@@ -10,15 +10,15 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   }])
 
 
-  .controller('ArtistCtrl', ['$scope','artist', function($scope, $routeParams, artist) {
-
+  .controller('ArtistCtrl', ['$scope', 'fbutil','$routeParams', function($scope, fbutil, $routeParams) {
+    $scope.artist=fbutil.syncObject('artists/'+$routeParams.artist);
   }])
 
   .controller('ArtistsCtrl', ['$scope','artistList', function($scope,artistList) {
     $scope.artists=artistList;
   }])
 
-.controller('SongCtrl', ['$scope','artist', function($scope, $routeParams, song) {
+.controller('SongCtrl', ['$scope','song', function($scope, $routeParams, song) {
 
 }])
 
