@@ -1,0 +1,7 @@
+<ul id="artists" ng-show="artists.length">
+    <li ng-repeat="artist in artists"><h3>{{artist.alias}}</h3>
+    <ul><li ng-repeat="song in artist.songs">{{song}}</ul>
+
+
+    </li>
+</ul>

@@ -24,6 +24,23 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
       templateUrl: 'partials/login.html',
       controller: 'LoginCtrl'
     },
+    '/artist/:artist': {
+      templateUrl: 'partials/artist.html',
+      controller: 'ArtistCtrl'
+    },
+    '/artists': {
+      templateUrl: 'partials/artists.html',
+      controller: 'ArtistsCtrl'
+    },
+    '/songs': {
+      templateUrl: 'partials/songs.html',
+      controller: 'SongsCtrl'
+    },
+    '/song/:song': {
+      templateUrl: 'partials/song.html',
+      controller: 'SongCtrl'
+    },
+
     '/account': {
       templateUrl: 'partials/account.html',
       controller: 'AccountCtrl',

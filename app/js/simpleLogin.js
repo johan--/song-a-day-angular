@@ -1,5 +1,5 @@
 
-angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
+angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeStatement'])
 
   // a simple wrapper on simpleLogin.getUser() that rejects the promise
   // if the user does not exists (i.e. makes user required)
@@ -11,8 +11,8 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
     }
   }])
 
-  .factory('simpleLogin', ['$firebaseSimpleLogin', 'fbutil', 'createProfile', 'changeEmail', '$q', '$rootScope',
-    function($firebaseSimpleLogin, fbutil, createProfile, changeEmail, $q, $rootScope) {
+  .factory('simpleLogin', ['$firebaseSimpleLogin', 'fbutil', 'createProfile', 'changeStatement', '$q', '$rootScope',
+    function($firebaseSimpleLogin, fbutil, createProfile, changeStatement, $q, $rootScope) {
       var auth = $firebaseSimpleLogin(fbutil.ref());
       var listeners = [];
 
@@ -49,7 +49,7 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
           auth.$logout();
         },
 
-        createAccount: function(email, pass, name) {
+        createAccount: function(email, pass, name,statement) {
           return auth.$createUser(email, pass)
             .then(function() {
               // authenticate so we have permission to write to Firebase
@@ -57,7 +57,7 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
             })
             .then(function(user) {
               // store user data in Firebase after creating account
-              return createProfile(user.uid, email, name).then(function() {
+              return createProfile(user.uid, email, name, statement).then(function() {
                 return user;
               })
             });
@@ -67,8 +67,8 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
           return auth.$changePassword(email, oldpass, newpass);
         },
 
-        changeEmail: function(password, newEmail) {
-          return changeEmail(password, fns.user.email, newEmail, this);
+        changeStatement: function(newStatement) {
+          return changeStatement(password, fns.user.email, newStatement, this);
         },
 
         removeUser: function(email, pass) {
@@ -100,9 +100,9 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
     }])
 
   .factory('createProfile', ['fbutil', '$q', '$timeout', function(fbutil, $q, $timeout) {
-    return function(id, email, name) {
+    return function(id, email, name, statement) {
       var ref = fbutil.ref('users', id), def = $q.defer();
-      ref.set({email: email, name: name||firstPartOfEmail(email)}, function(err) {
+      ref.set({email: email, name: name||firstPartOfEmail(email),statement:statement}, function(err) {
         $timeout(function() {
           if( err ) {
             def.reject(err);

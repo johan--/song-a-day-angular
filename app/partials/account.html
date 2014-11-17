@@ -10,10 +10,14 @@
             <input type="text" name="name" ng-model="profile.name"/>
         </label>
 
-        <label>
-            <span>Email:</span>
-            <br />{{profile.email}}
-        </label>
+<label>
+    <span>Email:</span>
+    <br />{{profile.email}}
+</label>
+      <label>
+    <span>Statement:</span>
+    <br />{{profile.statement}}
+</label>
     </fieldset>
 </form>
 
@@ -45,22 +49,17 @@
 
 <form>
     <fieldset>
-        <legend>Change Email</legend>
+        <legend>Update Statement</legend>
 
         <label>
-            <span>New Email:</span>
-            <input type="text" ng-keypress="clear()" ng-model="newEmail"/>
+            <span>New Statement:</span>
+            <input type="text" ng-keypress="clear()" ng-model="newStatement"/>
         </label>
 
-        <label>
-            <span>Password:</span>
-            <input type="password" ng-keypress="clear()" ng-model="pass"/>
-        </label>
+        <button ng-click="changeStatement(newStatement)">update statement</button>
 
-        <button ng-click="changeEmail(pass, newEmail)">update email</button>
-
-        <p class="error" ng-show="emailerr">{{emailerr}}</p>
-        <p class="good" ng-show="emailmsg">{{emailmsg}}</p>
+        <p class="error" ng-show="statementerr">{{emailerr}}</p>
+        <p class="good" ng-show="statementmsg">{{emailmsg}}</p>
     </fieldset>
 </form>
 

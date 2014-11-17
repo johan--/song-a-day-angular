@@ -1,0 +1,66 @@
+
+<h2>Account</h2>
+
+<form>
+    <fieldset>
+        <legend>Profile</legend>
+
+        <label>
+            <span>Name:</span>
+            <input type="text" name="name" ng-model="profile.name"/>
+        </label>
+
+<label>
+    <span>Email:</span>
+    <br />{{profile.email}}
+</label>
+      <label>
+    <span>Statement:</span>
+    <br />{{profile.statement}}
+</label>
+    </fieldset>
+</form>
+
+<form>
+    <fieldset>
+        <legend>Change Password</legend>
+
+        <label>
+            <span>Old Password:</span>
+            <input type="password" ng-keypress="clear()" ng-model="oldpass"/>
+        </label>
+
+        <label>
+            <span>New Password:</span>
+            <input type="password" ng-keypress="clear()" ng-model="newpass"/>
+        </label>
+
+        <label>
+            <span>Confirm New Password:</span>
+            <input type="password" ng-keypress="clear()" ng-model="confirm"/>
+        </label>
+
+        <button ng-click="changePassword(oldpass, newpass, confirm)">change password</button>
+
+        <p class="error" ng-show="err">{{err}}</p>
+        <p class="good" ng-show="msg">{{msg}}</p>
+    </fieldset>
+</form>
+
+<form>
+    <fieldset>
+        <legend>Update Statement</legend>
+
+        <label>
+            <span>New Statement:</span>
+            <input type="text" ng-keypress="clear()" ng-model="newStatement"/>
+        </label>
+
+        <button ng-click="changeStatement(pass, newStatement)">update statement</button>
+
+        <p class="error" ng-show="statementerr">{{emailerr}}</p>
+        <p class="good" ng-show="statementmsg">{{emailmsg}}</p>
+    </fieldset>
+</form>
+
+<button ng-click="logout()">Log Out</button>

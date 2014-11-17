@@ -9,6 +9,24 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.FBURL = FBURL;
   }])
 
+
+  .controller('ArtistCtrl', ['$scope','artist', function($scope, $routeParams, artist) {
+
+  }])
+
+  .controller('ArtistsCtrl', ['$scope','artistList', function($scope,artistList) {
+    $scope.artists=artistList;
+  }])
+
+.controller('SongCtrl', ['$scope','artist', function($scope, $routeParams, song) {
+
+}])
+
+.controller('SongsCtrl', ['$scope','songList', function($scope,songList) {
+  $scope.songs=songList;
+}])
+
+
   .controller('ChatCtrl', ['$scope', 'messageList', function($scope, messageList) {
     $scope.messages = messageList;
     $scope.addMessage = function(newMessage) {
@@ -28,7 +46,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $scope.err = null;
       simpleLogin.login(email, pass)
         .then(function(/* user */) {
-          $location.path('/account');
+          $location.path('/artists/me');
         }, function(err) {
           $scope.err = errMessage(err);
         });
@@ -39,7 +57,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       if( assertValidAccountProps() ) {
         simpleLogin.createAccount($scope.email, $scope.pass)
           .then(function(/* user */) {
-            $location.path('/account');
+            $location.path('/artists/me');
           }, function(err) {
             $scope.err = errMessage(err);
           });
@@ -97,17 +115,9 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
       $scope.clear = resetMessages;
 
-      $scope.changeEmail = function(pass, newEmail) {
+      $scope.changeStatement = function(newStatement) {
         resetMessages();
-        profile.$destroy();
-        simpleLogin.changeEmail(pass, newEmail)
-          .then(function(user) {
-            profile = fbutil.syncObject(['users', user.uid]);
-            profile.$bindTo($scope, 'profile');
-            $scope.emailmsg = 'Email changed';
-          }, function(err) {
-            $scope.emailerr = err;
-          });
+        simpleLogin.changeStatement(newStatement);
       };
 
       function resetMessages() {
