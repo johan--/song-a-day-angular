@@ -1,0 +1,7 @@
+<ul>
+  <li ng-repeat="comment in song.comments">
+    <blockquote><span class='comment-author'>{{comment.author.alias}}</span>:{{comment.comment}}</blockquote>
+</ul>
+<button ng-click="comment(song)">
+  comment
+</button>

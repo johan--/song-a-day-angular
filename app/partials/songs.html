@@ -1,12 +1,5 @@
 <ul id="songs" ng-show="songs.length">
-    <li ng-repeat="song in songs"><h3>{{song.title}}   </br><a href='#/artist/{{song.artist.key}}'> {{song.artist.alias}}</a></h3>
-
-
-<audio controls>
-  <source ng-src="{{song.media.mp3}}" type="audio/mpeg">
-</audio>
-    <ul><li ng-repeat="comment in song.comments">{{comment.author.alias}}:{{comment.comment}}</ul>
-
-
+    <li ng-repeat="song in songs">
+<div ng-include src="'partials/songelement.html'"
     </li>
 </ul>

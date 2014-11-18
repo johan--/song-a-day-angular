@@ -1,3 +1,14 @@
+/* comments */
+.comment-author{
+  color:purple;
+  font-style:bold;
+}
+ul {
+  list-style-type: none;
+}
+
+
+
 /* app css stylesheet */
 
 body {

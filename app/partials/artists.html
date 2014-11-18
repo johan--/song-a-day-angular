@@ -1,7 +1,8 @@
 <ul id="artists" ng-show="artists.length">
     <li ng-repeat="artist in artists"><h3><a href='#artist/{{artist.key}}'>{{artist.alias}}</a></h3>
       <ul>
-        <li ng-repeat="song in artist.songs"><h3>{{song.title}}</h3>
+        <li ng-repeat="song in artist.songs">
+          <div ng-include="'partials/songelement.html'"></div>
         </li>
       </ul>
     </li>

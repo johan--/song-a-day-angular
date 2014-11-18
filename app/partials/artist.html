@@ -1,8 +1,10 @@
 
 <h2>{{artist.alias}}</h2>
     <span>Statement:</span>
-    <br />{{artist.statement}}
+    <p>{{artist.statement}}
+</p>
+      <ul ng-repeat="song in artist.songs">
+        <li ng-include src="'partials/songelement.html'">
 
-      <div ng-repeat="song in artist.songs">
-         {{song.title}}
-      </div>
+        </li>
+      </ul>
