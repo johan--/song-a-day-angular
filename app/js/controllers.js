@@ -10,12 +10,22 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   }])
 
 
-  .controller('ArtistCtrl', ['$scope', 'fbutil','$routeParams','$sce', function($scope, fbutil, $routeParams,$sce) {
+  .controller('MissionCtrl', ['$scope', 'fbutil', function($scope, fbutil) {
+    $scope.artist=fbutil.syncObject('mission');
+  }])
+
+  .controller('ArtistCtrl', ['$scope', 'fbutil','$routeParams', function($scope, fbutil, $routeParams) {
     $scope.artist=fbutil.syncObject('artists/'+$routeParams.artist);
   }])
 
+  .controller('ArchiveCtrl', ['$scope','songList', function($scope,songList) {
+    $scope.songs=songList;
+  }])
+
+
   .controller('ArtistsCtrl', ['$scope','artistList', function($scope,artistList) {
     $scope.artists=artistList;
+    $scope.predicate='-songs'
   }])
 
 .controller('SongCtrl', ['$scope','$routeParams','fbutil', function($scope, $routeParams, fbutil) {
@@ -127,4 +137,18 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.emailmsg = null;
       }
     }
-  ]);
+  ])
+  .controller('TransmitCtrl', ['$scope', 'simpleLogin', 'fbutil',
+  function($scope, simpleLogin, fbutil) {
+    $scope.upload = function(newStatement) {
+      console.log($scope.media);
+    };
+
+    function checkMedia() {
+      $scope.err = null;
+      $scope.msg = null;
+      $scope.emailerr = null;
+      $scope.emailmsg = null;
+    }
+  }
+  ])

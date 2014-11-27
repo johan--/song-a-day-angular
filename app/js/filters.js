@@ -8,7 +8,11 @@ angular.module('myApp.filters', [])
          return String(text).replace(/\%VERSION\%/mg, version);
       }
    }])
-
+   .filter('trustUrl', function ($sce) {
+     return function(url) {
+       return $sce.trustAsResourceUrl(url);
+     };
+   })
    .filter('reverse', function() {
       return function(items) {
          return items.slice().reverse();

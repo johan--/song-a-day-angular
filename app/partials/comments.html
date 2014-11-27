@@ -1,7 +1,21 @@
-<ul>
-  <li ng-repeat="comment in song.comments">
-    <blockquote><span class='comment-author'>{{comment.author.alias}}</span>:{{comment.comment}}</blockquote>
-</ul>
-<button ng-click="comment(song)">
-  comment
-</button>
+  <div ng-repeat="comment in song.comments">
+    <div class='comment'><span class='comment-author'>{{comment.author.alias}}</span>:<span class='comment-msg'>{{comment.comment}}</span></div>
+  </div>
+<button ng-click="console.log('help')" style="float:right">Comment</button>
+
+<div id="comments-{{song.key}}" class="comments">
+  <div id="comment" ng-show="song.newComment">
+      <div style="display:block">
+        <button ng-show-auth ng-click="comment(song)">
+          comment
+        </button>
+      </div>
+      <textarea>
+        post a comment
+      </textarea>
+      <div ng-hide-auth>
+        <a  href="#/login">login</a>
+            to post a comment
+      </div>
+    </div>
+</div>

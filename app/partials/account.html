@@ -6,8 +6,8 @@
         <legend>Profile</legend>
 
         <label>
-            <span>Name:</span>
-            <input type="text" name="name" ng-model="profile.name"/>
+            <span>Alias:</span>
+            <input type="text" name="name" ng-model="profile.alias"/>
         </label>
 
 <label>
@@ -49,18 +49,19 @@
 
 <form>
     <fieldset>
-        <legend>Update Statement</legend>
+        <legend>Update Info</legend>
 
         <label>
             <span>New Statement:</span>
-            <input type="text" ng-keypress="clear()" ng-model="newStatement"/>
+            <textarea ng-keypress="clear()" ng-model="newStatement"></textarea>
         </label>
 
         <button ng-click="changeStatement(newStatement)">update statement</button>
 
-        <p class="error" ng-show="statementerr">{{emailerr}}</p>
-        <p class="good" ng-show="statementmsg">{{emailmsg}}</p>
-    </fieldset>
-</form>
+        <p class="error" ng-show="statementerr">{{statementerr}}</p>
+        <p class="good" ng-show="statementmsg">{{statementmsg}}</p>
 
-<button ng-click="logout()">Log Out</button>
+    </fieldset>
+    <ng-include src="'partials/choose-art.html'">
+
+</form>

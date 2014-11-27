@@ -16,6 +16,14 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
         }]
       }
     },
+    '/mission': {
+      templateUrl: 'partials/mission.html',
+      controller: 'MissionCtrl'
+    },
+    '/archives': {
+      templateUrl: 'partials/archives.html',
+      controller: 'ArchiveCtrl'
+    },
     '/chat': {
       templateUrl: 'partials/chat.html',
       controller: 'ChatCtrl'
@@ -23,6 +31,10 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
     '/login': {
       templateUrl: 'partials/login.html',
       controller: 'LoginCtrl'
+    },
+    '/transmit': {
+      templateUrl: 'partials/transmit.html',
+      controller: 'TransmitCtrl'
     },
     '/artist/:artist': {
       templateUrl: 'partials/artist.html',

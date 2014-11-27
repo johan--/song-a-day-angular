@@ -1,5 +1,5 @@
 
-<h2>Login Page</h2>
+<h2>Login</h2>
 
 <form>
     <label>
@@ -17,16 +17,17 @@
     <label ng-cloak ng-show="createMode">
       <span>Alias</span>
       <input type="text" ng-model="alias" />
+      
     </label>
     <label ng-cloak ng-show="createMode">
-        <span>Artist Statement</span>
+        <span>Statement</span>
         <textarea ng-model="statement" cols="40" rows="5"> Trancendental Artist statement.</textarea>
     </label>
-
     <button ng-click="login(email, pass)" ng-hide="createMode">Log In</button>
     <button ng-click="createMode = true" ng-hide="createMode">Register</button>
-    <button ng-cloak ng-show="createMode" ng-click="createAccount(email, pass, confirm, statement)">Create Account</button>
+    <button ng-cloak ng-show="createMode" ng-click="createAccount(email, pass, confirm, alias, statement)">Create Account</button>
     <button ng-cloak ng-show="createMode" ng-click="createMode = false">Cancel</button>
+
 
     <p ng-show="err" class="error">{{err}}</p>
 </form>
