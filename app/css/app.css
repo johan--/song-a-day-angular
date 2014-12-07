@@ -1,11 +1,84 @@
 @import url(http://fonts.googleapis.com/css?family=The+Girl+Next+Door);
 
+
+/*!
+Pure v0.5.0
+Copyright 2014 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+https://github.com/yui/pure/blob/master/LICENSE.md
+*/
+.progress-bar{
+  position:absolute;
+  height:80px;
+  bottom:0px;
+  border-radius:0px!important;
+  left:0px;
+  opacity:60%;
+  z-index:-9999;
+}
+.active{
+  background-color:#a0dba7!important;
+}
+.playlist{
+  border:1px black;
+  background-color:purple;
+}
+.track{
+  background-color:lightgray;
+  color:white!important;
+  border-radius:5px;
+  padding:5px;
+  font-size:small;
+}
+
+button{
+    font-family: Arial;
+    color: #a0dba7!important;
+    background: transparent;
+    padding: 0px;
+    text-decoration: none;
+    border-style:none;
+}
+
+textarea{
+  border-color:rgb(238, 238, 238);
+}
+#queue li
+{
+  display: inline;
+  list-style-type: none;
+  padding-right: 2px;
+}
+#queue{
+  overflow-x: scroll;
+}
+.freshComment{
+  width:100%;
+}
+.commentBtn{
+  border-left: 5px solid #eee;
+  padding-left: 5px;
+}
+.artist{
+  text-align:center;
+}
+.alias{
+  color:gray;
+}
+legend{
+padding-bottom:-20px;
+  border-radius:5px;
+  text-align:center;
+}
+
 .comment{
   border-left: 5px solid #eee;
   padding:5px;
   margin-top:2px;
 }
-
+.avatar{
+  border-radius: 1000px;
+}
 fieldset {
   padding:5px!important;
   margin:5px!important;
@@ -33,6 +106,9 @@ fieldset {
 
 .navbar-default {
   background-color: #fff;
+}
+ul{
+  padding:0px!important;
 }
 .jumbotron{
 

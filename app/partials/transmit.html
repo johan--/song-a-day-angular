@@ -1,21 +1,32 @@
+<form>
 <fieldset flow-init>
     <legend>Transmit a song</legend>
-    <div class='well'>      
-    <span>Choose Media</span>
-    <input ng-flow type="file" name="pic" id="pic" accept="video/webm, video/mp4,video/ogg , audio/ogg, audio/mpeg,audio/wave" />
-
-  <p class="error" ng-show="mediaerr">{{mediaerr}}</p>
-  <p class="good" ng-show="mediamsg">{{mediamsg}}</p>
-  <audio ng-cloak ng-show='$flow.files[0]' src='$flow.files[0]'></audio>
-</div>
-<div class='well'>
-  <label>
-    <span>Blurb </span>
+    <div class='well'>
+    <p>
+      <label>
+        <span>Title</span>
+      </label>
+      <input ng-model="transmission.title" type="text"/>
+    </p>
+    <p>
+      <label>
+    <span>Info </span>
   </label>
-  <textarea ng-model="transmission.blurb" type="text"></textarea>
+  <textarea ng-model="transmission.info" type="text"></textarea>
+  </p>
+  <p>
+    <label>Choose Media</label>
+<input flow-btn type="file" accept="video/*;capture=camcorder;audio/*;capture=microphone" />
+<p class="error" ng-show="mediaerr">{{mediaerr}}</p>
+<p class="good" ng-show="mediamsg">{{mediamsg}}</p>
+ <video controls flow-img="$flow.files[0]"></video>
+<p>
+ <button ng-click='transmit()'>
+   Send Transmission
+ </button>
+</p>
 </div>
-  <button>
-  Submit Transmission
-  </button>
+
 
 </fieldset>
+</form>

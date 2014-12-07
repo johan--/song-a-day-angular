@@ -1,19 +1,17 @@
 
 
-<div ng-show="song" class='col-md-8 col-md-offset-2 col-xs-12'>
+<div ng-show="song">
   <div class='panel panel-info'>
     <div class='panel-heading'>
 
-        <a href="#/artist/{{song.artist.key}}" >{{song.artist.alias}}</a>
-        <strong style='text-align:'><a href='#/song/{{song.key}}'>{{song.title}}</a>
-        </div>
+        <a class='alias' href="#/artist/{{song.artist.key}}" >{{song.artist.alias}}</a>
+        <strong style='text-align:'><a href='#/song/{{song.key}}'>{{song.title}}</a></strong>
+          <strong style='float:right'>{{song.key}}</a></strong>
+      </div>
         <div class="panel-body">
-        </strong>        <!--<audio controls preload='none' src="{{ song.media.mp3 | trustUrl  }}"></audio>-->
+                <!--<audio controls preload='none' src="{{ song.media.mp3 | trustUrl  }}"></audio>-->
         <button ng-click='playsong(song)'>
           ▶
-        </button>
-        <button ng-click='lovesong()'>
-          ♡
         </button>
         <small style='float:right;'>
           <abbr am-time-ago="song.timestamp"></abbr>
@@ -21,7 +19,7 @@
         </div>
         <div class='panel-footer panel-info'>
           <p>
-            {{song.blurb}}
+            {{song.info}}
             <ul ng-include src="'partials/comments.html'">
             </p>
         </div>

@@ -1,28 +1,22 @@
 <fieldset flow-init>
-  <legend>Choose Art</legend>
-
-  <button flow-btn>
+  <legend>Art</legend>
+<div class='well'>
+  <input accept="image/png,image/gif,image/jpeg,image/pjpeg" flow-btn>
     <span>Choose Avatar Art</span>
-  </button>
+  </input>
   <p class="error" ng-show="avatarerr">{{avatarerr}}</p>
   <p class="good" ng-show="avatarmsg">{{avatarmsg}}</p>
-  <img height="100px" width="100px" flow-img="$flow.files[0]" />
+  <img style='border-radius:40px;' height="80px" width="80px" flow-img="$flow.files[0]" />
   <div ng-cloak ng-show='$flow.files[0]'>
   <button flow-btn>
     <span >Choose Wall Art</span>
   </button>
-  <img height="100px" width="100px" flow-img="$flow.files[1]" />
+  <img style='float:right' height="50px" width="100px" flow-img="$flow.files[1]" />
   <p class="error" ng-show="wallerr">{{wallerr}}</p>
   <p class="good" ng-show="wallmsg">{{wallmsg}}</p>
   </div>
-
-  <label>
-    <span>Foreground color:</span>
-  </label>
-  <input colorpicker="rgba" colorpicker-position="right" ng-model="foregroundcolor" type="text">
-  <label>
-    <span>Background color:</span>
-  </label>
-  <input colorpicker="rgba" colorpicker-position="right"  ng-model="backgroundcolor" type="text">
-  <button ng-click="chooseArt($flow.files[0],$flow.files[1],foregroundcolor,backgroundcolor)">update</button>
+  <p>
+    <button ng-click="chooseArt($flow.files[0],$flow.files[1])">commit</button>
+  </p>
+</div>
 </fieldset>

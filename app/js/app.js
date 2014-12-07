@@ -9,16 +9,73 @@ angular.module('myApp', [
     'myApp.filters',
     'myApp.routes',
     'myApp.services',
-    'flow'
+    'flow',
+    'mediaPlayer'
 ])
 
-.run(['simpleLogin','$rootScope', function(simpleLogin,$rootScope) {
-    simpleLogin.getUser();
-    $rootScope.song=function(song){
-      console.log(song);
+.run(['simpleLogin','fbutil','$rootScope','$timeout', function(simpleLogin,fbutil,$rootScope,$timeout) {
+    simpleLogin.getUser().then(function(user){
+      if(user){
+        var current_artist_key=CryptoJS.SHA1(user.email);
+        $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
+      }
+    })
+
+    $rootScope.queue=[];
+    $rootScope.alerts=[{"type":"info","message":"I AM Celestial"}];
+    $rootScope.beginComment=function(song){
+      song.transmittingComment=true;
     }
+    $rootScope.transmitComment=function(song){
+      song.freshComment.timestamp=(new Date()).toISOString()
+      var firecomments=fbutil.ref('songs/'+song.key+'/comments');
+      console.log(firecomments);
+      if ('comments' in song){
+        song.comments.push(song.freshComment);
+      }else{
+        song.comments=[song.freshComment];
+      }
+      song.freshComment={}
+      song.transmittingComment=false;
+    }
+
     $rootScope.playsong=function(song){
-      console.log(song);
+      var next=song.media;
+      next.title=song.title;
+      if($rootScope.queue.indexOf(next) == -1){
+        $rootScope.queue.push(next);
+        $timeout(function() {
+          $rootScope.play();
+        }, 100);
+      }
+
     }
-    $rootScope.alerts=[{"type":"info","message":"I AM Celestial"}]
-}])
+    $rootScope.play=function(){
+      $rootScope.player.play();
+    }
+    $rootScope.skip=function(index){
+      $rootScope.player.playPause(index);
+      console.log('skip');
+    }
+    $rootScope.pause=function(){
+      $rootScope.player.pause();
+    }
+
+    $rootScope.next=function(){
+      $rootScope.player.next();
+    }
+
+    $rootScope.clear=function(){
+      $rootScope.player.pause();
+      $rootScope.queue=[];
+    }
+    $rootScope.seekPercentage = function ($event) {
+      var percentage = ($event.offsetX / $event.target.offsetWidth);
+      if (percentage <= 1) {
+        return percentage;
+      } else {
+        return 0;
+      }
+    };
+
+  }])

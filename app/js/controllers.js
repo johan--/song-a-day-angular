@@ -14,26 +14,45 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.artist=fbutil.syncObject('mission');
   }])
 
-  .controller('ArtistCtrl', ['$scope', 'fbutil','$routeParams', function($scope, fbutil, $routeParams) {
-    $scope.artist=fbutil.syncObject('artists/'+$routeParams.artist);
+  .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
+    artistPage.fetch($routeParams.artist)
+    $scope.artist=artistPage.artist;
+    $scope.predicate='-key';
+
+
   }])
 
   .controller('ArchiveCtrl', ['$scope','songList', function($scope,songList) {
     $scope.songs=songList;
+    $scope.predicate='-songs | length'
   }])
 
 
   .controller('ArtistsCtrl', ['$scope','artistList', function($scope,artistList) {
-    $scope.artists=artistList;
-    $scope.predicate='-songs'
+    var arts=artistList;
+    $scope.artists=arts;
+    $scope.moreArtists=function(){
+      console.log($scope.moreArtists);
+    }
   }])
 
 .controller('SongCtrl', ['$scope','$routeParams','fbutil', function($scope, $routeParams, fbutil) {
   $scope.song=fbutil.syncObject('songs/'+$routeParams.song);
 }])
+.controller('MediaCtrl', ['$scope','$rootScope','$routeParams','fbutil', function($scope,$rootScope, $routeParams, fbutil) {
 
-.controller('SongsCtrl', ['$scope','songList', function($scope,songList) {
-  $scope.songs=songList;
+
+}])
+
+.controller('SongsCtrl', ['$scope','songs','$window', function($scope,songs,$window) {
+  $scope.songs=songs.list;
+  songs.fetch();
+  $scope.predicate='-key'
+  $scope.moreSongs=function(){
+    var moreSongs=songs.fetch();
+  }
+
+
 }])
 
 
@@ -92,15 +111,16 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     }
   }])
 
-  .controller('AccountCtrl', ['$scope', 'simpleLogin', 'fbutil', 'user', '$location',
-    function($scope, simpleLogin, fbutil, user, $location) {
-      // create a 3-way binding with the user profile object in Firebase
-      var profile = fbutil.syncObject(['users', user.uid]);
-      profile.$bindTo($scope, 'profile');
-
+  .controller('AccountCtrl', ['$scope', 'simpleLogin', 'fbutil', 'user', '$location','$rootScope',
+    function($scope, simpleLogin, fbutil, user, $location,$rootScope) {
       // expose logout function to scope
+      if ('me' in $scope){
+        $scope.me.$bindTo($scope,'me');
+        $scope.artist=$scope.me;
+      }
+
       $scope.logout = function() {
-        profile.$destroy();
+        $scope.me.$destroy();
         simpleLogin.logout();
         $location.path('/login');
       };
@@ -114,9 +134,10 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           $scope.err = 'New pass and confirm do not match';
         }
         else {
-          simpleLogin.changePassword(profile.email, pass, newPass)
+          simpleLogin.changePassword(user.email, pass, newPass)
             .then(function() {
               $scope.msg = 'Password changed';
+
             }, function(err) {
               $scope.err = err;
             })
@@ -127,7 +148,13 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
       $scope.changeStatement = function(newStatement) {
         resetMessages();
-        simpleLogin.changeStatement(newStatement);
+
+      };
+      $scope.chooseArt = function(avatar,wallart){
+        resetMessages();
+        console.log($scope);
+        $scope.wallerr=avatar;
+        $scope.avatarerr=wallart;
       };
 
       function resetMessages() {
@@ -135,13 +162,18 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.msg = null;
         $scope.emailerr = null;
         $scope.emailmsg = null;
+        $scope.avatarmsg = null;
+        $scope.avatarerr = null;
+        $scope.wallmsg = null;
+        $scope.wallerr = null;
       }
     }
   ])
   .controller('TransmitCtrl', ['$scope', 'simpleLogin', 'fbutil',
   function($scope, simpleLogin, fbutil) {
-    $scope.upload = function(newStatement) {
-      console.log($scope.media);
+    $scope.transmit = function() {
+      console.log($scope.$flow.files[0]);
+      console.log($scope.transmission);
     };
 
     function checkMedia() {

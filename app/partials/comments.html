@@ -1,21 +1,27 @@
   <div ng-repeat="comment in song.comments">
-    <div class='comment'><span class='comment-author'>{{comment.author.alias}}</span>:<span class='comment-msg'>{{comment.comment}}</span></div>
+    <div class='comment'><span class='comment-author'>{{comment.author.alias ||"buddha"}}</span>:<span class='comment-msg'>{{comment.comment}}</span></div>
   </div>
-<button ng-click="console.log('help')" style="float:right">Comment</button>
+  <button class='commentBtn' ng-hide='song.transmittingComment' ng-show-auth ng-click="beginComment(song)">
+    comment
+  </button>
+  <button ng-hide-auth>
+    <a  href="#/login">login</a>
+    to post a comment
+  </button>
 
 <div id="comments-{{song.key}}" class="comments">
-  <div id="comment" ng-show="song.newComment">
-      <div style="display:block">
-        <button ng-show-auth ng-click="comment(song)">
-          comment
-        </button>
-      </div>
-      <textarea>
-        post a comment
+  <div id="comment" ng-show="song.transmittingComment">
+    <p>
+      {{user.email}}
+    </p>
+    <p>
+        <textarea class='freshComment' ng-model='song.freshComment.comment' placeholder='transmit a comment'>
+
       </textarea>
-      <div ng-hide-auth>
-        <a  href="#/login">login</a>
-            to post a comment
-      </div>
+    </p>
+      <button class='commentBtn' ng-show-auth ng-click="transmitComment(song)">
+        comment
+      </button>
+
     </div>
 </div>

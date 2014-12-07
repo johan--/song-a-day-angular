@@ -1,9 +1,15 @@
-<div>
-<audio media-player="audioplayer" data-playlist="queue">
-  <source src="http://upload.wikimedia.org/wikipedia/en/d/d0/Rick_Astley_-_Never_Gonna_Give_You_Up.ogg" type="audio/ogg">
-  </audio>
-  <h3>
-    <span ng-show="!audioplayer.playing">▶</span>
-    <span ng-show="audioplayer.playing">▐▐</span>
-  </h3>
-</div>
+<nav class="navbar-header navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="container">
+    <div>
+      <audio media-player="player" playlist="queue"></audio>        <h3>
+        <ul id='queue'>
+          <li ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
+          <li ng-click='pause()' ng-show="player.playing">▐▐</li>
+          <li ng-repeat="song in queue" ng-show="queue.length">
+            {{song.title}}
+          </li>
+        </ul>
+      </h3>
+    </div>
+  </div>
+</nav>

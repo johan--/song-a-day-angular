@@ -16,7 +16,7 @@
     "angularfire": "0.8.x",
     "mockfirebase": "0.2.x",
     "angular-media-player": "0.5.x",
-    "ngInfiniteScroll": "1.0.x",
+    "ngInfiniteScroll": "1.2.0",
     "angular-moment": "~0.8.2"
   }
 }
