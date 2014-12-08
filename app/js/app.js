@@ -55,7 +55,6 @@ angular.module('myApp', [
     }
     $rootScope.skip=function(index){
       $rootScope.player.playPause(index);
-      console.log('skip');
     }
     $rootScope.pause=function(){
       $rootScope.player.pause();
@@ -65,6 +64,13 @@ angular.module('myApp', [
       $rootScope.player.next();
     }
 
+    $rootScope.removeTrack=function(index){
+      console.log('Removing track at:' + index);
+      console.log($rootScope.queue);
+      $rootScope.queue.splice(index,1);
+      console.log($rootScope.queue);
+
+    }
     $rootScope.clear=function(){
       $rootScope.player.pause();
       $rootScope.queue=[];

@@ -7,6 +7,12 @@ Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
 https://github.com/yui/pure/blob/master/LICENSE.md
 */
+.attached{
+  background-color:gray;
+  border-radius:0px 10px 10px 0px!important;
+  padding:5px;
+  color:white;
+}
 .sketchpad{
   width:100%!important;
   height:500px;
@@ -33,7 +39,7 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 .track{
   background-color:lightgray;
   color:white!important;
-  border-radius:5px;
+  border-radius:10px 0px 0px 10px;
   padding:5px;
   font-size:small;
 }
