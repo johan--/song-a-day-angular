@@ -184,3 +184,8 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     }
   }
   ])
+  .controller('SketchCtrl', ['$scope', 'simpleLogin', 'fbutil',
+  function($scope, simpleLogin, fbutil) {
+    console.log('sketch it up!');
+  }
+  ])
