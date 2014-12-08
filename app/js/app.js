@@ -11,6 +11,7 @@ angular.module('myApp', [
     'myApp.services',
     'flow',
     'mediaPlayer'
+
 ])
 
 .run(['simpleLogin','fbutil','$rootScope','$timeout', function(simpleLogin,fbutil,$rootScope,$timeout) {
