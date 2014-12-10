@@ -23,6 +23,10 @@ angular.module('myApp', [
     })
 
     $rootScope.queue=[];
+    $rootScope.hideNav=true;
+    $rootScope.toggleNav=function(){
+      $rootScope.hideNav=!$rootScope.hideNav;
+    }
     $rootScope.alerts=[{"type":"info","message":"I AM Celestial"}];
     $rootScope.beginComment=function(song){
       song.transmittingComment=true;
@@ -56,6 +60,10 @@ angular.module('myApp', [
     }
     $rootScope.skip=function(index){
       $rootScope.player.playPause(index);
+      console.log($rootScope.queue[index])
+      console.log("skip to "+index);
+
+
     }
     $rootScope.pause=function(){
       $rootScope.player.pause();
@@ -67,9 +75,7 @@ angular.module('myApp', [
 
     $rootScope.removeTrack=function(index){
       console.log('Removing track at:' + index);
-      console.log($rootScope.queue);
       $rootScope.queue.splice(index,1);
-      console.log($rootScope.queue);
 
     }
     $rootScope.clear=function(){

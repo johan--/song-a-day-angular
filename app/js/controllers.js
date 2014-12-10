@@ -189,3 +189,12 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     console.log('sketch it up!');
   }
   ])
+  .controller('NavCtrl', ['$scope',
+  function($scope) {
+    $scope.hideNav=true;
+    $scope.toggleNav=function(){
+      $scope.hideNav=!$scope.hideNav;
+    }
+
+  }
+  ])
