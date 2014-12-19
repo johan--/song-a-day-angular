@@ -9,19 +9,28 @@ angular.module('myApp', [
     'myApp.filters',
     'myApp.routes',
     'myApp.services',
-    'flow',
-    'mediaPlayer'
+    'mediaPlayer',
+    'ngSanitize',
+    'ngS3upload'
 
 ])
 
 .run(['simpleLogin','fbutil','$rootScope','$timeout', function(simpleLogin,fbutil,$rootScope,$timeout) {
+
+  $rootScope.updateMe=function(callback){
     simpleLogin.getUser().then(function(user){
       if(user){
-        var current_artist_key=CryptoJS.SHA1(user.email);
+        var current_artist_key=CryptoJS.SHA1(user.email).toString().substring(0,11);
         $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
+        var me=fbutil.syncObject('artists/'+current_artist_key);
+        console.log(me);
+        if (callback){
+          callback(me);
+        }
       }
     })
-
+  }
+  $rootScope.updateMe();
     $rootScope.queue=[];
     $rootScope.hideNav=true;
     $rootScope.toggleNav=function(){

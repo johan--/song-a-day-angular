@@ -171,9 +171,15 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   ])
   .controller('TransmitCtrl', ['$scope', 'simpleLogin', 'fbutil',
   function($scope, simpleLogin, fbutil) {
+
+    $scope.updateMe(function(me){
+      $scope.s3OptionsUri='/config/aws.json';
+      console.log(me);
+      $scope.destfolder='/media/'+me;
+        console.log($scope.destfolder);
+      });
     $scope.transmit = function() {
-      console.log($scope.$flow.files[0]);
-      console.log($scope.transmission);
+      console.log($scope);
     };
 
     function checkMedia() {

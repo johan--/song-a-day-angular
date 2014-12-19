@@ -1,8 +1,8 @@
 <h2>Choose</h2>
-<div class='well artist' style='background-img:{{me.wallart}}'>
+<div class='well artist' style='background-image:url({{me.wall}})!important'>
   <a href="{{me.link| default:'javascript:void()' | trustUrl}}"><h2 class='alias'>{{me.alias}}</h2></a>
   <p class='statement'>{{artist.statement}}</p>
-  <img src='{{me.avatar}}'/>
+  <img height='100px' width='100px' style="border-radius:50px" ng-src='{{me.avatar}}'/>
 </div>
 <form>
     <fieldset>
@@ -67,21 +67,23 @@
   <fieldset flow-init>
     <legend>Art</legend>
     <div class='well'>
-      <button flow-btn>
-        <span >Choose Avatar</span>
-      </button>
-    </input>
+      <label>
+        <span>Avatar</span>
+      </label>
+      <div s3-upload bucket="s3Bucket" ng-model="me.avatar"
+      s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
+    </div>
+
     <p class="error" ng-show="avatarerr">{{avatarerr}}</p>
     <p class="good" ng-show="avatarmsg">{{avatarmsg}}</p>
-    <img style='border-radius:40px;' height="80px" width="80px" flow-img="$flow.files[0]" />
-    <div ng-cloak ng-show='$flow.files[0]'>
-      <button flow-btn>
-        <span >Choose Wall Art</span>
-      </button>
-      <img style='float:right' height="50px" width="100px" flow-img="$flow.files[1]" />
+    <label>
+      <span>wall</span>
+    </label>
+    <div s3-upload bucket="s3Bucket" ng-model="me.wall"
+    s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
+  </div>
       <p class="error" ng-show="wallerr">{{wallerr}}</p>
       <p class="good" ng-show="wallmsg">{{wallmsg}}</p>
-    </div>
     <p>
       <button ng-click="chooseArt()">commit</button>
     </p>

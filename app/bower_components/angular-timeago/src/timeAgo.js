@@ -2,7 +2,7 @@
 
 'use strict';
 
-angular.module('angular-timeago', [
+angular.module('yaru22.angular-timeago', [
 ]).directive('timeAgo', function (timeAgo, nowTime) {
   return {
     restrict: 'EA',
@@ -22,12 +22,14 @@ angular.module('angular-timeago', [
       });
     }
   };
-}).factory('nowTime', function ($timeout) {
+}).factory('nowTime', function ($window, $rootScope) {
   var nowTime = Date.now();
   var updateTime = function() {
-    $timeout(function() {
-      nowTime = Date.now();
-      updateTime();
+    $window.setTimeout(function() {
+      $rootScope.$apply(function(){
+        nowTime = Date.now();
+        updateTime();
+      });
     }, 1000);
   };
   updateTime();
@@ -59,6 +61,24 @@ angular.module('angular-timeago', [
         years: '%d years',
         numbers: []
       },
+      'de_DE': {
+        prefixAgo: 'vor',
+        prefixFromNow: null,
+        suffixAgo: null,
+        suffixFromNow: 'from now',
+        seconds: 'weniger als einer Minute',
+        minute: 'ca. einer Minute',
+        minutes: '%d Minuten',
+        hour: 'ca. einer Stunde',
+        hours: 'ca. %d Stunden',
+        day: 'einem Tag',
+        days: '%d Tagen',
+        month: 'ca. einem Monat',
+        months: '%d Monaten',
+        year: 'ca. einem Jahr',
+        years: '%d Jahren',
+        numbers: []
+      },
       'he_IL': {
         prefixAgo: null,
         prefixFromNow: null,
@@ -76,7 +96,7 @@ angular.module('angular-timeago', [
         year: 'כשנה',
         years: '%d שנים',
         numbers: []
-      },
+      }
     }
   };
 
@@ -121,7 +141,11 @@ angular.module('angular-timeago', [
         substitute($l.years, Math.round(years));
 
     var separator = $l.wordSeparator === undefined ?  ' ' : $l.wordSeparator;
-    return [prefix, words, suffix].join(separator).trim();
+    if(lang === 'he_IL'){
+      return [prefix, suffix, words].join(separator).trim();
+    } else {
+      return [prefix, words, suffix].join(separator).trim();
+    }
   };
 
   service.parse = function (iso8601) {

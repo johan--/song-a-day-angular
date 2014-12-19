@@ -16,7 +16,11 @@
     "angularfire": "0.8.x",
     "mockfirebase": "0.2.x",
     "angular-media-player": "0.5.x",
+    "ng-s3upload": "0.1.1",
     "ngInfiniteScroll": "1.2.0",
     "angular-moment": "~0.8.2"
+  },
+  "resolutions": {
+    "angular": "1.2.28"
   }
 }
