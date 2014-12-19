@@ -1,8 +1,4 @@
-# angularfire-seed — the seed for Angular+Firebase apps
-
-This derivative of [angular-seed](https://github.com/angular/angularfire-seed) is an application 
-skeleton for a typical [AngularFire](http://angularfire.com/) web app. You can use it to quickly 
-bootstrap your Angular + Firebase projects.
+# Song a day angular implementation! Amazon s3 for media storage
 
 The seed is preconfigured to install the Angular framework, Firebase, AngularFire, and a bundle of
 development and testing tools.
