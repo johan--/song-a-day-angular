@@ -30,7 +30,6 @@
 <p class="error" ng-show="statementerr">{{statementerr}}</p>
 <p class="good" ng-show="statementmsg">{{statementmsg}}</p>
 
-<button ng-click="changeStatement(newStatement)">commit</button>
 </div>
     </fieldset>
 </form>
@@ -63,8 +62,7 @@
 </form>
 -->
 <form>
-
-  <fieldset flow-init>
+  <fieldset>
     <legend>Art</legend>
     <div class='well'>
       <label>
@@ -84,11 +82,20 @@
   </div>
       <p class="error" ng-show="wallerr">{{wallerr}}</p>
       <p class="good" ng-show="wallmsg">{{wallmsg}}</p>
-    <p>
-      <button ng-click="chooseArt()">commit</button>
-    </p>
   </div>
 </fieldset>
+
+
+</form>
+
+<form style='float:right'>
+  <fieldset>
+    <legend>Account</legend>
+    <div class='well'>
+    <button ng-click='logout()'>logout
+    </button>
+  </div>
+    </fieldset>
 
 
 </form>

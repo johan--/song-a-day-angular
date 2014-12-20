@@ -1,6 +1,6 @@
 
 
-<div ng-show="song">
+<div id='s{{song.key}}' ng-show="song">
   <div class='panel panel-info'>
     <div class='panel-heading'>
       <ng-include src="'partials/avatar.html'"></ng-include>
@@ -9,7 +9,6 @@
           <strong style='float:right'>{{song.key}}</a></strong>
       </div>
         <div class="panel-body">
-                <!--<audio controls preload='none' src="{{ song.media.mp3 | trustUrl  }}"></audio>-->
         <button ng-click='playsong(song)'>
           ▶
         </button>

@@ -15,35 +15,34 @@ angular.module('myApp', [
 
 ])
 
-.run(['simpleLogin','fbutil','$rootScope','$timeout', function(simpleLogin,fbutil,$rootScope,$timeout) {
+.run(['simpleLogin','$firebase','fbutil','$rootScope','$timeout', function(simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
 
-  $rootScope.updateMe=function(callback){
+  $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
       if(user){
         var current_artist_key=CryptoJS.SHA1(user.email).toString().substring(0,11);
         $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
-        var me=fbutil.syncObject('artists/'+current_artist_key);
-        console.log(me);
-        if (callback){
-          callback(me);
-        }
+            if (callback){
+              $rootScope.me.$loaded(function(){callback($rootScope.me);});
+            }
+
       }
     })
   }
-  $rootScope.updateMe();
+    $rootScope.refreshYourself(function(){
+        $rootScope.alerts = fbutil.syncObject('alerts/'+$rootScope.me.key);
+    });
     $rootScope.queue=[];
     $rootScope.hideNav=true;
     $rootScope.toggleNav=function(){
       $rootScope.hideNav=!$rootScope.hideNav;
     }
-    $rootScope.alerts=[{"type":"info","message":"I AM Celestial"}];
     $rootScope.beginComment=function(song){
       song.transmittingComment=true;
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
       var firecomments=fbutil.ref('songs/'+song.key+'/comments');
-      console.log(firecomments);
       if ('comments' in song){
         song.comments.push(song.freshComment);
       }else{

@@ -10,7 +10,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
 
   .controller('MissionCtrl', ['$scope', 'fbutil', function($scope, fbutil) {
-    $scope.artist=fbutil.syncObject('mission');
   }])
 
   .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
@@ -119,7 +118,9 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       }
 
       $scope.logout = function() {
-        $scope.me.$destroy();
+        if ('me' in $scope){
+          $scope.me.$destroy;
+        }
         simpleLogin.logout();
         $location.path('/login');
       };
@@ -168,16 +169,25 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       }
     }
   ])
-  .controller('TransmitCtrl', ['$scope', 'simpleLogin', 'fbutil',
-  function($scope, simpleLogin, fbutil) {
+  .controller('TransmitCtrl', ['$timeout','$rootScope','$scope', 'simpleLogin','$firebase', 'fbutil',
+  function($timeout,$rootScope,$scope, simpleLogin,$firebase, fbutil) {
+    $scope.refreshYourself(function(self){
 
-    $scope.updateMe(function(me){
       $scope.s3OptionsUri='/config/aws.json';
-      console.log(me);
-      $scope.destfolder='/media/'+me;
+      self.$loaded(function(){
+        $scope.destfolder='/media/'+self.alias;
         console.log($scope.destfolder);
       });
+    });
+
+    $scope.$on('s3upload:success',function(e) {
+      $scope.filename=e.targetScope['filename'];
+      $timeout(function() {
+        $scope.media=e.targetScope['media'];
+      });
+    });
       $scope.calculateKey = function() {
+        var today=new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1; //January is 0!
         var yyyy = today.getFullYear();
@@ -189,16 +199,32 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         if(mm<10) {
           mm='0'+mm
         }
-        console.log(me);
         today = mm+'/'+dd+'/'+yyyy;
-        return CryptoJS.SHA1(today+me.email).toString().substring(0,11)
+        return CryptoJS.SHA1(today+$scope.me.email).toString().substring(0,11)
       }
-        $scope.sendTransmition = function(transmission) {
-        transmission.key=$scope.calculateKey(transmission)
-        transmission.artist=$scope.me;
-        $scope.freshTrack=fbutil.syncObject('songs/'+transmission.key);
-        freshtrack.$extend(transmission)
-    };
+      $scope.sendTransmission = function() {
+        $scope.refreshYourself(function(self){
+          var fresh_key=$scope.calculateKey($scope.transmission)
+          var song={};
+          song['info']=$scope.info;
+          song['title']=$scope.title;
+          song['timestamp']= (new Date()).toISOString();
+          song['media']={}
+          song['key']=fresh_key;
+          song['media']['src']= $scope.media;
+          self.$loaded(function(){
+            song['artist']={'alias':self.alias,'key':self.key,'avatar':self.avatar};
+            var rf=fbutil.ref('songs/'+song.key)
+            $firebase(rf).$set(song).then(function(){
+              $scope.song=song;
+              console.log("Awesome");
+            });
+          });
+
+
+
+        });
+      };
 
     function checkMedia() {
       $scope.err = null;

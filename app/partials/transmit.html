@@ -1,36 +1,36 @@
 <form class='w100'>
-<<fieldset></fieldset>>
+<fieldset></fieldset>
     <legend>Transmit a song</legend>
     <div class='well'>
     <p>
       <label>
         <span>Title</span>
       </label>
-      <input class='w100' ng-model="transmission.title" type="text"/>
+      <input class='w100' ng-model="title" type="text"/>
     </p>
     <p>
       <label>
     <span>Info </span>
   </label>
-  <textarea class='w100' ng-model="transmission.info" type="text"></textarea>
+  <textarea class='w100' ng-model="info" type="text"></textarea>
   </p>
   <p>
     <label>Choose Media</label>
 <p class="error" ng-show="mediaerr">{{mediaerr}}</p>
 <p class="good" ng-show="mediamsg">{{mediamsg}}</p>
 <p>
-  <div theme='audio' s3-accept='audio/*' s3-upload bucket="s3Bucket" ng-model="transmission.mediaURL"
+  <div theme='audio' s3-accept='audio/*' s3-upload bucket="s3Bucket" ng-model="media"
   s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
   </div>
 </p>
-<p>
-  <audio ng-show="transmission.mediaURL" controls ng-src='transmission.mediaURL'>
-  </audio>
-</p>
-<p><button ng-click='sendTransmission(transmission)'>SEND</button>
+<p><button class='floatr' ng-click='sendTransmission()'>SEND</button>
   <p>
 </div>
 
 
 </fieldset>
 </form>
+<div ng-show="song">
+Your transmission has been recieved!
+</div>
+<div ng-include src="'partials/songelement.html'"></div>

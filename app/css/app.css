@@ -5,6 +5,16 @@
   margin-left:auto;
   margin-right:auto;
 }
+.floatr{
+  float:right;
+}
+.floatl{
+  float:left;
+}
+video{
+  border-radius:5px;
+  padding:15px;
+}
 .w100{
   width:100%;
 }

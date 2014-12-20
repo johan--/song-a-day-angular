@@ -76,7 +76,6 @@ angular.module('ngS3upload.config', []).
       xhr.addEventListener("error", uploadFailed, false);
       xhr.addEventListener("abort", uploadCanceled, false);
       scope.$emit('s3upload:start', xhr);
-      console.log('eee');
       // Define event handlers
       function uploadProgress(e) {
         scope.$apply(function () {
@@ -272,14 +271,14 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
   "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
   "    </div>\n" +
   "  </div>\n" +
-  "  <input accept='audio/*' type=\"file\" style=\"display: none\"/>\n" +
+  "  <input accept='audio/*,video/*' type=\"file\" style=\"display: none\"/>\n" +
   "<h1 ng-show='success'>{{success}}ss</h1></div>"
 );
 
 
   $templateCache.put('theme/audio.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span><span ng-if=\"filename\">Swap</span></button>\n" +
+    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span></button>\n" +
     "  <video controls ng-src=\"{{ filename| trustUrl }}\" class=\"\" ng-if=\"filename\" ></video>\n" +
     "  <div class=\"progress\">\n" +
     "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
