@@ -6,7 +6,10 @@
       <ng-include src="'partials/avatar.html'"></ng-include>
       <a class='alias' href="#/artist/{{song.artist.key}}" >{{song.artist.alias}}</a>
         <strong style='text-align:'><a href='#/song/{{song.key}}'>{{song.title}}</a></strong>
-          <strong style='float:right'>{{song.key}}</a></strong>
+          <strong style='float:right'>        <button ng-click='playsong(song)'>
+            +
+          </button>
+        </strong>
       </div>
         <div class="panel-body">
         <button ng-click='playsong(song)'>

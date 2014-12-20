@@ -111,7 +111,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
   .controller('AccountCtrl', ['$scope', 'simpleLogin', 'fbutil', 'user', '$location','$rootScope',
     function($scope, simpleLogin, fbutil, user, $location,$rootScope) {
-      // expose logout function to scope
       if ('me' in $scope){
         $scope.me.$bindTo($scope,'me');
         $scope.artist=$scope.me;
@@ -176,16 +175,15 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $scope.s3OptionsUri='/config/aws.json';
       self.$loaded(function(){
         $scope.destfolder='/media/'+self.alias;
-        console.log($scope.destfolder);
       });
     });
 
     $scope.$on('s3upload:success',function(e) {
-      $scope.filename=e.targetScope['filename'];
       $timeout(function() {
-        $scope.media=e.targetScope['media'];
+        $scope.media=e.targetScope['filename'];
       });
     });
+
       $scope.calculateKey = function() {
         var today=new Date();
         var dd = today.getDate();
@@ -202,12 +200,33 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         today = mm+'/'+dd+'/'+yyyy;
         return CryptoJS.SHA1(today+$scope.me.email).toString().substring(0,11)
       }
+
+
+      $scope.fetchTodaysTranmission = function() {
+        //check to see if we've transmitted a track
+        $rootScope.refreshYourself(function(self){
+          self.$loaded(function(){
+            var sng=fbutil.syncObject('songs/'+$scope.calculateKey())
+            sng.$loaded(function(){
+              if (sng.media){
+                $scope.song=sng;
+              }
+            });
+          });
+        });
+      };
+
+      $scope.fetchTodaysTranmission();
+
       $scope.sendTransmission = function() {
+        if (!$scope.title){
+          $scope.mediaErr=" title";
+        }
         $scope.refreshYourself(function(self){
           var fresh_key=$scope.calculateKey($scope.transmission)
           var song={};
-          song['info']=$scope.info;
-          song['title']=$scope.title;
+          song['info']=$scope.info||"whatever";
+          song['title']=$scope.title||"untitled";
           song['timestamp']= (new Date()).toISOString();
           song['media']={}
           song['key']=fresh_key;
@@ -216,8 +235,10 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
             song['artist']={'alias':self.alias,'key':self.key,'avatar':self.avatar};
             var rf=fbutil.ref('songs/'+song.key)
             $firebase(rf).$set(song).then(function(){
-              $scope.song=song;
-              console.log("Awesome");
+              self.songs[song.key]=true;
+              var mysongs = fbutil.syncObject(['artists', self.key,'songs']);
+              $scope.mysongs[song.key]=true;
+              $scope.song=fbutil.syncObject('songs/'+$scope.calculateKey());
             });
           });
 

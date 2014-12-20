@@ -265,21 +265,32 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
   $templateCache.put('theme/image.html',
   "<div class=\"upload-wrap\">\n" +
   "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span><span ng-if=\"filename\">Replace file</span></button>\n" +
-  "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > ♬ </a>\n" +
+  "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > <img style='width:200px' ng-src={{filename}} /> </a>\n" +
   "  <div class=\"progress\">\n" +
   "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
   "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
   "    </div>\n" +
   "  </div>\n" +
-  "  <input accept='audio/*,video/*' type=\"file\" style=\"display: none\"/>\n" +
-  "<h1 ng-show='success'>{{success}}ss</h1></div>"
+  "  <input accept='image/*' type=\"file\" style=\"display: none\"/>\n" +
+  "</div>"
 );
 
 
-  $templateCache.put('theme/audio.html',
+$templateCache.put('theme/audio.html',
+"<div class=\"upload-wrap\">\n" +
+"  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span><span ng-if=\"filename\">Replace file</span></button>\n" +
+"  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > 𝄞 </a>\n" +
+"  <div class=\"progress\">\n" +
+"    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
+"      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
+"    </div>\n" +
+"  </div>\n" +
+"  <input accept='audio/*,video/*' type=\"file\" style=\"display: none\"/>\n" +
+"</div>"
+);
+  $templateCache.put('theme/video.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span></button>\n" +
-    "  <video controls ng-src=\"{{ filename| trustUrl }}\" class=\"\" ng-if=\"filename\" ></video>\n" +
+    "  <button class=\"btn btn-primary\"  ng-if=\"!filename\" type=\"button\"><span>Choose</span></button>\n" +
     "  <div class=\"progress\">\n" +
     "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
     "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
