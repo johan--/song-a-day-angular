@@ -4,7 +4,6 @@
 
 angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   .controller('HomeCtrl', ['$scope', 'fbutil', 'user', 'FBURL', function($scope, fbutil, user, FBURL) {
-    $scope.syncedValue = fbutil.syncObject('syncedValue');
     $scope.user = user;
     $scope.FBURL = FBURL;
   }])
@@ -178,8 +177,27 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $scope.destfolder='/media/'+me;
         console.log($scope.destfolder);
       });
-    $scope.transmit = function() {
-      console.log($scope);
+      $scope.calculateKey = function() {
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if(dd<10) {
+          dd='0'+dd
+        }
+
+        if(mm<10) {
+          mm='0'+mm
+        }
+        console.log(me);
+        today = mm+'/'+dd+'/'+yyyy;
+        return CryptoJS.SHA1(today+me.email).toString().substring(0,11)
+      }
+        $scope.sendTransmition = function(transmission) {
+        transmission.key=$scope.calculateKey(transmission)
+        transmission.artist=$scope.me;
+        $scope.freshTrack=fbutil.syncObject('songs/'+transmission.key);
+        freshtrack.$extend(transmission)
     };
 
     function checkMedia() {

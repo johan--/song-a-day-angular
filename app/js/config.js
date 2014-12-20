@@ -14,4 +14,4 @@ angular.module('myApp.config', [])
   .constant('FBURL', 'https://song-a-day.firebaseio.com')
 
   // double check that the app has been configured before running it and blowing up space and time
-  .run(['FBURL', '$timeout', function(FBURL, $timeout) {}]);
+  .run(['FBURL', '$timeout', function(FBURL, $timeout) {}])

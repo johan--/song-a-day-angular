@@ -35,7 +35,7 @@
     </fieldset>
 </form>
 
-<form>
+<!--<form>
     <fieldset>
         <legend>Password</legend>
 <div class='well'>
@@ -61,7 +61,7 @@
       </div>
         </fieldset>
 </form>
-
+-->
 <form>
 
   <fieldset flow-init>
@@ -70,7 +70,7 @@
       <label>
         <span>Avatar</span>
       </label>
-      <div s3-upload bucket="s3Bucket" ng-model="me.avatar"
+      <div theme='image' s3-upload bucket="s3Bucket" ng-model="me.avatar"
       s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
     </div>
 
@@ -79,7 +79,7 @@
     <label>
       <span>wall</span>
     </label>
-    <div s3-upload bucket="s3Bucket" ng-model="me.wall"
+    <div theme='image' s3-upload bucket="s3Bucket" ng-model="me.wall"
     s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
   </div>
       <p class="error" ng-show="wallerr">{{wallerr}}</p>

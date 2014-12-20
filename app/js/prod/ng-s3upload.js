@@ -28,7 +28,7 @@ angular.module('ngS3upload',
     ]);
 angular.module('ngS3upload.config', []).
   constant('ngS3Config', {
-    theme: 'bootstrap2'
+    theme: 'image'
   });angular.module('ngS3upload.services', []).
   service('S3Uploader', ['$http', '$q', '$window', function ($http, $q, $window) {
     this.uploads = 0;
@@ -36,11 +36,9 @@ angular.module('ngS3upload.config', []).
 
     this.getUploadOptions = function (uri) {
       var deferred = $q.defer();
-      console.log(uri);
       uri='/config/aws.json';
       $http.get(uri).
         success(function (response, status) {
-          console.log(response);
           deferred.resolve(response);
         }).error(function (error, status) {
           deferred.reject(error);
@@ -184,7 +182,6 @@ angular.module('ngS3upload.directives', []).
               targetFilename: null
             }, opts);
             var bucket = scope.$eval(attrs.bucket);
-
             // Bind the button click event
             var button = angular.element(element.children()[0]),
               file = angular.element(element.find("input")[0]);
@@ -266,29 +263,32 @@ angular.module('ngS3upload.directives', []).
 angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('theme/bootstrap2.html',
-    "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
-    "  <a ng-href=\"{{ filename  }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > Stored file </a>\n" +
-    "  <div class=\"progress progress-striped\" ng-class=\"{active: uploading}\" ng-show=\"attempt\" style=\"margin-top: 10px\">\n" +
-    "    <div class=\"bar\" style=\"width: {{ progress }}%;\" ng-class=\"barClass()\"></div>\n" +
-    "    </div>\n" +
-    "  <input type=\"file\" style=\"display: none\"/>\n" +
-    "</div>"
-  );
+  $templateCache.put('theme/image.html',
+  "<div class=\"upload-wrap\">\n" +
+  "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span><span ng-if=\"filename\">Replace file</span></button>\n" +
+  "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > ♬ </a>\n" +
+  "  <div class=\"progress\">\n" +
+  "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
+  "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
+  "    </div>\n" +
+  "  </div>\n" +
+  "  <input accept='audio/*' type=\"file\" style=\"display: none\"/>\n" +
+  "<h1 ng-show='success'>{{success}}ss</h1></div>"
+);
 
 
-  $templateCache.put('theme/bootstrap3.html',
+  $templateCache.put('theme/audio.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
-    "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > Stored file </a>\n" +
+    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose</span><span ng-if=\"filename\">Swap</span></button>\n" +
+    "  <video controls ng-src=\"{{ filename| trustUrl }}\" class=\"\" ng-if=\"filename\" ></video>\n" +
     "  <div class=\"progress\">\n" +
     "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
     "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
     "    </div>\n" +
     "  </div>\n" +
-    "  <input type=\"file\" style=\"display: none\"/>\n" +
-    "</div>"
+    "  <input accept='audio/*' type=\"file\" style=\"display: none\"/>\n" +
+    "<h1 ng-if=\"!filename\">{{filename}}</h1></div>"
+
   );
 
 }]);
