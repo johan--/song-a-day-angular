@@ -1,5 +1,5 @@
 <div class='well artist' style='background-image:url({{artist.wall}})!important'>
 <a href="{{artist.link| default:'javascript:void()' | trustUrl}}"><h2 class='alias'>{{artist.alias}}</h2></a>
   <p class='statement'>{{artist.statement}}</p>
-  <ng-include src="'partials/avatar.html'"></ng-include>
+  <img style='height:20px;width:20px;' class='avatar' ng-src='{{artist.avatar}}?default=404' err-src="img/default-avatar.png">
 </div>

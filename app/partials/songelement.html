@@ -1,9 +1,9 @@
 
 
-<div id='s{{song.key}}' ng-show="song">
+<div class='col-md-6 col-xs-12' id='s{{song.key}}' ng-show="song">
   <div class='panel panel-info'>
     <div class='panel-heading'>
-      <ng-include src="'partials/avatar.html'"></ng-include>
+      <img class='avatar' ng-src='{{song.artist.avatar}}?default=404' err-src="img/default-avatar.png">
       <a class='alias' href="#/artist/{{song.artist.key}}" >{{song.artist.alias}}</a>
         <strong style='text-align:'><a href='#/song/{{song.key}}'>{{song.title}}</a></strong>
           <strong style='float:right'>        <button ng-click='playsong(song)'>
@@ -12,9 +12,11 @@
         </strong>
       </div>
         <div class="panel-body">
-        <button ng-click='playsong(song)'>
+        <button ng-click='playsong(song)' ng-hide='song.video'>
           ▶
         </button>
+        <video id='v{{song.key}}'  ng-show='song.video' width='100%' ng-src="{{song.media.src|trustUrl}}" controls>
+          </video>
         <small style='float:right;'>
           <abbr am-time-ago="song.timestamp"></abbr>
           </small>

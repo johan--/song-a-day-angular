@@ -65,14 +65,18 @@ angular.module('myApp', [
       })
 
     }
+    $rootScope.playVideo=function(song){
+
+    }
 
     $rootScope.playsong=function(song){
       var next=song.media;
       var vid='video'
       if(song.media.type.substring(0, vid.length) === vid){
-        $rootScope.videoTime=true;
+        song['video']=true;
+        $rootScope.playVideo(song);
+        return;
       }else{
-        $rootScope.videoTime=false;
       }
       next.title=song.title;
       if($rootScope.queue.indexOf(next) == -1){

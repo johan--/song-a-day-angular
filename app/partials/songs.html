@@ -1,7 +1,7 @@
 <div id="songs">
-<ul  class='songs' ng-show="songs.length">
+<ul class='row' class='songs' ng-show="songs.length">
     <li ng-repeat="song in songs | orderBy:predicate">
-<div ng-include src="'partials/songelement.html'"></div>
+<div  ng-include src="'partials/songelement.html'"></div>
     </li>
 </ul>
 <button ng-click='moreSongs()'>
