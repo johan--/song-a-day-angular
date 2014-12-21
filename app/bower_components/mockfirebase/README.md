@@ -7,19 +7,27 @@ A Firebase stub useful for unit testing.
 
 [![Build Status](https://travis-ci.org/katowulf/mockfirebase.svg?branch=master)](https://travis-ci.org/katowulf/mockfirebase)
 
-## Installation
+## Setup
 
-### Node.js
+### Node/Browserify
 
 ```bash
 $ npm install mockfirebase
 ```
 
-### Web
+```js
+var MockFirebase = require('mockfirebase').MockFirebase;
+```
+
+### AMD / Browser
+
+```bash
+$ bower install mockfirebase
+```
+
 ```html
 <!-- include sinon unless you use jasmine -->
-<script src="sinon.js"></script>
-<script src="mockfirebase.js"></script>
+<script src="./bower_components/mockfirebase/browser/mockfirebase.js"></script>
 ```
 ### Browser Support
 
@@ -44,7 +52,7 @@ fb.flush();
 expect(spy.called).to.be(true); // it is!
 ```
 
-See [angularFire's unit tests](https://github.com/firebase/angularFire/blob/master/tests/unit/AngularFire.spec.js) for examples of the MockFirebase in action.
+See [angularFire's unit tests](https://github.com/firebase/angularfire/tree/master/tests/unit) for examples of the MockFirebase in action.
 
 ## Specifying data
 
@@ -60,27 +68,25 @@ All the regular Firebase methods are(?) supported. In addition, the following te
     @param {boolean|int} [delay] in milliseconds
     @returns {MockFirebase}
 
-Invoke all the operations that have been queued thus far. If a numeric delay is specified, this
-occurs asynchronously. Otherwise, it is a synchronous event (at the time flush is called).
+Invoke all the operations that have been queued thus far. If a numeric delay is passed, this
+occurs asynchronously. Otherwise, it is a synchronous event (at the time `flush` is called).
 
 This allows Firebase to be used in synchronous tests without waiting for async callbacks. It also
 provides a rudimentary mechanism for simulating locally cached data (events are triggered
-synchronously when you do on('value') or on('child_added'))
+synchronously when you do `on('value')` or `on('child_added')`)
 
 If you call this multiple times with different delay values, you can invoke the events out
-of order, as might happen on a network with some latency, or if multiple users update values "simultaneously".
+of order, as might happen on a network with some latency, or if multiple users update values in rapid succession.
 
 ### autoFlush
 
     @param {int|boolean} [delay] in milliseconds
 
-Automatically trigger a flush event after each operation. If a numeric delay is specified, this is an
-asynchronous event. If value is set to true, it is synchronous (flush is triggered immediately). Setting
-this to false disabled autoFlush
+Automatically trigger a `flush` after each operation. If a numeric delay is passed, the flush is performed asychronously after the delay. If `true` is passed, `flush` is triggered synchronously, immediately after data is changed or handlers are added. Passing `false` disables `autoFlush`
 
 ### failNext
 
-    @param {String} methodName currently only supports `set` and `transaction`
+    @param {String} methodName currently only supports `set`, `update`, `push` (with data) and `transaction`
     @param {String|Error} error
 
 Simulate a failure by specifying that the next invocation of methodName should fail with the provided error.
@@ -93,7 +99,7 @@ Returns a copy of the current data
 
 # Proxying Firebase
 
-When writing unit tests, you'll probably want to patch calls to `Firebase` in your source code with `MockFirebase`. 
+When writing unit tests, you'll probably want to patch calls to `Firebase` in your source code with `MockFirebase`.
 
 ## Browser
 
@@ -117,18 +123,25 @@ ref.on('value', function (snapshot) {
 });
 ```
 
-In order to test the above source code, we use proxyquire like this:
+In order to test the above source code, we can use proxyquire.
+
+**Example**
 
 ```js
 // ./test.js
-var proxyquire = require('proxyquire');
+var proxyquire   = require('proxyquire');
+var MockFirebase = require('mockfirebase').MockFirebase;
+var mock;
 var mySrc = proxyquire('./mySrc', {
-  firebase: require('mockfirebase').MockFirebase.autoFlush()
+  firebase: function (url) {
+    return (mock = new MockFirebase(url));
+  };
 });
+mock.flush();
 // data is logged
 ```
 
-Note that the key in the stubs object matches the module name (`'firebase'`) and not the capitalized variable name. 
+Note that the key in the stubs object matches the module name (`'firebase'`) and not the capitalized variable name.
 
 # Support
 

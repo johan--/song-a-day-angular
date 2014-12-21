@@ -24,12 +24,12 @@
     "type": "git",
     "url": "git://github.com/yaru22/angular-timeago.git"
   },
-  "version": "0.1.5",
-  "_release": "0.1.5",
+  "version": "0.1.6",
+  "_release": "0.1.6",
   "_resolution": {
     "type": "version",
-    "tag": "0.1.5",
-    "commit": "910ac2b402806602ebae6c0f225f79c552593c72"
+    "tag": "0.1.6",
+    "commit": "a2bf57316e61d563f030bc6768dd084373830673"
   },
   "_source": "git://github.com/yaru22/angular-timeago.git",
   "_target": "~0.1.3",

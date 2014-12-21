@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+angular.module('changeStatement', ['firebase.utils'])
+  .factory('changeStatement', ['fbutil', '$q', function(fbutil, $q) {
+    return function(newStatement, simpleLogin) {
+      simpleLogin.getUser().set('statement',newStatement);
+=======
 angular.module('changeEmail', ['firebase.utils'])
   .factory('changeEmail', ['fbutil', '$q', '$rootScope', function(fbutil, $q, $rootScope) {
     return function(password, oldEmail, newEmail, simpleLogin) {
@@ -98,5 +104,6 @@ angular.module('changeEmail', ['firebase.utils'])
       function authNewAccount() {
         return simpleLogin.login(ctx.curr.email, password);
       }
+>>>>>>> master
     };
 }]);

@@ -8,6 +8,7 @@ angular.module('myApp', [
     'myApp.directives',
     'myApp.filters',
     'myApp.routes',
+<<<<<<< HEAD
     'myApp.services',
     'mediaPlayer',
     'ngSanitize',
@@ -19,13 +20,10 @@ angular.module('myApp', [
 
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
-      console.log(user);
       if(user){
-        var current_artist_key=user.google.id
-        console.log(user);
+        var current_artist_key=CryptoJS.SHA1(user.email).toString().substring(0,11);
         $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
-        console.log($rootScope.me);
-        if (callback){
+            if (callback){
               $rootScope.me.$loaded(function(){callback($rootScope.me);});
             }
 
@@ -103,3 +101,7 @@ angular.module('myApp', [
     };
 
   }])
+=======
+    'myApp.services'
+  ]);
+>>>>>>> master

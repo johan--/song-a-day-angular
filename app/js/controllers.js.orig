@@ -147,6 +147,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
       $scope.changeStatement = function(newStatement) {
         resetMessages();
+<<<<<<< HEAD
 
       };
       $scope.chooseArt = function(avatar,wallart){
@@ -154,6 +155,18 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         console.log($scope);
         $scope.wallerr=avatar;
         $scope.avatarerr=wallart;
+=======
+        var oldEmail = profile.email;
+        profile.$destroy();
+        simpleLogin.changeEmail(pass, oldEmail, newEmail)
+          .then(function(user) {
+            profile = fbutil.syncObject(['users', user.uid]);
+            profile.$bindTo($scope, 'profile');
+            $scope.emailmsg = 'Email changed';
+          }, function(err) {
+            $scope.emailerr = err;
+          });
+>>>>>>> master
       };
 
       function resetMessages() {
@@ -198,7 +211,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           mm='0'+mm
         }
         today = mm+'/'+dd+'/'+yyyy;
-        return CryptoJS.SHA1(today+$scope.me.key).toString().substring(0,11)
+        return CryptoJS.SHA1(today+$scope.me.email).toString().substring(0,11)
       }
 
 
