@@ -29,7 +29,7 @@ angular.module('myApp', [
           if  (!$rootScope.me['avatar']){
             if ('cachedUserProfile' in user){
               if ('picture' in user.cachedUserProfile){
-                $rootScope.me['avatar']=user.cachedUserProfile.picture;                
+                $rootScope.me['avatar']=user.cachedUserProfile.picture;
               }
             }
           }
@@ -57,10 +57,9 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
-      var comments = fbutil.syncObject(['songs', song.key,'/comments']);
+      var comments = fbutil.syncArray(['songs', song.key,'/comments']);
       comments.$loaded(function(){
-        comments.push(song.freshComment);
-        mysongs.$save();
+        comments.$add(song.freshComment);
         song.freshComment={}
         song.transmittingComment=false;
       })
