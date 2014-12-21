@@ -21,9 +21,17 @@ angular.module('myApp', [
     simpleLogin.getUser().then(function(user){
         if(user){
           var current_artist_key=user.google.id
+          console.log(user.cachedUserProfile.picture);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
           if  (!$rootScope.me['key']){
             $rootScope.me['key']=current_artist_key;
+          }
+          if  (!$rootScope.me['avatar']){
+            if ('cachedUserProfile' in user){
+              if ('picture' in user.cachedUserProfile){
+                $rootScope.me['avatar']=user.cachedUserProfile.picture;                
+              }
+            }
           }
           if  (!$rootScope.me['songs']){
             $rootScope.me['songs']=[];
@@ -49,18 +57,24 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
-      var firecomments=fbutil.ref('songs/'+song.key+'/comments');
-      if ('comments' in song){
-        song.comments.push(song.freshComment);
-      }else{
-        song.comments=[song.freshComment];
-      }
-      song.freshComment={}
-      song.transmittingComment=false;
+      var comments = fbutil.syncObject(['songs', song.key,'/comments']);
+      comments.$loaded(function(){
+        comments.push(song.freshComment);
+        mysongs.$save();
+        song.freshComment={}
+        song.transmittingComment=false;
+      })
+
     }
 
     $rootScope.playsong=function(song){
       var next=song.media;
+      var vid='video'
+      if(song.media.type.substring(0, vid.length) === vid){
+        $rootScope.videoTime=true;
+      }else{
+        $rootScope.videoTime=false;
+      }
       next.title=song.title;
       if($rootScope.queue.indexOf(next) == -1){
         $rootScope.queue.push(next);
@@ -75,8 +89,6 @@ angular.module('myApp', [
     }
     $rootScope.skip=function(index){
       $rootScope.player.playPause(index);
-      console.log($rootScope.queue[index])
-      console.log("skip to "+index);
 
 
     }

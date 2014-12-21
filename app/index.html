@@ -20,6 +20,7 @@
 </br>
 
   <div class='main container' >
+    <video ng-show='videoPlaying' id='movie' media-player="player" playlist="queue"></video>
     <div ng-show-auth ng-include src="'partials/alerts.html'"></div>
   <div class='col-md-10 col-md-offset-1 col-xs-12' ng-view>
   </div>
@@ -31,22 +32,22 @@
   <nav class="navbar-header navbar-default navbar-fixed-bottom playlist" role="navigation">
     <div class="container">
       <div>
-        <audio media-player="player" playlist="queue"></audio>        <h3>
           <div  ng-click="player.seek(player.duration * seekPercentage($event))">
             <div class="track progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{ width: player.currentTime*100/player.duration + '%' }">
             </div>
           </div>
           <ul id='queue'>
-            <li ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
+            <h3>
+              <li ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
             <li ng-click='pause()' ng-show="player.playing">▐▐</li>
             <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
-            <li ng-repeat="song in queue" ng-show="queue.length">
+            </h3>
+                      <li ng-repeat="song in queue" ng-show="queue.length">
               <button class='track' ng-click='skip($index)' ng-class="{ active: player.playing && player.currentTrack-1 === $index }" >{{song.title}}</button><button class='track attached' ng-click="removeTrack($index)">X</button>
 
             </li>
           </ul>
 
-        </h3>
       </div>
     </div>
   </nav>
