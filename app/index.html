@@ -18,12 +18,13 @@
   </div>
 </br>
 </br>
+<video width='100%' height='100%' ng-show='videoPlaying' id='movie' media-player="player" playlist="queue"></video>
 
   <div class='main container' >
-    <video ng-show='videoPlaying' id='movie' media-player="player" playlist="queue"></video>
     <div ng-show-auth ng-include src="'partials/alerts.html'"></div>
   <div class='col-md-10 col-md-offset-1 col-xs-12' ng-view>
   </div>
+
   </div>
 
 

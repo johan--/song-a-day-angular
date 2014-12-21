@@ -21,7 +21,6 @@ angular.module('myApp', [
     simpleLogin.getUser().then(function(user){
         if(user){
           var current_artist_key=user.google.id
-          console.log(user.cachedUserProfile.picture);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
           if  (!$rootScope.me['key']){
             $rootScope.me['key']=current_artist_key;
@@ -57,7 +56,8 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
-      var comments = fbutil.syncArray(['songs', song.key,'/comments']);
+      song.freshComment.author={alias:$rootScope.me.alias};
+      var comments = fbutil.syncArray(['songs', (song.key).toString(),'/comments']);
       comments.$loaded(function(){
         comments.$add(song.freshComment);
         song.freshComment={}

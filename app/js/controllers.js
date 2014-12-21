@@ -182,6 +182,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $timeout(function() {
         console.log(e);
         $scope.media=e.targetScope['filename'];
+        $scope.mediaType=e.targetScope['filetype'];
       });
     });
 
@@ -232,6 +233,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           song['media']={}
           song['key']=fresh_key;
           song['media']['src']= $scope.media;
+          song['media']['type']= $scope.mediaType;
           self.$loaded(function(){
             song['artist']={'alias':self.alias,'key':self.$id,'avatar':self.avatar};
             var rf=fbutil.ref('songs/'+song.key)

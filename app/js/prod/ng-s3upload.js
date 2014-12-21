@@ -217,7 +217,7 @@ angular.module('ngS3upload.directives', []).
                   ).then(function () {
                     ngModel.$setViewValue(s3Uri + key);
                     scope.filename = ngModel.$viewValue;
-
+                    scope.filetype = selectedFile.type;
                     if (opts.enableValidation) {
                       ngModel.$setValidity('uploading', true);
                       ngModel.$setValidity('succeeded', true);

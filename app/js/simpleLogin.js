@@ -40,6 +40,7 @@ function($firebaseAuth, fbutil, createProfile, changeEmail) {
     },
 
     logout: function() {
+      console.log('yes logout yes');
       auth.$unauth();
     },
 
