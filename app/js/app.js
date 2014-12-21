@@ -19,19 +19,25 @@ angular.module('myApp', [
 
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
-      console.log(user);
-      if(user){
-        var current_artist_key=user.google.id
-        console.log(user);
-        $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
-        console.log($rootScope.me);
-        if (callback){
-              $rootScope.me.$loaded(function(){callback($rootScope.me);});
-            }
+        if(user){
+          var current_artist_key=user.google.id
+          console.log(user);
+          $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
+          if  (!$rootScope.me['key']){
+            $rootScope.me['key']=current_artist_key;
+          }
+          if  (!$rootScope.me['songs']){
+            $rootScope.me['songs']=[];
+          }
+          console.log($rootScope.me);
+          if (callback){
+            $rootScope.me.$loaded(function(){callback($rootScope.me);});
+          }
 
-      }
-    })
-  }
+        }
+      });
+    }
+
     $rootScope.refreshYourself(function(){
         $rootScope.alerts = fbutil.syncObject('alerts/'+$rootScope.me.key);
     });
