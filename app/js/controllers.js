@@ -180,6 +180,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
     $scope.$on('s3upload:success',function(e) {
       $timeout(function() {
+        console.log(e);
         $scope.media=e.targetScope['filename'];
       });
     });
@@ -198,7 +199,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           mm='0'+mm
         }
         today = mm+'/'+dd+'/'+yyyy;
-        return CryptoJS.SHA1(today+$scope.me.key).toString().substring(0,11)
+        return CryptoJS.SHA1(today+$scope.me.$id).toString().substring(0,11)
       }
 
 
@@ -232,12 +233,14 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           song['key']=fresh_key;
           song['media']['src']= $scope.media;
           self.$loaded(function(){
-            song['artist']={'alias':self.alias,'key':self.key,'avatar':self.avatar};
+            song['artist']={'alias':self.alias,'key':self.$id,'avatar':self.avatar};
             var rf=fbutil.ref('songs/'+song.key)
             $firebase(rf).$set(song).then(function(){
-              self.songs[song.key]=true;
-              var mysongs = fbutil.syncObject(['artists', self.key,'songs']);
-              $scope.mysongs[song.key]=true;
+              var mysongs = fbutil.syncObject(['artists', self.$id,'songs']);
+                mysongs.$loaded(function(){
+                  mysongs[song.key]=true;
+                  mysongs.$save();
+                })
               $scope.song=fbutil.syncObject('songs/'+$scope.calculateKey());
             });
           });

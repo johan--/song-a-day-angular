@@ -38,7 +38,7 @@
       service.artist={}
       service.songs=[]
       service.fetchSongs=function(songs){
-        angular.forEach(Object.keys(songs).reverse(),function(song_key){
+        angular.forEach(Object.keys(songs||[]).reverse(),function(song_key){
           var song=$firebase(fbutil.ref('songs/'+song_key)).$asObject();
           song.$loaded().then(function(){
             service.artist.works.push(song);

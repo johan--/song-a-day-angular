@@ -21,7 +21,6 @@ angular.module('myApp', [
     simpleLogin.getUser().then(function(user){
         if(user){
           var current_artist_key=user.google.id
-          console.log(user);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
           if  (!$rootScope.me['key']){
             $rootScope.me['key']=current_artist_key;
@@ -29,7 +28,6 @@ angular.module('myApp', [
           if  (!$rootScope.me['songs']){
             $rootScope.me['songs']=[];
           }
-          console.log($rootScope.me);
           if (callback){
             $rootScope.me.$loaded(function(){callback($rootScope.me);});
           }
