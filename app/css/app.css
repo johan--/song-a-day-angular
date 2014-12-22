@@ -93,6 +93,8 @@ textarea{
 }
 #queue li
 {
+  padding-top:5px;
+  font-size:larger;
   display: inline;
   list-style-type: none;
   padding-right: 2px;

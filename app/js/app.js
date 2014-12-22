@@ -56,27 +56,30 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
-      song.freshComment.author={alias:$rootScope.me.alias};
-      var comments = fbutil.syncArray(['songs', (song.key).toString(),'/comments']);
+      var comments = fbutil.syncObject(['songs', song.key,'/comments']);
       comments.$loaded(function(){
-        comments.$add(song.freshComment);
+        comments.push(song.freshComment);
+        mysongs.$save();
         song.freshComment={}
         song.transmittingComment=false;
       })
 
     }
-    $rootScope.playVideo=function(song){
-
+    $rootScope.nowPlaying=function(){
+      console.log($rootScope.player.currentTrack);
+      console.log($rootScope.queue);
+      $rootScope.queue[$rootScope.player.currentTrack];
     }
 
     $rootScope.playsong=function(song){
+      console.log('added',song);
+
       var next=song.media;
       var vid='video'
       if(song.media.type.substring(0, vid.length) === vid){
-        song['video']=true;
-        $rootScope.playVideo(song);
-        return;
+        $rootScope.videoTime=true;
       }else{
+        $rootScope.videoTime=false;
       }
       next.title=song.title;
       if($rootScope.queue.indexOf(next) == -1){
@@ -104,8 +107,18 @@ angular.module('myApp', [
     }
 
     $rootScope.removeTrack=function(index){
-      console.log('Removing track at:' + index);
       $rootScope.queue.splice(index,1);
+      if(index+1<$rootScope.player.currentTrack){
+        $rootScope.player.currentTrack=index
+        return;
+      }else if (index+1==$rootScope.player.currentTrack){
+        $rootScope.player.currentTrack=index;
+        $timeout(function() {
+          $rootScope.play();
+        }, 100);
+      }else{
+
+      }
 
     }
     $rootScope.clear=function(){

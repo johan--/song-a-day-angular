@@ -1,7 +1,13 @@
 <form class='w100'>
-<fieldset>
+  <div ng-show="song">
+    <legend>Transmission recieved</legend>
+    <div ng-include src="'partials/songelement.html'"></div>
+  </div>
+
+
+<fieldset ng-hide="song"  >
     <legend>Transmit a song</legend>
-    <div  ng-hide="song" class='well'>
+    <div class='well'>
     <p>
       <label>
         <span>Title</span>
@@ -26,11 +32,5 @@
 <p><button class='floatr' ng-hide="song" ng-click='sendTransmission()'>SEND</button>
   <p>
   </div>
-    <div ng-show="song">
-      transmission recieved!
-      <div ng-include src="'partials/songelement.html'"></div>
-    </div>
-
-
 </fieldset>
 </form>
