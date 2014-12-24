@@ -20,9 +20,7 @@ angular.module('myApp', [
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
         if(user){
-          console.log(user);
           var current_artist_key=CryptoJS.SHA1(user.google.email).toString().substring(0,11);
-          console.log(current_artist_key);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
           if  (!$rootScope.me['key']){
             $rootScope.me['key']=current_artist_key;
@@ -60,8 +58,9 @@ angular.module('myApp', [
       song.freshComment.timestamp=(new Date()).toISOString()
       var comments = fbutil.syncArray(['songs', song.key+'','/comments']);
       comments.$loaded(function(){
+
         song.freshComment.author={}
-        song.freshComment.author={'alias':me.alias,'key':me.key}
+        song.freshComment.author={'alias':$rootScope.me.alias,'key':$rootScope.me.key}
         comments.$add(song.freshComment);
         song.freshComment={}
         song.transmittingComment=false;
