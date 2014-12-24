@@ -30,4 +30,15 @@ angular.module('myApp.filters', [])
      return function (item) {
        return Object.keys(item||{}).length;
      };
-   });
+   }).filter('startsWith', function() {
+     return function(array, search) {
+       var matches = [];
+       for(var i = 0; i < array.length; i++) {
+         if (array[i].indexOf(search) === 0 &&
+           search.length < array[i].length) {
+             matches.push(array[i]);
+           }
+         }
+         return matches;
+       };
+     });

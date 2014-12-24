@@ -12,11 +12,13 @@
         </strong>
       </div>
         <div class="panel-body">
-        <button ng-click='playsong(song)' ng-hide='song.video'>
+          {{awesome}}
+        <button ng-click='playVideo(song,$event)' ng-show="startsWith(song.media.type,'video')">
+          ▶ video
+        </button>
+        <button ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
           ▶
         </button>
-        <video id='v{{song.key}}'  ng-show='song.video' width='100%' ng-src="{{song.media.src|trustUrl}}" controls>
-          </video>
         <small style='float:right;'>
           <abbr am-time-ago="song.timestamp"></abbr>
           </small>

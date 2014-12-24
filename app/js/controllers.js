@@ -69,26 +69,8 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.confirm = null;
     $scope.createMode = false;
 
-    $scope.login = function(email, pass) {
-      $scope.err = null;
-      simpleLogin.login(email, pass)
-        .then(function(/* user */) {
-          $location.path('/artists/me');
-        }, function(err) {
-          $scope.err = errMessage(err);
-        });
-    };
-
-    $scope.createAccount = function() {
-      $scope.err = null;
-      if( assertValidAccountProps() ) {
-        simpleLogin.createAccount($scope.email, $scope.pass)
-          .then(function(/* user */) {
-            $location.path('/artists/me');
-          }, function(err) {
-            $scope.err = errMessage(err);
-          });
-      }
+    $scope.login = function() {
+      simpleLogin.login();
     };
 
     function assertValidAccountProps() {
@@ -235,7 +217,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
           song['media']['src']= $scope.media;
           song['media']['type']= $scope.mediaType;
           self.$loaded(function(){
-            song['artist']={'alias':self.alias,'key':self.$id,'avatar':self.avatar};
+            song['artist']={'alias':self.alias||"",'key':self.$id,'avatar':self.avatar||""};
             var rf=fbutil.ref('songs/'+song.key)
             $firebase(rf).$set(song).then(function(){
               var mysongs = fbutil.syncObject(['artists', self.$id,'songs']);

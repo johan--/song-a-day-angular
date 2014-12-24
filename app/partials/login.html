@@ -3,8 +3,10 @@
 
 <form>
 
-
-    <button ng-click="login()">Log In with Google</button>
+    <button  ng-hide-auth ng-click="login()">Log In with Google</button>
 
     <p ng-show="err" class="error">{{err}}</p>
 </form>
+
+<div ng-show-auth><a href='#transmit'>Begin Transmission</div>
+<div ng-show-auth><a href='#songs'>songs</div>

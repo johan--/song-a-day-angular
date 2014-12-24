@@ -15,12 +15,14 @@ angular.module('myApp', [
 
 ])
 
-.run(['simpleLogin','$firebase','fbutil','$rootScope','$timeout', function(simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
+.run(['$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
 
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
         if(user){
-          var current_artist_key=user.google.id
+          console.log(user);
+          var current_artist_key=CryptoJS.SHA1(user.google.email).toString().substring(0,11);
+          console.log(current_artist_key);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
           if  (!$rootScope.me['key']){
             $rootScope.me['key']=current_artist_key;
@@ -56,31 +58,29 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
-      var comments = fbutil.syncObject(['songs', song.key,'/comments']);
+      var comments = fbutil.syncArray(['songs', song.key+'','/comments']);
       comments.$loaded(function(){
-        comments.push(song.freshComment);
-        mysongs.$save();
+        song.freshComment.author={}
+        song.freshComment.author={'alias':me.alias,'key':me.key}
+        comments.$add(song.freshComment);
         song.freshComment={}
         song.transmittingComment=false;
       })
 
     }
     $rootScope.nowPlaying=function(){
-      console.log($rootScope.player.currentTrack);
-      console.log($rootScope.queue);
-      $rootScope.queue[$rootScope.player.currentTrack];
+      return $rootScope.queue[$rootScope.player.currentTrack];
     }
-
-    $rootScope.playsong=function(song){
-      console.log('added',song);
-
+    $rootScope.playVideo=function(song,$event){
+      $event.srcElement.outerHTML='<button style="float:right;" onclick=\'document.getElementById("v'+song.key+'").remove()\'>X</button><video id="v'+song.key+'" autoplay src="'+song.media.src+'" height="100%" width="100%" ></video>';
       var next=song.media;
-      var vid='video'
-      if(song.media.type.substring(0, vid.length) === vid){
-        $rootScope.videoTime=true;
-      }else{
-        $rootScope.videoTime=false;
-      }
+      next.title=song.title;
+      var videoPlayer=$document.find('#movie');
+      videoPlayer.attr('src',next.src);
+      $rootScope.pause();
+    }
+    $rootScope.playsong=function(song){
+      var next=song.media;
       next.title=song.title;
       if($rootScope.queue.indexOf(next) == -1){
         $rootScope.queue.push(next);
@@ -91,12 +91,10 @@ angular.module('myApp', [
 
     }
     $rootScope.play=function(){
-      $rootScope.player.play();
-    }
+        $rootScope.player.play();
+      }
     $rootScope.skip=function(index){
       $rootScope.player.playPause(index);
-
-
     }
     $rootScope.pause=function(){
       $rootScope.player.pause();
@@ -124,6 +122,9 @@ angular.module('myApp', [
     $rootScope.clear=function(){
       $rootScope.player.pause();
       $rootScope.queue=[];
+    }
+    $rootScope.startsWith = function(str,target){
+      return str.startsWith(target);
     }
     $rootScope.seekPercentage = function ($event) {
       var percentage = ($event.offsetX / $event.target.offsetWidth);

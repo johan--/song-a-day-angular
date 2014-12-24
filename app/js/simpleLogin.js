@@ -36,11 +36,18 @@ function($firebaseAuth, fbutil, createProfile, changeEmail) {
     * @returns {*}
     */
     login: function() {
-      return auth.$authWithOAuthRedirect("google");
+
+      auth.$authWithOAuthPopup("google", {
+        rememberMe: false,
+        scope: "email"
+      }, function(error, authData) {
+
+      });
+
+      return function(){console.log('login')}
     },
 
     logout: function() {
-      console.log('yes logout yes');
       auth.$unauth();
     },
 
