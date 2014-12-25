@@ -11,7 +11,8 @@ angular.module('myApp', [
     'myApp.services',
     'mediaPlayer',
     'ngSanitize',
-    'ngS3upload'
+    'ngS3upload',
+    'angularMoment'
 
 ])
 
