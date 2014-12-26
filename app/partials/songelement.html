@@ -10,21 +10,26 @@
         </strong>
       </div>
         <div class="panel-body">
-        <button ng-click='playVideo(song,$event)' ng-show="startsWith(song.media.type,'video')">
-          ▶ video
-        </button>
-        <button ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
+          <div ng-show='song.playingVideo' ng-if="startsWith(song.media.type,'video')">
+            <video controls width='100%' id='movie{{song.key}}'  ng-src='{{song.media.src|trustUrl}}'>
+            </video>
+          </div>
+          <span>
+        <button class='playbtn' ng-click='playVideo(song)' ng-show="startsWith(song.media.type,'video')">
           ▶
         </button>
-        <div id='v{{song.key}}'>
-        </div>
+
+        <button class='playbtn' ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
+          ▶
+        </button>
+      </span>
         <small style='float:right;'>
           <abbr am-time-ago="song.timestamp"></abbr>
           </small>
+          <p style='white-space:pre-line;font-family:monospace;padding:5px;word-wrap:normal'>{{song.info}}</p>
         </div>
         <div class='panel-footer panel-info'>
           <p>
-            {{song.info}}
             <ul ng-include src="'partials/comments.html'">
             </p>
         </div>

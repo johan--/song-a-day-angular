@@ -73,25 +73,19 @@ angular.module('myApp', [
     }
     $rootScope.playVideo=function(song,$event){
 
-      var element=angular.element(document.querySelector('#v'+song.key))
-
-      var vid=angular.element(document.querySelector('#video'+song.key))
-      if (typeof(vid.html())!='undefined'){
-        console.log(        angular.element(document.querySelector('#video'+song.key)));
-        angular.element(document.querySelector('#video'+song.key)).outerHTML='';
-        return;
+      var video=angular.element(document.querySelector('#movie'+song.key))[0]
+      song.playingVideo=true;
+      if(!video.paused){
+        video.pause();
+      }else{
+        video.play();
       }
-      var video = document.createElement("video");
-      video.src = song.media.src;
-      video.autoplay=true;
-      video.id='video'+song.key;
-      element[0].innerHTML=video.outerHTML;
+      song.pause=video.paused;
       video.onended = function(e) {
         $rootScope.play();
-        angular.element(document.querySelector('#video'+song.key)).outerHTML='';
+        song.playingVideo=false;
+        $rootScope.$apply()
       };
-      var next=song.media;
-      next.title=song.title;
       $rootScope.pause();
     }
     $rootScope.playsong=function(song){
@@ -165,8 +159,8 @@ angular.module('myApp', [
       }
     };
     $rootScope.logout = function() {
-      if ('me' in $scope){
-        $scope.me.$destroy;
+      if ('me' in $rootScope){
+        $rootScope.me.$destroy;
       }
       simpleLogin.logout();
       $location.path('/login');

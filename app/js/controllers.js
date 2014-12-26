@@ -45,7 +45,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 .controller('SongsCtrl', ['$scope','songs','$window', function($scope,songs,$window) {
   $scope.songs=songs.list;
   songs.fetch();
-  $scope.predicate='-key'
+  $scope.predicate='-timestamp'
   $scope.moreSongs=function(){
     var moreSongs=songs.fetch();
   }
@@ -142,8 +142,8 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       }
     }
   ])
-  .controller('TransmitCtrl', ['$timeout','$rootScope','$scope', 'simpleLogin','$firebase', 'fbutil',
-  function($timeout,$rootScope,$scope, simpleLogin,$firebase, fbutil) {
+  .controller('TransmitCtrl', ['$route','$timeout','$rootScope','$scope', 'simpleLogin','$firebase', 'fbutil',
+  function($route,$timeout,$rootScope,$scope, simpleLogin,$firebase, fbutil) {
     $scope.refreshYourself(function(self){
 
       $scope.s3OptionsUri='/config/aws.json';
@@ -193,7 +193,17 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       };
 
       $scope.fetchTodaysTranmission();
-
+      $scope.delete=function(song){
+        $scope.refreshYourself(function(self){
+          console.log($scope.song);
+          if (self.key==song.artist.key){
+            $firebase(fbutil.ref('songs/'+song.key)).$set(null);
+            $route.reload();
+          }else{
+            console.log('plx no hax kthnx');
+          }
+        });
+      }
       $scope.sendTransmission = function() {
         if (!$scope.title){
           $scope.mediaErr=" title";

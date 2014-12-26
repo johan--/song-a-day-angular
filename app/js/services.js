@@ -18,7 +18,7 @@
       service.batch=10;
       service.fetch=function(){
         service.load=service.load+service.batch;
-        var more=$firebase(fbutil.ref('songs').limit(service.load)).$asArray();
+        var more=$firebase(fbutil.ref('songs').orderByChild("key").limitToLast(service.load)).$asArray();
         more.$loaded().then(function() {
           for(var x=0;x<service.batch;x++){
             service.list.push(more[x]);

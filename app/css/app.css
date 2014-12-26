@@ -3,18 +3,7 @@
   height: 1px;
 }
 .movie{
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  z-index: 1000;
-  background-size: cover;
-  transition: 1s opacity;
+  width:100%;
   }
 .center{
   text-align:center;
@@ -26,6 +15,17 @@
 }
 .floatl{
   float:left;
+}
+.banner{
+  background-size: cover;
+}
+.destroybtn{
+  color: red!important;
+  border: 1px red;
+  padding: 20px;
+  font-size: large;
+  border: 2px solid;
+  border-radius: 15px;
 }
 video{
   border-radius:5px;
@@ -80,7 +80,25 @@ https://github.com/yui/pure/blob/master/LICENSE.md
   z-index:-200;
   font-size:small;
 }
+.pad10{
+  padding:10px;
+}
+.pad5{
+  padding:5px;
+}
+.sendbtn{
+  border:1px solid #a0dba7;
+  background-color:white;
+  border-radius:5px;
+}
 
+.playbtn{
+  border-radius:4px;
+  font-size:larger;
+  border:1px solid #a0dba7;
+  height:30px;
+  width:30px
+}
 .trackavatar{
   color:white;
   background-size: 100%;

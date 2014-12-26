@@ -17,12 +17,8 @@
       {{user.email}}
     </p>
     <p>
-        <textarea class='freshComment' ng-model='song.freshComment.comment' placeholder='transcendental comment goes here'>
+        <textarea focus-me='song.transmittingComment' enter-submit='transmitComment(song)' class='freshComment' ng-model='song.freshComment.comment' placeholder='transcendental comment goes here'>
       </textarea>
     </p>
-      <button class='commentBtn' ng-show-auth ng-click="transmitComment(song)">
-        comment
-      </button>
-
     </div>
 </div>

@@ -2,6 +2,9 @@
   <div ng-show="song">
     <legend>Transmission recieved</legend>
     <div ng-include src="'partials/songelement.html'"></div>
+    <button class='destroybtn' ng-click='delete(song)'>
+      Revoke Song
+    </button>
   </div>
 
 
@@ -29,11 +32,9 @@
   s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">
   </div>
 </p>
-<p>
-
-  <button class='floatr' ng-hide="song" ng-click='sendTransmission()'>SEND</button>
-
-  <p>
-  </div>
+  <button class='sendbtn pad10 floatr' ng-hide="song" ng-click='sendTransmission()'>SEND</button>
+</br>
+</br>
+</div>
 </fieldset>
 </form>
