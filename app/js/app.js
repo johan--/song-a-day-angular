@@ -16,7 +16,7 @@ angular.module('myApp', [
 
 ])
 
-.run(['$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
+.run(['$location','$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($location,$document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
 
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
@@ -72,24 +72,37 @@ angular.module('myApp', [
       return $rootScope.queue[$rootScope.player.currentTrack];
     }
     $rootScope.playVideo=function(song,$event){
-      $event.srcElement.outerHTML='<button style="float:right;" onclick=\'document.getElementById("v'+song.key+'").remove()\'>X</button><video id="v'+song.key+'" autoplay src="'+song.media.src+'" height="100%" width="100%" ></video>';
+
+      $event.srcElement.outerHTML='<button ng-click=\'alert("awesome")\'>▶ video</button><button style="float:right;" onclick=\'document.getElementById("v'+song.key+'").remove()\'>X</button><video id="v'+song.key+'" autoplay src="'+song.media.src+'" height="100%" width="100%" ></video>';
       var next=song.media;
       next.title=song.title;
       var videoPlayer=$document.find('#movie');
       videoPlayer.attr('src',next.src);
+      console.log(videoPlayer);
       $rootScope.pause();
     }
     $rootScope.playsong=function(song){
       var next=song.media;
       next.title=song.title;
+      next.artist=song.artist;
       if($rootScope.queue.indexOf(next) == -1){
-        $rootScope.queue.push(next);
+        if(!$rootScope.player.playing){
+          $rootScope.queue.unshift(next);
+          $rootScope.player.currentTrack=0;
+        }else{
+          $rootScope.queue.push(next);
+        }
         $timeout(function() {
           $rootScope.play();
         }, 100);
+      }else{
+        $rootScope.skip($rootScope.queue.indexOf(next));
       }
 
     }
+    $rootScope.showArtist = function ( key ) {
+      $location.path( 'artist/'+key );
+    };
     $rootScope.play=function(){
         $rootScope.player.play();
       }
@@ -124,6 +137,9 @@ angular.module('myApp', [
       $rootScope.queue=[];
     }
     $rootScope.startsWith = function(str,target){
+      if (typeof ( str )== 'undefined'){
+        return false;
+      }
       return str.startsWith(target);
     }
     $rootScope.seekPercentage = function ($event) {

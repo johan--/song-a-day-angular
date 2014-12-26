@@ -27,12 +27,12 @@
 
   </div>
 
+  <video autoplay id='movie'></video>
 
 
 
   <nav class="navbar-header navbar-default navbar-fixed-bottom playlist" role="navigation">
     <div class="container">
-      <div>
         <audio  media-player="player" playlist="queue"></audio>
 
           <div  ng-click="player.seek(player.duration * seekPercentage($event))">
@@ -40,17 +40,20 @@
             </div>
           </div>
           <ul id='queue'>
+
+            <li ng-click='prev()' ng-show="player.currentTrack > 1">◀◀</li>
             <li  ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
             <li ng-click='pause()' ng-show="player.playing">▐▐</li>
             <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
                       <li ng-repeat="song in queue" ng-show="queue.length">
-              <button class='track' ng-click='skip($index)' ng-class="{ active: player.playing && player.currentTrack-1 === $index }" >{{song.title}}</button><button class='track attached' ng-click="removeTrack($index)">X</button>
+                      <button style='background-image:url("{{song.artist.avatar}}")' height='30px' class='trackavatar track' ng-click="showArtist(song.artist.key)">&nbsp&nbsp&nbsp</button>
+
+                        <button class='track' ng-click='skip($index)' ng-class="{ active: player.playing && player.currentTrack-1 === $index }" >{{song.title}}</button><button class='track attached' ng-click="removeTrack($index)">X</button>
 
             </li>
           </ul>
 
       </div>
-    </div>
   </nav>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>

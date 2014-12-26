@@ -1,6 +1,6 @@
 
 
-<div class='col-md-6 col-xs-12' id='s{{song.key}}' ng-show="song">
+<div class='col-md-6 col-xs-12' id='s{{song.key}}' ng-show="song.artist">
   <div class='panel panel-info'>
     <div class='panel-heading'>
       <img class='avatar' ng-src='{{song.artist.avatar}}?default=404' err-src="img/default-avatar.png">
@@ -10,7 +10,6 @@
         </strong>
       </div>
         <div class="panel-body">
-          {{awesome}}
         <button ng-click='playVideo(song,$event)' ng-show="startsWith(song.media.type,'video')">
           ▶ video
         </button>

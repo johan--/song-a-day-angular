@@ -11,8 +11,8 @@ angular.module('simpleLogin', ['firebase', 'firebase.utils', 'changeEmail'])
   }
 }])
 
-.factory('simpleLogin', ['$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
-function($firebaseAuth, fbutil, createProfile, changeEmail) {
+.factory('simpleLogin', ['$rootScope','$firebaseAuth', 'fbutil', 'createProfile', 'changeEmail',
+function($rootScope,$firebaseAuth, fbutil, createProfile, changeEmail) {
   var auth = $firebaseAuth(fbutil.ref());
   var listeners = [];
 
@@ -35,16 +35,17 @@ function($firebaseAuth, fbutil, createProfile, changeEmail) {
     * @param {string} pass
     * @returns {*}
     */
-    login: function() {
+    login: function(callback) {
 
-      auth.$authWithOAuthPopup("google", {
+      return auth.$authWithOAuthPopup("google", {
         rememberMe: false,
         scope: "email"
       }, function(error, authData) {
-
+        $scope.refreshYourself();
+        callback();
       });
 
-      return function(){console.log('login')}
+
     },
 
     logout: function() {
