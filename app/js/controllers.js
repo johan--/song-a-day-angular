@@ -98,14 +98,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.artist=$scope.me;
       }
 
-      $scope.logout = function() {
-        if ('me' in $scope){
-          $scope.me.$destroy;
-        }
-        simpleLogin.logout();
-        $location.path('/login');
-      };
-
       $scope.changePassword = function(pass, confirm, newPass) {
         resetMessages();
         if( !pass || !confirm || !newPass ) {

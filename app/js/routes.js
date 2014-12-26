@@ -38,7 +38,9 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
     },
     '/transmit': {
       templateUrl: 'partials/transmit.html',
-      controller: 'TransmitCtrl'
+      controller: 'TransmitCtrl',
+      authRequired: true
+
     },
     '/artist/:artist': {
       templateUrl: 'partials/artist.html',
@@ -105,7 +107,7 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
       }
     });
     // routes which are not in our map are redirected to /home
-    $routeProvider.otherwise({redirectTo: '/home'});
+    $routeProvider.otherwise({redirectTo: '/mission'});
   }])
 
   /**

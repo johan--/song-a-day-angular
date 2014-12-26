@@ -1,4 +1,3 @@
-<h2>Choose</h2>
 <div class='well artist' style='background-image:url({{me.wall}})!important'>
   <a href="{{me.link| default:'javascript:void()' | trustUrl}}"><h2 class='alias'>{{me.alias}}</h2></a>
   <p class='statement'>{{artist.statement}}</p>
@@ -12,14 +11,8 @@
             <span>Alias</span>
             <input type="text" name="name" ng-model="me.alias"/>
         </label>
-
 <label>
-  <p>
-    <span>Email</span>
-    <p />{{user.email}}
-</label>
-<label>
-  <span>Statement</span>
+  <span>Artist Statement</span>
   <textarea ng-keypress="clear()" ng-model="me.statement"></textarea>
 </label>
 <label>
@@ -75,7 +68,7 @@
     <p class="error" ng-show="avatarerr">{{avatarerr}}</p>
     <p class="good" ng-show="avatarmsg">{{avatarmsg}}</p>
     <label>
-      <span>wall</span>
+      <span>Wall</span>
     </label>
     <div theme='image' s3-upload bucket="s3Bucket" ng-model="me.wall"
     s3-upload-options="{getOptionsUri: s3OptionsUri, folder: destfolder}">

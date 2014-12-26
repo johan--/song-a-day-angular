@@ -73,12 +73,25 @@ angular.module('myApp', [
     }
     $rootScope.playVideo=function(song,$event){
 
-      $event.srcElement.outerHTML='<button ng-click=\'alert("awesome")\'>▶ video</button><button style="float:right;" onclick=\'document.getElementById("v'+song.key+'").remove()\'>X</button><video id="v'+song.key+'" autoplay src="'+song.media.src+'" height="100%" width="100%" ></video>';
+      var element=angular.element(document.querySelector('#v'+song.key))
+
+      var vid=angular.element(document.querySelector('#video'+song.key))
+      if (typeof(vid.html())!='undefined'){
+        console.log(        angular.element(document.querySelector('#video'+song.key)));
+        angular.element(document.querySelector('#video'+song.key)).outerHTML='';
+        return;
+      }
+      var video = document.createElement("video");
+      video.src = song.media.src;
+      video.autoplay=true;
+      video.id='video'+song.key;
+      element[0].innerHTML=video.outerHTML;
+      video.onended = function(e) {
+        $rootScope.play();
+        angular.element(document.querySelector('#video'+song.key)).outerHTML='';
+      };
       var next=song.media;
       next.title=song.title;
-      var videoPlayer=$document.find('#movie');
-      videoPlayer.attr('src',next.src);
-      console.log(videoPlayer);
       $rootScope.pause();
     }
     $rootScope.playsong=function(song){
@@ -119,6 +132,7 @@ angular.module('myApp', [
 
     $rootScope.removeTrack=function(index){
       $rootScope.queue.splice(index,1);
+      console.log(index);
       if(index+1<$rootScope.player.currentTrack){
         $rootScope.player.currentTrack=index
         return;
@@ -150,5 +164,14 @@ angular.module('myApp', [
         return 0;
       }
     };
+    $rootScope.logout = function() {
+      if ('me' in $scope){
+        $scope.me.$destroy;
+      }
+      simpleLogin.logout();
+      $location.path('/login');
+    };
+
+
 
   }])

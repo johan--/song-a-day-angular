@@ -84,9 +84,10 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 .trackavatar{
   color:white;
   background-size: 100%;
-  background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: initial;
+  background-size: 135%;
   margin-right:-5px;
   border-radius:10px 0px 0px 10px!important;
 }
@@ -109,9 +110,10 @@ textarea{
   display: inline;
   list-style-type: none;
   padding-right: 2px;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 #queue{
+  margin-top:10px;
   overflow-x: scroll;
   white-space:nowrap;
 }

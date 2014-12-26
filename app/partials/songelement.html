@@ -1,6 +1,6 @@
 
 
-<div class='col-md-6 col-xs-12' id='s{{song.key}}' ng-show="song.artist">
+<div class='col-md-8 col-md-offset-2 col-xs-12' id='s{{song.key}}' ng-show="song.artist">
   <div class='panel panel-info'>
     <div class='panel-heading'>
       <img class='avatar' ng-src='{{song.artist.avatar}}?default=404' err-src="img/default-avatar.png">
@@ -16,6 +16,8 @@
         <button ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
           ▶
         </button>
+        <div id='v{{song.key}}'>
+        </div>
         <small style='float:right;'>
           <abbr am-time-ago="song.timestamp"></abbr>
           </small>
