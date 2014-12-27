@@ -93,8 +93,10 @@ angular.module('myApp', [
       next.artist=song.artist;
       if($rootScope.queue.indexOf(next) == -1){
         if(!$rootScope.player.playing){
-          $rootScope.queue.unshift(next);
-          $rootScope.player.currentTrack=0;
+          $rootScope.queue.push(next);
+          $rootScope.player.currentTrack=$rootScope.queue.length;
+          console.log($rootScope.player.currentTrack);
+          $rootScope.player.pause();
         }else{
           $rootScope.queue.push(next);
         }
@@ -125,7 +127,6 @@ angular.module('myApp', [
 
     $rootScope.removeTrack=function(index){
       $rootScope.queue.splice(index,1);
-      console.log(index);
       if(index+1<$rootScope.player.currentTrack){
         $rootScope.player.currentTrack=index
         return;
