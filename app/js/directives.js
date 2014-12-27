@@ -114,6 +114,24 @@ angular.module('myApp.directives', ['simpleLogin'])
         });
       }
     };
+  }).directive("whenScrolled", function ($window) {
+    return{
+      restrict: 'A',
+      link: function (scope, elem, attrs) {
+        var raw = elem[0];
+        var checkBounds = function (evt) {
+          var rectObject = raw.getBoundingClientRect();
+          if ($window.innerHeight >rectObject.bottom+120) {
+            if (!scope.loading){
+              scope.loading = true;
+              scope.$apply(attrs.whenScrolled);
+            }
+          }
+        };
+        console.log('init');
+        angular.element($window).bind('scroll load', checkBounds);
+      }
+    };
   });
 
 

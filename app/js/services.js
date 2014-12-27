@@ -16,13 +16,14 @@
       service.load=0;
       service.list=[];
       service.batch=10;
-      service.fetch=function(){
+      service.fetch=function(callback){
         service.load=service.load+service.batch;
         var more=$firebase(fbutil.ref('songs').orderByChild("key").limitToLast(service.load)).$asArray();
         more.$loaded().then(function() {
           for(var x=0;x<service.batch;x++){
             service.list.push(more[x]);
           }
+          callback();
         });
       }
       return service;

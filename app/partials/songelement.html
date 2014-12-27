@@ -16,7 +16,8 @@
           </div>
           <span>
         <button class='playbtn' ng-click='playVideo(song)' ng-show="startsWith(song.media.type,'video')">
-          ▶
+          <span ng-show='!song.videoPlaying'>▶</span>
+          <span ng-show='song.videoPlaying'>||</span>
         </button>
 
         <button class='playbtn' ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>

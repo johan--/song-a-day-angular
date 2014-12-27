@@ -44,10 +44,14 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
 .controller('SongsCtrl', ['$scope','songs','$window', function($scope,songs,$window) {
   $scope.songs=songs.list;
-  songs.fetch();
+  songs.fetch(function(){
+    console.log('fetched');
+  });
   $scope.predicate='-timestamp'
   $scope.moreSongs=function(){
-    var moreSongs=songs.fetch();
+    songs.fetch(function(){
+      $scope.loading = false;
+    });
   }
 
 
