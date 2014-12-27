@@ -73,10 +73,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.confirm = null;
     $scope.createMode = false;
 
-    $scope.login = function() {
-      simpleLogin.login();
-    };
-
     function assertValidAccountProps() {
       if( !$scope.email ) {
         $scope.err = 'Please enter an email address';

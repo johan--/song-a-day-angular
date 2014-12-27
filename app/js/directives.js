@@ -128,7 +128,6 @@ angular.module('myApp.directives', ['simpleLogin'])
             }
           }
         };
-        console.log('init');
         angular.element($window).bind('scroll load', checkBounds);
       }
     };

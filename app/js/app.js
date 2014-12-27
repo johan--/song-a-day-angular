@@ -13,7 +13,6 @@ angular.module('myApp', [
     'ngSanitize',
     'ngS3upload',
     'angularMoment'
-
 ])
 
 .run(['$location','$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($location,$document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
@@ -158,6 +157,10 @@ angular.module('myApp', [
         return 0;
       }
     };
+    $rootScope.login = function() {
+      simpleLogin.login();
+    };
+
     $rootScope.logout = function() {
       if ('me' in $rootScope){
         $rootScope.me.$destroy;
