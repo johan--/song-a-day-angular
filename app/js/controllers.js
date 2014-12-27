@@ -150,7 +150,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
       $scope.s3OptionsUri='/config/aws.json';
       self.$loaded(function(){
-        $scope.destfolder='/media/'+self.alias;
+        $scope.destfolder='/media/'+$scope.me.alias;
       });
     });
 
@@ -195,9 +195,49 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       };
 
       $scope.fetchTodaysTranmission();
+      /*
+      $scope.startRecording=function() {
+        var constraints = {
+          audio: true,
+          video: false
+        };
+        navigator.getUserMedia(constraints, function(stream) {
+
+            var audio=angular.element(document.querySelector('#recorder'))[0];
+            audio.onloadedmetadata = function() {
+              var options = {
+                type: 'audio' ,
+                audio: audio,
+              };
+
+              window.recorder = window.RecordRTC(stream, options);
+              window.recorder.startRecording();
+              audio.volume=0;
+            };
+            audio.src = URL.createObjectURL(stream);
+          }, function() {
+                  alert('Something went wrong, did you allow recording?');
+          });
+
+      }
+      $scope.stopRecording=function(){
+        if (window.recorder){
+          var audio=angular.element(document.querySelector('#recorder'))[0];
+          window.recorder.stopRecording(function(url) {
+            audio.src = url;
+            audio.volume=.8;
+            audio.play();
+            $scope.recording=false;
+              $scope.media=url
+              var input=angular.element(document.querySelector('input'))[2];
+              console.log(input);
+
+          });
+        }
+      }
+*/
       $scope.delete=function(song){
         $scope.refreshYourself(function(self){
-          console.log($scope.song);
           if (self.key==song.artist.key){
             $firebase(fbutil.ref('songs/'+song.key)).$set(null);
             $route.reload();
@@ -213,11 +253,12 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.refreshYourself(function(self){
           var fresh_key=$scope.calculateKey($scope.transmission)
           var song={};
-          song['info']=$scope.info||"whatever";
+          song['info']=$scope.info||"";
           song['title']=$scope.title||"untitled";
           song['timestamp']= (new Date()).toISOString();
           song['media']={}
           song['key']=fresh_key;
+          song['user_id']=self.user_id
           song['media']['src']= $scope.media;
           song['media']['type']= $scope.mediaType;
           self.$loaded(function(){

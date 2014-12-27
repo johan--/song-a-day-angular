@@ -16,36 +16,46 @@ angular.module('myApp', [
 ])
 
 .run(['$location','$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($location,$document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
-
+console.log(fbutil);
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
+
         if(user){
           var current_artist_key=CryptoJS.SHA1(user.google.email).toString().substring(0,11);
           $rootScope.me = fbutil.syncObject('artists/'+current_artist_key);
-          if  (!$rootScope.me['key']){
-            $rootScope.me['key']=current_artist_key;
-          }
-          if  (!$rootScope.me['avatar']){
-            if ('cachedUserProfile' in user){
-              if ('picture' in user.cachedUserProfile){
-                $rootScope.me['avatar']=user.cachedUserProfile.picture;
+
+          $rootScope.me.$loaded(function(){
+            $rootScope.alerts = fbutil.syncArray('alerts/'+$rootScope.me.key);
+            $rootScope.alerts.$loaded(function(){
+            })
+
+            if  (!$rootScope.me['key']){
+              $rootScope.me['key']=current_artist_key;
+            }
+            if (!$rootScope.me['user_id']){
+              var user_id = fbutil.syncObject('artists/'+current_artist_key+'/user_id');
+              user_id.$value=user.auth.uid;
+              user_id.$save();
+            }
+            if  (!$rootScope.me['avatar']){
+              if ('cachedUserProfile' in user){
+                if ('picture' in user.cachedUserProfile){
+                  $rootScope.me['avatar']=user.cachedUserProfile.picture;
+                }
               }
             }
-          }
-          if  (!$rootScope.me['songs']){
-            $rootScope.me['songs']=[];
-          }
-          if (callback){
-            $rootScope.me.$loaded(function(){callback($rootScope.me);});
-          }
+            if  (!$rootScope.me['songs']){
+              $rootScope.me['songs']=[];
+            }
+            if (callback){
+              callback($rootScope.me);
+            }
+          });
 
         }
       });
     }
-
-    $rootScope.refreshYourself(function(){
-        $rootScope.alerts = fbutil.syncObject('alerts/'+$rootScope.me.key);
-    });
+    $rootScope.refreshYourself();
     $rootScope.queue=[];
     $rootScope.hideNav=true;
     $rootScope.toggleNav=function(){
@@ -56,12 +66,21 @@ angular.module('myApp', [
     }
     $rootScope.transmitComment=function(song){
       song.freshComment.timestamp=(new Date()).toISOString()
+      var alerts = fbutil.syncArray(['alerts', song.artist.key]);
       var comments = fbutil.syncArray(['songs', song.key+'','/comments']);
+
+      alerts.$loaded(function(){
+        var freshAlert={}
+        freshAlert.type='comment';
+        freshAlert.song={'key':song.key,'title':song.title}
+        alerts.$add(freshAlert);
+      });
       comments.$loaded(function(){
 
         song.freshComment.author={}
         song.freshComment.author={'alias':$rootScope.me.alias,'key':$rootScope.me.key}
         comments.$add(song.freshComment);
+
         song.freshComment={}
         song.transmittingComment=false;
       })
@@ -94,8 +113,10 @@ angular.module('myApp', [
       if($rootScope.queue.indexOf(next) == -1){
         if(!$rootScope.player.playing){
           $rootScope.queue.push(next);
-          $rootScope.player.currentTrack=$rootScope.queue.length;
-          $rootScope.player.pause();
+          $timeout(function() {
+            $rootScope.skip($rootScope.queue.length)
+          }, 100);
+          return;
         }else{
           $rootScope.queue.push(next);
         }
@@ -125,19 +146,7 @@ angular.module('myApp', [
     }
 
     $rootScope.removeTrack=function(index){
-      $rootScope.player.$playlist.splice(index,1);
-      console.log(index,'x');
-      console.log($rootScope.player);
-      if(index+1<$rootScope.player.currentTrack){
-        $rootScope.player.currentTrack=index
-        return;
-      }else if (index+1==$rootScope.player.currentTrack){
-        $timeout(function() {
-                    $rootScope.play(index);
-        }, 200);
-      }else{
-
-      }
+      $rootScope.queue.splice(index,1);
 
     }
     $rootScope.clear=function(){

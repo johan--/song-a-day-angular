@@ -41,10 +41,9 @@ function($rootScope,$firebaseAuth, fbutil, createProfile, changeEmail) {
         rememberMe: false,
         scope: "email"
       }, function(error, authData) {
-        $scope.refreshYourself();
-        callback();
+      }).then(function(){
+        $rootScope.refreshYourself(callback);                
       });
-
 
     },
 
