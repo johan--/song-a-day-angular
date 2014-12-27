@@ -151,6 +151,7 @@ textarea{
   text-align:center;
 }
 .alias{
+  color:gray;
 }
 legend{
 padding-bottom:-20px;

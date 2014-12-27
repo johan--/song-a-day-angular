@@ -95,7 +95,6 @@ angular.module('myApp', [
         if(!$rootScope.player.playing){
           $rootScope.queue.push(next);
           $rootScope.player.currentTrack=$rootScope.queue.length;
-          console.log($rootScope.player.currentTrack);
           $rootScope.player.pause();
         }else{
           $rootScope.queue.push(next);
@@ -126,15 +125,16 @@ angular.module('myApp', [
     }
 
     $rootScope.removeTrack=function(index){
-      $rootScope.queue.splice(index,1);
+      $rootScope.player.$playlist.splice(index,1);
+      console.log(index,'x');
+      console.log($rootScope.player);
       if(index+1<$rootScope.player.currentTrack){
         $rootScope.player.currentTrack=index
         return;
       }else if (index+1==$rootScope.player.currentTrack){
-        $rootScope.player.currentTrack=index;
         $timeout(function() {
-          $rootScope.play();
-        }, 100);
+                    $rootScope.play(index);
+        }, 200);
       }else{
 
       }
