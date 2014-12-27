@@ -18,6 +18,7 @@
 }
 .banner{
   background-size: cover;
+  background-color:#d9edf7!important;
 }
 .destroybtn{
   color: red!important;
@@ -87,9 +88,7 @@ https://github.com/yui/pure/blob/master/LICENSE.md
   padding:5px;
 }
 .statement{
-  background-color:white;
-  color:gray;
-  border-radius:5px;
+  color:white;
   padding:5px;
 }
 .sendbtn{
@@ -152,7 +151,6 @@ textarea{
   text-align:center;
 }
 .alias{
-  color:gray;
 }
 legend{
 padding-bottom:-20px;
