@@ -176,6 +176,7 @@ textarea{
 .commentBtn{
   border-left: 5px solid #eee;
   padding-left: 5px;
+  color:#3F68BF!important;
 }
 .day{
   padding:10px;float:right;
