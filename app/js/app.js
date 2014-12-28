@@ -178,7 +178,9 @@ angular.module('myApp', [
       }
     };
     $rootScope.login = function() {
-      simpleLogin.login();
+      simpleLogin.login().then(function(){
+        $location.path('/songs');        
+      })
     };
 
     $rootScope.logout = function() {
