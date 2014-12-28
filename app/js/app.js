@@ -12,11 +12,11 @@ angular.module('myApp', [
     'mediaPlayer',
     'ngSanitize',
     'ngS3upload',
-    'angularMoment'
+    'angularMoment',
+    'ui.bootstrap'
 ])
 
 .run(['$location','$document','simpleLogin','$firebase','fbutil','$rootScope','$timeout', function($location,$document,simpleLogin,$firebase,fbutil,$rootScope,$timeout) {
-console.log(fbutil);
   $rootScope.refreshYourself=function(callback){
     simpleLogin.getUser().then(function(user){
 

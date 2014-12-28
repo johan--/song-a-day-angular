@@ -15,8 +15,12 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
     artistPage.fetch($routeParams.artist)
     $scope.artist=artistPage.artist;
-    $scope.predicate='-key';
-
+    $scope.predicate='-timestamp';
+    $scope.playAll=function(){
+      $scope.artist.works.reverse().forEach(function(song){
+      $scope.playsong(song);
+      })
+    }
 
   }])
 
@@ -156,9 +160,9 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
     $scope.$on('s3upload:success',function(e) {
       $timeout(function() {
-        console.log(e);
         $scope.media=e.targetScope['filename'];
         $scope.mediaType=e.targetScope['filetype'];
+
       });
     });
 
@@ -247,9 +251,8 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         });
       }
       $scope.sendTransmission = function() {
-        if (!$scope.title){
-          $scope.mediaErr=" title";
-        }
+        console.log($scope)
+
         $scope.refreshYourself(function(self){
           var fresh_key=$scope.calculateKey($scope.transmission)
           var song={};

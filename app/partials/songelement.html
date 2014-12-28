@@ -8,6 +8,10 @@
         <strong style='text-align:'><a href='#/song/{{song.key}}'>{{song.title}}</a></strong>
           </button>
         </strong>
+        <abbr class='day'>
+          Day {{song.timestamp | amDateFormat:'D'}}
+        </abbr>
+
       </div>
         <div class="panel-body">
           <div ng-show='song.playingVideo' ng-if="startsWith(song.media.type,'video')">
