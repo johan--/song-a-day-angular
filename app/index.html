@@ -44,7 +44,7 @@
           <li  ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
           <li ng-click='pause()' ng-show="player.playing">▐▐</li>
           <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
-        </ul>
+          </ul>
           <ul id='queue'>
                       <li ng-repeat="song in queue" ng-show="queue.length">
                       <button style='background-image:url("{{song.artist.avatar}}")' height='30px' class='trackavatar track' ng-click="showArtist(song.artist.key)">&nbsp&nbsp&nbsp</button>
@@ -53,6 +53,9 @@
 
             </li>
           </ul>
+        <ul id='nowPlaying'>
+          <li  ng-class="{ playing: player.playing }" ng-click='showSong(nowPlaying())'>♬</li>
+        </ul>
 
       </div>
   </nav>

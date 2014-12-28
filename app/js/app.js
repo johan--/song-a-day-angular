@@ -87,7 +87,7 @@ angular.module('myApp', [
 
     }
     $rootScope.nowPlaying=function(){
-      return $rootScope.queue[$rootScope.player.currentTrack];
+      return $rootScope.queue[$rootScope.player.currentTrack-1];
     }
     $rootScope.playVideo=function(song,$event){
 
@@ -110,6 +110,7 @@ angular.module('myApp', [
       var next=song.media;
       next.title=song.title;
       next.artist=song.artist;
+      next.key=song.key;
       if($rootScope.queue.indexOf(next) == -1){
         if(!$rootScope.player.playing){
           $rootScope.queue.push(next);
@@ -131,6 +132,11 @@ angular.module('myApp', [
     $rootScope.showArtist = function ( key ) {
       $location.path( 'artist/'+key );
     };
+
+    $rootScope.showSong = function ( song ) {
+      console.log(song);
+      $location.path( 'song/'+song.key );
+    };
     $rootScope.play=function(){
         $rootScope.player.play();
       }
@@ -142,6 +148,10 @@ angular.module('myApp', [
     }
 
     $rootScope.next=function(){
+      $rootScope.player.next();
+    }
+
+    $rootScope.current=function(){
       $rootScope.player.next();
     }
 

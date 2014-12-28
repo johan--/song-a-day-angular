@@ -167,8 +167,28 @@ textarea{
   list-style-type: none;
   padding-right: 2px;
   margin-bottom: 2px;
-
 }
+
+#nowPlaying{
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  margin-top:10px;
+  overflow-x: scroll;
+  white-space:nowrap;
+  float:right;
+  display:inline;
+  margin-right:5px;
+}
+#nowPlaying li{
+  padding-top:5px;
+  font-size:larger;
+  display: inline;
+  list-style-type: none;
+  padding-right: 2px;
+  margin-bottom: 2px;
+}
+
 
 .freshComment{
   width:100%;
