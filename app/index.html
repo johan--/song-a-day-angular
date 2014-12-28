@@ -39,12 +39,13 @@
             <div class="track progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{ width: player.currentTime*100/player.duration + '%' }">
             </div>
           </div>
+          <ul id='controls'>
+          <li ng-click='prev()' ng-show="player.currentTrack > 1">◀◀</li>
+          <li  ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
+          <li ng-click='pause()' ng-show="player.playing">▐▐</li>
+          <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
+        </ul>
           <ul id='queue'>
-
-            <li ng-click='prev()' ng-show="player.currentTrack > 1">◀◀</li>
-            <li  ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
-            <li ng-click='pause()' ng-show="player.playing">▐▐</li>
-            <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
                       <li ng-repeat="song in queue" ng-show="queue.length">
                       <button style='background-image:url("{{song.artist.avatar}}")' height='30px' class='trackavatar track' ng-click="showArtist(song.artist.key)">&nbsp&nbsp&nbsp</button>
 

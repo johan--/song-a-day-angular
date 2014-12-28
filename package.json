@@ -1,6 +1,6 @@
 {
-  "name": "angularfire-seed",
-  "description": "A starter project for Angular + Firebase with AngularFire",
+  "name": "songaday",
+  "description": "simple angular app to power song a day",
   "version": "0.9.1",
   "homepage": "https://github.com/firebase/angularfire-seed",
   "repository": "https://github.com/angular/angular-seed",

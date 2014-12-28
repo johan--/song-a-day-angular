@@ -152,6 +152,24 @@ textarea{
   overflow-x: scroll;
   white-space:nowrap;
 }
+#controls{
+  margin-top:10px;
+  overflow-x: scroll;
+  white-space:nowrap;
+  float:left;
+  display:inline;
+  margin-right:5px;
+}
+#controls li{
+  padding-top:5px;
+  font-size:larger;
+  display: inline;
+  list-style-type: none;
+  padding-right: 2px;
+  margin-bottom: 2px;
+
+}
+
 .freshComment{
   width:100%;
 }
