@@ -6,10 +6,10 @@
   <button class='commentBtn' ng-hide='song.transmittingComment' ng-show-auth ng-click="beginComment(song)">
     comment
   </button>
-  <button ng-hide-auth>
-    <a  href="#/login">login</a>
+  <span ng-hide-auth>
+    <button  ng-click='login()'>login</button>
     to post a comment
-  </button>
+  </span>
 
 <div id="comments-{{song.key}}" class="comments">
   <div id="comment" ng-show="song.transmittingComment">
