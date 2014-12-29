@@ -84,9 +84,7 @@ angular.module('myApp.directives', ['simpleLogin'])
       link: function (scope, elem, attrs) {
 
         elem.bind('keyup', function(event) {
-          console.log(event);
           var code = event.keyCode || event.which;
-
           if (code === 13) {
             if (!event.shiftKey) {
               event.preventDefault();
@@ -94,9 +92,11 @@ angular.module('myApp.directives', ['simpleLogin'])
             }
           }
         });
-        elem.bind('blur', function(event) {
-          console.log(event);
-        });
+        if (Modernizr.isiOS) {
+          elem.bind('blur', function(event) {
+            scope.$apply(attrs.enterSubmit);            
+          });
+        }
       }
     }
   }).directive('focusMe', function($timeout, $parse) {
@@ -136,6 +136,12 @@ angular.module('myApp.directives', ['simpleLogin'])
       }
     };
   });
+
+//MISC bonus functions ....
+
+Modernizr.addTest('isiOS', function(){
+  return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false
+});
 
 
   if (!String.prototype.startsWith) {
