@@ -92,9 +92,9 @@ angular.module('myApp.directives', ['simpleLogin'])
             }
           }
         });
-        if (Modernizr.isiOS) {
+        if (Modernizr.ios) {
           elem.bind('blur', function(event) {
-            scope.$apply(attrs.enterSubmit);            
+            scope.$apply(attrs.enterSubmit);
           });
         }
       }
@@ -139,7 +139,7 @@ angular.module('myApp.directives', ['simpleLogin'])
 
 //MISC bonus functions ....
 
-Modernizr.addTest('isiOS', function(){
+Modernizr.addTest('ios', function(){
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false
 });
 
