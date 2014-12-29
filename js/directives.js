@@ -83,7 +83,7 @@ angular.module('myApp.directives', ['simpleLogin'])
       restrict: 'A',
       link: function (scope, elem, attrs) {
 
-        elem.bind('keydown', function(event) {
+        elem.bind('keyup', function(event) {
           console.log(event);
           var code = event.keyCode || event.which;
 
