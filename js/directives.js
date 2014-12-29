@@ -84,6 +84,7 @@ angular.module('myApp.directives', ['simpleLogin'])
       link: function (scope, elem, attrs) {
 
         elem.bind('keydown', function(event) {
+          console.log(event);
           var code = event.keyCode || event.which;
 
           if (code === 13) {
