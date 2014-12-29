@@ -94,6 +94,17 @@ angular.module('myApp.directives', ['simpleLogin'])
             }
           }
         });
+        elem.bind('unblur', function(event) {
+          console.log(event);
+          var code = event.keyCode || event.which;
+
+          if (code === 13) {
+            if (!event.shiftKey) {
+              event.preventDefault();
+              scope.$apply(attrs.enterSubmit);
+            }
+          }
+        });
       }
     }
   }).directive('focusMe', function($timeout, $parse) {
