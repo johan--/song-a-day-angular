@@ -13,12 +13,12 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   }])
 
   .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
-    artistPage.fetch($routeParams.artist)
+    artistPage.fetch($routeParams.artist,function(){
+      $scope.songs=artistPage.artistSongs[$routeParams.artist];
+      console.log($scope.songs);
+    });
     $scope.artist=artistPage.artist;
     $scope.predicate='-timestamp';
-    $scope.songs=artistPage.songs;
-    console.log($scope.songs);
-
     $scope.playAll=function(){
       artistPage.songs.reverse().forEach(function(song){
       $scope.playsong(song);
@@ -106,7 +106,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.me.$bindTo($scope,'me');
         $scope.artist=$scope.me;
         $scope.propogate=function(){
-          artistPage.fetchSongs($scope.me.songs,function(song){
+          artistPage.fetchSongs($scope.me,function(song){
             if ('artist' in song){
               song.artist.alias=$scope.me.alias;
               song.artist.avatar=$scope.me.avatar;
