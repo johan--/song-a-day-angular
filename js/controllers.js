@@ -59,7 +59,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $scope.loading = false;
     });
   }
-  
+
 
 }])
 
@@ -244,9 +244,9 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         $scope.refreshYourself(function(self){
           if (self.key==song.artist.key){
             $firebase(fbutil.ref('songs/'+song.key)).$set(null);
+            $firebase(fbutil.ref('artists/'+self.key+'/songs/'+song.key)).$set(null);
             $route.reload();
           }else{
-            console.log('plx no hax kthnx');
           }
         });
       }
