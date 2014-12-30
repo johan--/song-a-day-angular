@@ -16,8 +16,11 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     artistPage.fetch($routeParams.artist)
     $scope.artist=artistPage.artist;
     $scope.predicate='-timestamp';
+    $scope.songs=artistPage.songs;
+    console.log($scope.songs);
+
     $scope.playAll=function(){
-      $scope.artist.works.reverse().forEach(function(song){
+      artistPage.songs.reverse().forEach(function(song){
       $scope.playsong(song);
       })
     }

@@ -28,6 +28,7 @@
           }
         })
         if (!exists){
+          console.log('new song!');
           service.list.unshift(snapshot.val());
         }
       });
@@ -35,8 +36,8 @@
         var deletedSong=snapshot.val()
         service.list.forEach(function(song,index){
           if (song.key==deletedSong.key){
+            console.log(deletedSong,song);
             service.list.splice(index,1);
-            console.log('found');
           }
         })
       });
@@ -66,25 +67,20 @@
       service.artist={}
       service.songs=[]
       service.fetchSongs=function(songs,applyToSong){
-
         angular.forEach(Object.keys(songs||[]).reverse(),function(song_key){
           var song=$firebase(fbutil.ref('songs/'+song_key)).$asObject();
           song.$loaded().then(function(){
-            if (applyToSong){
+            if (applyToSong)
               applyToSong(song);
-            }
-            if (!service.artist.hasOwnProperty('works'))
-              service.artist['works']=[];
-            service.artist.works.push(song);
+            service.songs.push(song);
           });
         });
       }
       service.fetch=function(artist_id){
         service.artist=$firebase(fbutil.ref('artists/'+artist_id)).$asObject()
-        service.artist['works']=[];
         service.artist.$loaded().then(function(){
           service.fetchSongs(service.artist.songs);
-        })
+        });
       }
 
       return service;
