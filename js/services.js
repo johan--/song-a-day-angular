@@ -69,14 +69,13 @@
 
         angular.forEach(Object.keys(songs||[]).reverse(),function(song_key){
           var song=$firebase(fbutil.ref('songs/'+song_key)).$asObject();
-          if (!('works' in service.artist)){
-            service.artist['works']=[];
-          }
           song.$loaded().then(function(){
-            service.artist.works.push(song);
             if (applyToSong){
               applyToSong(song);
             }
+            if (!service.artist.hasOwnProperty('works'))
+              service.artist['works']=[];
+            service.artist.works.push(song);
           });
         });
       }
