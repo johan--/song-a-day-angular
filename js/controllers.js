@@ -59,7 +59,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
       $scope.loading = false;
     });
   }
-
+  
 
 }])
 
