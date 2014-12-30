@@ -59,24 +59,31 @@
       return fbutil.syncArray('days', {limit: 2000, endAt: null});
     }])
     .factory('artistList', ['fbutil', function(fbutil) {
-      return fbutil.syncArray('artists', {limit: 100, endAt: null});
+      return fbutil.syncArray('artists', {limit: 120, endAt: null});
     }])
     .factory('artistPage', ['fbutil','$firebase', function(fbutil,$firebase) {
       var service={}
       service.artist={}
       service.songs=[]
-      service.fetchSongs=function(songs){
+      service.fetchSongs=function(songs,applyToSong){
+
         angular.forEach(Object.keys(songs||[]).reverse(),function(song_key){
           var song=$firebase(fbutil.ref('songs/'+song_key)).$asObject();
+          if (!('works' in service.artist)){
+            service.artist['works']=[];
+          }
           song.$loaded().then(function(){
             service.artist.works.push(song);
+            if (applyToSong){
+              applyToSong(song);
+            }
           });
         });
       }
       service.fetch=function(artist_id){
         service.artist=$firebase(fbutil.ref('artists/'+artist_id)).$asObject()
+        service.artist['works']=[];
         service.artist.$loaded().then(function(){
-          service.artist['works']=[];
           service.fetchSongs(service.artist.songs);
         })
       }
