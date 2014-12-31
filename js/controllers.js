@@ -20,8 +20,8 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.artist=artistPage.artist;
     $scope.predicate='-timestamp';
     $scope.playAll=function(){
-      artistPage.songs.reverse().forEach(function(song){
-      $scope.playsong(song);
+      $scope.songs.reverse().forEach(function(song){
+        $scope.playsong(song);
       })
     }
 
