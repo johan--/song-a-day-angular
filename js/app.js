@@ -90,19 +90,22 @@ angular.module('myApp', [
     $rootScope.playVideo=function(song,$event){
 
       var video=angular.element(document.querySelector('#movie'+song.key))[0]
-      song.playingVideo=true;
       if(!video.paused){
+        $rootScope.playingVideo=false;
         video.pause();
+        $rootScope.play();
       }else{
+        $rootScope.playingVideo=true;
         video.play();
+        $rootScope.pause();
       }
-      song.pause=video.paused;
       video.onended = function(e) {
         $rootScope.play();
-        song.playingVideo=false;
+        var video=angular.element(document.querySelector('#movie'+song.key))[0]
+        video.exitFullscreen()
+        $rootScope.playingVideo=false;
         $rootScope.$apply()
       };
-      $rootScope.pause();
     }
     $rootScope.playsong=function(song){
       var next=song.media;

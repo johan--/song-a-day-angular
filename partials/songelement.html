@@ -14,14 +14,14 @@
 
       </div>
         <div class="panel-body">
-          <div ng-show='song.playingVideo' ng-if="startsWith(song.media.type,'video')">
+          <div ng-show='playingVideo' ng-if="startsWith(song.media.type,'video')">
             <video controls width='100%' id='movie{{song.key}}'  ng-src='{{song.media.src|trustUrl}}'>
             </video>
           </div>
           <span>
         <button class='playbtn' ng-click='playVideo(song)' ng-show="startsWith(song.media.type,'video')">
-          <span ng-show='!song.videoPlaying'>▶</span>
-          <span ng-show='song.videoPlaying'>||</span>
+          <span class='black' ng-show='!playingVideo'>▶</span>
+          <span class='black' ng-show='playingVideo'>▢</span>
         </button>
 
         <button class='playbtn' ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>

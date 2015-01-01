@@ -12,6 +12,16 @@
   margin-left:auto;
   margin-right:auto;
 }
+.black{
+  color:black!important;
+  border-color:black!important;
+}
+.pad2{
+padding:2px;  
+}
+.small{
+  font-size:x-small;
+}
 .floatr{
   float:right;
 }
