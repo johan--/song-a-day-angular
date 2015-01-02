@@ -15,7 +15,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
     artistPage.fetch($routeParams.artist,function(){
       $scope.songs=artistPage.artistSongs[$routeParams.artist];
-      console.log($scope.songs);
     });
     $scope.artist=artistPage.artist;
     $scope.predicate='-timestamp';
@@ -37,7 +36,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     var arts=artistList;
     $scope.artists=arts;
     $scope.moreArtists=function(){
-      console.log($scope.moreArtists);
     }
   }])
 
@@ -53,7 +51,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   $scope.songs=songs.list;
   $scope.loading = true;
   songs.fetch(function(){
-    console.log('fetched');
     $scope.loading = false;
   });
   $scope.predicate='-timestamp'
@@ -226,7 +223,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         });
       }
       $scope.sendTransmission = function() {
-        console.log($scope)
 
         $scope.refreshYourself(function(self){
           var fresh_key=$scope.calculateKey($scope.transmission)
@@ -267,7 +263,6 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   ])
   .controller('SketchCtrl', ['$scope', 'simpleLogin', 'fbutil',
   function($scope, simpleLogin, fbutil) {
-    console.log('sketch it up!');
   }
   ])
   .controller('NavCtrl', ['$scope',

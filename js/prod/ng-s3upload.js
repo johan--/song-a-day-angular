@@ -196,10 +196,13 @@ angular.module('ngS3upload.directives', []).
             var uploadFile = function () {
               var selectedFile = file[0].files[0];
               var filename = selectedFile.name;
-              var ext = filename.split('.').pop();
+              var ext = filename.split('.').pop().toLowerCase();
+              if (ext=="aif"||ext=="aiif"||ext=="wav"){
+                alert('AIF and WAV files are not supported by all browsers, please convert to mp3 m4a or acc');
+                return;
+              }
               if (selectedFile.size>42000000){
                 alert('This file is over 42 megabytes, please compress your media and trasmit again.');
-                file[0].files=[]
                 return;
               }
 
