@@ -116,7 +116,7 @@ angular.module('myApp', [
         if(!$rootScope.player.playing){
           $rootScope.queue.push(next);
           $timeout(function() {
-            $rootScope.skip($rootScope.queue.length)
+            $rootScope.skip($rootScope.queue.indexOf(next));
           }, 100);
           return;
         }else{
