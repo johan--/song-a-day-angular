@@ -212,7 +212,7 @@ angular.module('ngS3upload.directives', []).
                 }
 
                 var s3Uri = 'https://songadays.s3.amazonaws.com/';
-                var cloudfrontUri = 'http://d1hmps6uc7xmb3.cloudfront.net/'
+                var cloudfrontUri = 'https://d1hmps6uc7xmb3.cloudfront.net/'
                 var key = opts.targetFilename ? scope.$eval(opts.targetFilename) : (new Date()).getTime() + '-' + S3Uploader.randomString(16) + "." + ext;
                 S3Uploader.upload(scope,
                     s3Uri,
