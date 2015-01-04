@@ -40,10 +40,10 @@
             </div>
           </div>
           <ul id='controls'>
-          <li ng-click='prev()' ng-show="player.currentTrack > 1">◀◀</li>
+          <li ng-click='prev()' ng-show="player.currentTrack > 1"><button class='black'>◀◀</button></li>
           <li  ng-click='play()' ng-show="!player.playing"><button>▶</button></li>
-          <li ng-click='pause()' ng-show="player.playing">▐▐</li>
-          <li ng-click='next()' ng-show="queue.length > 1">▶▶</li>
+          <li ng-click='pause()' ng-show="player.playing"><button class='black'>▐▐</button></li>
+          <li ng-click='next()' ng-show="queue.length > 1"><button class='black'>▶▶</button></li>
           </ul>
           <ul id='queue'>
                       <li ng-repeat="song in queue" ng-show="queue.length">
