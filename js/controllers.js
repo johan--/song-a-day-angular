@@ -33,8 +33,16 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
 
   .controller('ArtistsCtrl', ['$scope','artistList', function($scope,artistList) {
-    var arts=artistList;
-    $scope.artists=arts;
+    $scope.artists=artistList;
+    $scope.artists.$loaded(function(e){
+    $scope.total=0;
+      $scope.artists.forEach(function(artist){
+        if ('songs' in artist){
+          $scope.total=Object.keys(artist.songs).length+$scope.total
+        }
+
+      })
+    })
     $scope.moreArtists=function(){
     }
   }])

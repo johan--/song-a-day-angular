@@ -1,4 +1,4 @@
-<ul infinite-scroll="moreArtists()" infinite-scroll-distance="3" id="artists" ng-show="artists.length">
+<ul id="artists" ng-show="artists.length">
     <li  ng-repeat="artist in artists | orderBy:'songs | length'|reverse">
       <h3 ng-show='artist.songs'>
         <a href='#artist/{{artist.key}}'>
@@ -8,4 +8,11 @@
       </a>
     </h3>
   </li>
+  <h3>
+      <img class='avatar' ng-src="img/song-a-day.png">
+      Grand Total:
+      <small class='floatr'>{{total}}</small>
+    </a>
+  </h3>
+  <li>
 </ul>
