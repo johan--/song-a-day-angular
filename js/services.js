@@ -16,7 +16,7 @@
       service.load=0;
       service.list=[];
       service.batch=10;
-      fbutil.ref('songs').limitToLast(1).on('child_added', function(snapshot) {
+      fbutil.ref('songs').on('child_added', function(snapshot) {
         if (service.list.length==0){
           return;
         }
@@ -35,7 +35,6 @@
         var deletedSong=snapshot.val()
         service.list.forEach(function(song,index){
           if (song.key==deletedSong.key){
-            console.log(deletedSong,song);
             service.list.splice(index,1);
           }
         })
