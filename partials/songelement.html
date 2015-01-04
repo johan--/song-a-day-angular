@@ -19,12 +19,12 @@
             </video>
           </div>
           <span>
-        <button onClick="_gaq.push(['_trackEvent', 'Watch', '{{song.key}}', '{{song.title}}']);" class='playbtn' ng-click='playVideo(song)' ng-show="startsWith(song.media.type,'video')">
+        <button class='playbtn' ng-click='playVideo(song)' ng-show="startsWith(song.media.type,'video')">
           <span class='black' ng-show='!playingVideo'>▶</span>
           <span class='black' ng-show='playingVideo'>▢</span>
         </button>
 
-        <button onClick="_gaq.push(['_trackEvent', 'Play', '{{song.key}}', '{{song.title}}']);" class='playbtn' ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
+        <button class='playbtn' ng-hide="startsWith(song.media.type,'video')" ng-click='playsong(song)' ng-hide='song.video'>
           ▶
         </button>
       </span>

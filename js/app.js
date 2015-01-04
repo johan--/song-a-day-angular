@@ -88,7 +88,7 @@ angular.module('myApp', [
       return $rootScope.queue[$rootScope.player.currentTrack-1];
     }
     $rootScope.playVideo=function(song,$event){
-
+      window.ga('send', 'event', 'play', song.title, song.key)
       var video=angular.element(document.querySelector('#movie'+song.key))[0]
       if(!video.paused){
         $rootScope.playingVideo=false;
@@ -108,6 +108,7 @@ angular.module('myApp', [
       };
     }
     $rootScope.playsong=function(song){
+      window.ga('send', 'event', 'play', song.title, song.key);
       var next=song.media;
       next.title=song.title;
       next.artist=song.artist;
@@ -184,12 +185,15 @@ angular.module('myApp', [
       }
     };
     $rootScope.login = function() {
+      window.ga('send', 'event', 'login');      
       simpleLogin.login().then(function(){
         $location.path('/songs');
       })
     };
 
     $rootScope.logout = function() {
+      window.ga('send', 'event', 'logout');
+
       if ('me' in $rootScope){
         $rootScope.me.$destroy;
       }
