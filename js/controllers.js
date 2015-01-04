@@ -143,7 +143,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         var dd = today.getDate();
         var mm = today.getMonth()+1; //January is 0!
         var yyyy = today.getFullYear();
-
+        var offset = today.getTimezoneOffset()
         if(dd<10) {
           dd='0'+dd
         }
@@ -151,7 +151,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         if(mm<10) {
           mm='0'+mm
         }
-        today = mm+'/'+dd+'/'+yyyy;
+        today = mm+'/'+dd+'/'+yyyy+'/'+offset;
         return CryptoJS.SHA1(today+$scope.me.$id).toString().substring(0,11)
       }
 
