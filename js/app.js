@@ -92,7 +92,6 @@ angular.module('myApp', [
         song.freshComment.author={}
         song.freshComment.author={'alias':$rootScope.me.alias,'key':$rootScope.me.key}
         comments.$add(song.freshComment);
-
         song.freshComment={}
         song.transmittingComment=false;
       })

@@ -9,21 +9,23 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   }])
 
 
-  .controller('PlaylistsCtrl', ['$scope','$rootScope', 'fbutil', function($scope,$rootScope,fbutil) {
+  .controller('PlaylistsCtrl', ['$scope','$rootScope','$timeout', 'fbutil', function($scope,$rootScope,$timeout,fbutil) {
     $scope.playlists=fbutil.syncArray('playlists/');
     $scope.clearQueue=function(){
-      $rootScope.queue=[];
+      $scope.queue=[];
     }
 
     $scope.addToQueue=function(playlistID){
+
       $scope.queue=[];
       var playlist=fbutil.syncObject('playlists/'+playlistID);
       playlist.$loaded(function(){
+        window.ga('send', 'event', 'playlist', 'play', playlist.title);
+        $rootScope.player.currentTrack=0;
         $rootScope.queue=playlist.songs;
-        playlist.songs.forEach(function(song){
-          $rootScope.playSong(song);
-        });
-
+        $timeout(function(){
+          $rootScope.player.play();
+        },100);
       })
     }
     $scope.savePlaylist=function(){
@@ -207,7 +209,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
         if(mm<10) {
           mm='0'+mm
         }
-        today = mm+'/'+dd+'/'+yyyy+'/'+offset;
+        today = mm+'/'+dd+'/'+yyyy+'/';
         return CryptoJS.SHA1(today+$scope.me.$id).toString().substring(0,11)
       }
 
