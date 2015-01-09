@@ -24,6 +24,10 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
       templateUrl: 'partials/archives.html',
       controller: 'ArchiveCtrl'
     },
+    '/playlists': {
+      templateUrl: 'partials/playlists.html',
+      controller: 'PlaylistsCtrl'
+    },
     '/chat': {
       templateUrl: 'partials/chat.html',
       controller: 'ChatCtrl'

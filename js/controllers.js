@@ -9,6 +9,48 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   }])
 
 
+  .controller('PlaylistsCtrl', ['$scope','$rootScope', 'fbutil', function($scope,$rootScope,fbutil) {
+    $scope.playlists=fbutil.syncArray('playlists/');
+    $scope.clearQueue=function(){
+      $rootScope.queue=[];
+    }
+
+    $scope.addToQueue=function(playlistID){
+      $scope.queue=[];
+      var playlist=fbutil.syncObject('playlists/'+playlistID);
+      playlist.$loaded(function(){
+        $rootScope.queue=playlist.songs;
+        playlist.songs.forEach(function(song){
+          $rootScope.playSong(song);
+        });
+
+      })
+    }
+    $scope.savePlaylist=function(){
+      var title=$scope.freshPlaylistTitle
+      var playlist_key=CryptoJS.SHA1($scope.alias+title).toString().substring(1,7);
+      var playlist=fbutil.syncObject('playlists/'+playlist_key)
+      var newPlaylist={};
+      newPlaylist.songs=$scope.queue
+      newPlaylist.title=title;
+      newPlaylist.user_id=$scope.me.user_id;
+      newPlaylist.artist={};
+      newPlaylist.songs=[];
+      newPlaylist.artist.alias=$scope.me.alias;
+      newPlaylist.artist.key=$scope.me.key;
+      $scope.queue.forEach(function(song){
+        delete song.$$hashKey;
+        newPlaylist.songs.push(song);
+      })
+      if (newPlaylist.songs.length==0){
+        return;
+      }
+      console.log(playlist);
+      console.log(newPlaylist);
+      playlist.$value=newPlaylist;
+      playlist.$save();
+    }
+  }])
   .controller('MissionCtrl', ['$scope', 'fbutil', function($scope, fbutil) {
   }])
 
@@ -20,7 +62,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     $scope.predicate='-timestamp';
     $scope.playAll=function(){
       $scope.songs.reverse().forEach(function(song){
-        $scope.playsong(song);
+        $scope.playSong(song);
       })
     }
 
@@ -61,6 +103,12 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   songs.fetch(function(){
     $scope.loading = false;
   });
+  $scope.playAll=function(){
+    $scope.songs.reverse().forEach(function(song){
+      $scope.playSong(song);
+    })
+  }
+
   $scope.predicate='-timestamp'
   $scope.moreSongs=function(){
     songs.fetch(function(){

@@ -27,7 +27,9 @@ angular.module('myApp', [
             $rootScope.notices = fbutil.syncArray('notices/'+$rootScope.me.key);
 
             if  (!$rootScope.me['key']){
-              $rootScope.me['key']=current_artist_key;
+              var key = fbutil.syncObject('artists/'+current_artist_key+'/key');
+              key.$value=current_artist_key;
+              key.$save();
             }
             if (!$rootScope.me['user_id']){
               var user_id = fbutil.syncObject('artists/'+current_artist_key+'/user_id');
@@ -35,10 +37,22 @@ angular.module('myApp', [
               user_id.$save();
             }
 
-            if  (!$rootScope.me['avatar']){
-              if ('cachedUserProfile' in user){
-                if ('picture' in user.cachedUserProfile){
-                  $rootScope.me['avatar']=user.cachedUserProfile.picture;
+            if  (!$rootScope.me['alias']){
+              if ('cachedUserProfile' in user.google){
+                if ('name' in user.google.cachedUserProfile){
+                  var alias = fbutil.syncObject('artists/'+current_artist_key+'/alias');
+                  alias.$value=user.google.cachedUserProfile.name;
+                  alias.$save();
+                }
+              }
+
+            }
+              if  (!$rootScope.me['avatar']){
+              if ('cachedUserProfile' in user.google){
+                if ('picture' in user.google.cachedUserProfile){
+                  var avatar = fbutil.syncObject('artists/'+current_artist_key+'/avatar');
+                  avatar.$value=user.google.cachedUserProfile.picture;
+                  avatar.$save();
                 }
               }
             }
@@ -107,7 +121,7 @@ angular.module('myApp', [
         $rootScope.$apply()
       };
     }
-    $rootScope.playsong=function(song){
+    $rootScope.playSong=function(song){
       window.ga('send', 'event', 'play', song.title, song.key);
       var next=song.media;
       next.title=song.title;
@@ -129,8 +143,9 @@ angular.module('myApp', [
       }else{
         $rootScope.skip($rootScope.queue.indexOf(next));
       }
-
     }
+    $rootScope.playsong=$rootScope.playSong //Cached Browser Alias
+
     $rootScope.showArtist = function ( key ) {
       $location.path( 'artist/'+key );
     };
@@ -156,6 +171,9 @@ angular.module('myApp', [
 
     $rootScope.next=function(){
       $rootScope.player.next();
+    }
+    $rootScope.prev=function(){
+      $rootScope.player.prev();
     }
 
     $rootScope.current=function(){
@@ -185,7 +203,7 @@ angular.module('myApp', [
       }
     };
     $rootScope.login = function() {
-      window.ga('send', 'event', 'login');      
+      window.ga('send', 'event', 'login');
       simpleLogin.login().then(function(){
         $location.path('/songs');
       })

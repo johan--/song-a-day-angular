@@ -11,6 +11,10 @@
     .factory('messageList', ['fbutil', function(fbutil) {
       return fbutil.syncArray('messages', {limit: 10000, endAt: null});
     }])
+
+    .factory('playlists', ['fbutil', function(fbutil) {
+      return fbutil.syncArray('playlists', {limit: 100, endAt: null});
+    }])
     .factory('songs', ['fbutil','$firebase', function(fbutil,$firebase) {
       var service={}
       service.load=0;

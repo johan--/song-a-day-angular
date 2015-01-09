@@ -1,0 +1,22 @@
+PL△Y L|STS
+<button ng-click='clear()'>:::::::::Clear::::::</button>
+<ul class="nav nav-tabs nav-stacked" ng-repeat="playlist in playlists | orderBy:predicate">
+  <li>
+    <button ng-click=addToQueue(playlist.$id)>
+    {{playlist.title}}
+    </button>
+    <ul>
+    <li ng-repeat="song in playlists.songs">
+      {{song.title}}
+    </li>
+    </ul>
+
+</li>
+</ul>
+<form>
+  <legend>
+    <p>
+      Save my playlist as: <input ng-model='freshPlaylistTitle' type='text'/>
+      <button ng-show='freshPlaylistTitle' ng-click='savePlaylist()'>Save</button>
+    </p>
+</form>
