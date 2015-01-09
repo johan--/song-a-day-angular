@@ -37,25 +37,6 @@ angular.module('myApp', [
               user_id.$save();
             }
 
-            if  (!$rootScope.me['alias']){
-              if ('cachedUserProfile' in user.google){
-                if ('name' in user.google.cachedUserProfile){
-                  var alias = fbutil.syncObject('artists/'+current_artist_key+'/alias');
-                  alias.$value=user.google.cachedUserProfile.name;
-                  alias.$save();
-                }
-              }
-
-            }
-              if  (!$rootScope.me['avatar']){
-              if ('cachedUserProfile' in user.google){
-                if ('picture' in user.google.cachedUserProfile){
-                  var avatar = fbutil.syncObject('artists/'+current_artist_key+'/avatar');
-                  avatar.$value=user.google.cachedUserProfile.picture;
-                  avatar.$save();
-                }
-              }
-            }
             if  (!$rootScope.me['songs']){
               $rootScope.me['songs']=[];
             }
