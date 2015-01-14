@@ -125,7 +125,7 @@ angular.module('myApp.directives', ['simpleLogin'])
         var raw = elem[0];
         var checkBounds = function (evt) {
           var rectObject = raw.getBoundingClientRect();
-          if ($window.innerHeight >rectObject.bottom+120) {
+          if ($window.innerHeight > rectObject.bottom) {
             if (!scope.loading){
               scope.loading = true;
               scope.$apply(attrs.whenScrolled);

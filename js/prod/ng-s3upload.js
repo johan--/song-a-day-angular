@@ -201,8 +201,8 @@ angular.module('ngS3upload.directives', []).
                 alert('AIF and WAV files are not supported by all browsers, please convert to mp3 m4a or acc');
                 return;
               }
-              if (selectedFile.size>42000000){
-                alert('This file is over 42 megabytes, please compress your media and trasmit again.');
+              if (selectedFile.size>108000000){
+                alert('This file is over 108 megabytes, please compress your media and trasmit again.');
                 return;
               }
 
