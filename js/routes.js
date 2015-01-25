@@ -55,7 +55,7 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
       controller: 'ArtistsCtrl'
     },
     '/songs': {
-      templateUrl: 'partials/songs.html?version=2.6.2',
+      templateUrl: 'partials/songs.html?version=2.6.3',
       controller: 'SongsCtrl'
     },
     '/song/:song': {

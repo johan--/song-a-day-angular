@@ -121,7 +121,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
     songs.batch=17
     songs.fetch(function(){
       $scope.loading = false;
-      $scope.songs.reverse().forEach(function(song){
+      $scope.songs.forEach(function(song){
         if(song.media.type.startsWith('audio')){
           $scope.addToQueue(song);
         }

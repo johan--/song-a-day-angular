@@ -1,9 +1,9 @@
 
 <div id="songs">
-  <button ng-hide='loading' class='floatl playallbtn' ng-click='playAll()'>
+  <button ng-hide='loading' class='playallbtn' ng-click='playAll()'>
     ◎▶
   </button>
-  
+
 <ul when-scrolled="moreSongs()"  class='row' class='songs' ng-show="songs.length">
     <li class='song' ng-animate=" 'animate' " ng-repeat="song in songs | orderBy:predicate">
       <div ng-include src="'partials/songelement.html'"></div>

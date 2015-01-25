@@ -42,12 +42,10 @@ padding:2px;
   background-color:#337ab7!important;
 }
 .playallbtn{
-  border: 1px ;
   padding: 5px;
   background-color:white;
-  border: 2px solid;
-  position:absolute;
-  right:-7%;
+  width:100%;
+  margin:5px;
   border-radius: 5px;
 }
 .destroybtn{
