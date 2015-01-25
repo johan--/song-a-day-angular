@@ -19,7 +19,7 @@
       var service={}
       service.load=0;
       service.list=[];
-      service.batch=10;
+      service.batch=3;
       fbutil.ref('songs').on('child_added', function(snapshot) {
         if (service.list.length==0){
           return;

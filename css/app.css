@@ -3,7 +3,9 @@
   height: 1px;
 }
 
-
+.song-info{
+  white-space:pre-line;font-family:monospace;padding:5px;word-wrap:normal;overflow-x:scroll;
+}
 .movie{
   width:100%;
   }
@@ -17,7 +19,7 @@
   border-color:black!important;
 }
 .pad2{
-padding:2px;  
+padding:2px;
 }
 .small{
   font-size:x-small;
@@ -45,7 +47,7 @@ padding:2px;
   background-color:white;
   border: 2px solid;
   position:absolute;
-  left:7%;
+  right:-7%;
   border-radius: 5px;
 }
 .destroybtn{

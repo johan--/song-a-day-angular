@@ -58,6 +58,7 @@ angular.module('myApp', [
       song.transmittingComment=true;
     }
     $rootScope.transmitComment=function(song){
+      window.ga('send', 'event', 'comment', $rootScope.me.alias , song.artist.alias);
       song.freshComment.timestamp=(new Date()).toISOString()
       var notices = fbutil.syncArray(['notices', song.artist.key]);
       var comments = fbutil.syncArray(['songs', song.key+'','/comments']);
@@ -69,12 +70,12 @@ angular.module('myApp', [
         notices.$add(notification);
       });
       comments.$loaded(function(){
-
         song.freshComment.author={}
         song.freshComment.author={'alias':$rootScope.me.alias,'key':$rootScope.me.key}
         comments.$add(song.freshComment);
         song.freshComment={}
         song.transmittingComment=false;
+        song.comments=comments;
       })
 
     }
@@ -89,7 +90,11 @@ angular.module('myApp', [
         video.pause();
         $rootScope.play();
       }else{
-        $rootScope.playingVideo=true;
+        if ($rootScope.playingVideo){
+          var previousVideo=angular.element(document.querySelector('#movie'+$rootScope.playingVideo))[0]
+          previousVideo.pause();
+        }
+        $rootScope.playingVideo=song.key;
         video.play();
         $rootScope.pause();
       }
@@ -101,6 +106,15 @@ angular.module('myApp', [
         $rootScope.$apply()
       };
     }
+    $rootScope.addToQueue=function(song){
+      window.ga('send', 'event', 'play', song.title, song.key);
+      var next=song.media;
+      next.title=song.title;
+      next.artist=song.artist;
+      next.key=song.key;
+      $rootScope.queue.push(next);
+    }
+
     $rootScope.playSong=function(song){
       window.ga('send', 'event', 'play', song.title, song.key);
       var next=song.media;
@@ -174,6 +188,8 @@ angular.module('myApp', [
       }
       return str.startsWith(target);
     }
+
+
     $rootScope.seekPercentage = function ($event) {
       var percentage = ($event.offsetX / $event.target.offsetWidth);
       if (percentage <= 1) {

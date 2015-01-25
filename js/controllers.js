@@ -56,17 +56,27 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
   .controller('MissionCtrl', ['$scope', 'fbutil', function($scope, fbutil) {
   }])
 
-  .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams', function($scope, artistPage, $routeParams) {
+  .controller('ArtistCtrl', ['$scope', 'artistPage','$routeParams','$timeout', function($scope, artistPage, $routeParams,$timeout) {
     artistPage.fetch($routeParams.artist,function(){
       $scope.songs=artistPage.artistSongs[$routeParams.artist];
     });
     $scope.artist=artistPage.artist;
     $scope.predicate='-timestamp';
     $scope.playAll=function(){
-      $scope.songs.reverse().forEach(function(song){
-        $scope.playSong(song);
-      })
+      window.ga('send', 'event', 'playAll');
+      $scope.clear();
+        $scope.songs.reverse().forEach(function(song){
+          if ('media' in song){
+            if(song.media.type.startsWith('audio')){
+              $scope.addToQueue(song);
+            }
+          }
+        });
+        $timeout(function() {
+          $scope.play();
+        }, 100);
     }
+
 
   }])
 
@@ -99,17 +109,31 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
 }])
 
-.controller('SongsCtrl', ['$scope','songs','$window', function($scope,songs,$window) {
+.controller('SongsCtrl', ['$scope','songs','$window','$timeout', function($scope,songs,$window,$timeout) {
   $scope.songs=songs.list;
   $scope.loading = true;
   songs.fetch(function(){
     $scope.loading = false;
   });
   $scope.playAll=function(){
-    $scope.songs.reverse().forEach(function(song){
-      $scope.playSong(song);
-    })
+    window.ga('send', 'event', 'playAll');
+    $scope.clear();
+    songs.batch=17
+    songs.fetch(function(){
+      $scope.loading = false;
+      $scope.songs.reverse().forEach(function(song){
+        if(song.media.type.startsWith('audio')){
+          $scope.addToQueue(song);
+        }
+      })
+      $timeout(function() {
+        $scope.play();
+      }, 100);
+    });
+
+
   }
+
 
   $scope.predicate='-timestamp'
   $scope.moreSongs=function(){
