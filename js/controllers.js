@@ -181,6 +181,7 @@ angular.module('myApp.controllers', ['firebase.utils', 'simpleLogin'])
 
   .controller('AccountCtrl', ['$scope', 'simpleLogin', 'fbutil', 'user', '$location','artistPage',
     function($scope, simpleLogin, fbutil, user, $location,artistPage) {
+      $scope.reloadPage = function(){window.location.reload();}
       if ('me' in $scope){
         $scope.me.$bindTo($scope,'me');
         $scope.artist=$scope.me;

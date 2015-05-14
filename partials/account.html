@@ -16,37 +16,14 @@
         <span>Cyber Link</span>
         <input type="text" name="name" ng-model="me.link"/>
       </label>
+      <label>
+        <span> Single Play Mode </span>
+        <input type='checkbox' ng-blur='reloadPage()' ng-model="me.singlePlayMode" >
+      </label>
+
     </div>
   </fieldset>
 </form>
-
-<!--<form>
-    <fieldset>
-        <legend>Password</legend>
-<div class='well'>
-        <label>
-            <span>Old Password</span>
-            <input type="password" ng-keypress="clear()" ng-model="oldpass"/>
-        </label>
-
-        <label>
-            <span>New Password</span>
-            <input type="password" ng-keypress="clear()" ng-model="newpass"/>
-        </label>
-
-        <label>
-            <span>Confirm New Password</span>
-            <input type="password" ng-keypress="clear()" ng-model="confirm"/>
-        </label>
-
-        <button ng-click="changePassword(oldpass, newpass, confirm)">commit</button>
-
-        <p class="error" ng-show="err">{{err}}</p>
-        <p class="good" ng-show="msg">{{msg}}</p>
-      </div>
-        </fieldset>
-</form>
--->
 <form>
   <fieldset>
     <legend>Art</legend>

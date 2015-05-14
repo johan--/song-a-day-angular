@@ -64,7 +64,7 @@ angular.module('myApp.routes', ['ngRoute', 'simpleLogin'])
     },
 
     '/account': {
-      templateUrl: 'partials/account.html',
+      templateUrl: 'partials/account.html?version=2.7.9',
       controller: 'AccountCtrl',
       // require user to be logged in to view this route
       // the whenAuthenticated method below will resolve the current user
