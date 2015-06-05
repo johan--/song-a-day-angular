@@ -9,12 +9,6 @@ loader {
 .artist {
   display: inline-block; }
 
-.record{
-  text-align: center;
-}
-.record .button-icon{
-  font-size:xx-large;
-}
 .artist-info {
   position: absolute;
   background-color: white;
@@ -22,6 +16,12 @@ loader {
 
 .artists {
   display: inline-block; }
+
+.record {
+  text-align: center; }
+
+.record .button-icon {
+  font-size: xx-large; }
 
 .avatar {
   border-radius: 100%;
