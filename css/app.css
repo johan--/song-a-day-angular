@@ -23,6 +23,9 @@ loader {
 .record .button-icon {
   font-size: xx-large; }
 
+.float-right {
+  float: right; }
+
 .avatar {
   border-radius: 100%;
   width: 100px;
