@@ -39199,7 +39199,7 @@ angular.module("com.2fdevs.videogular")
 
         this.onComplete = function (event) {
             $scope.vgComplete();
-
+            console.log($scope)
             this.setState(VG_STATES.STOP);
             this.isCompleted = true;
             $scope.$apply();
@@ -52377,13 +52377,11 @@ angular.module('ngS3upload.config', []).
 
     this.getUploadOptions = function (uri) {
       var deferred = $q.defer();
-      $http.get(uri).
-        success(function (response, status) {
-          deferred.resolve(response);
-        }).error(function (error, status) {
-          deferred.reject(error);
-        });
-
+          deferred.resolve({
+            "policy": "ewogICJleHBpcmF0aW9uIjogIjIwMjAtMDEtMDFUMDA6MDA6MDBaIiwKICAiY29uZGl0aW9ucyI6IFsKICAgIHsiYnVja2V0IjogInNvbmdhZGF5cyJ9LAogICAgWyJzdGFydHMtd2l0aCIsICIka2V5IiwgIiJdLAogICAgeyJhY2wiOiAicHJpdmF0ZSJ9LAogICAgWyJzdGFydHMtd2l0aCIsICIkQ29udGVudC1UeXBlIiwgIiJdLAogICAgWyJzdGFydHMtd2l0aCIsICIkZmlsZW5hbWUiLCAiIl0sCiAgICBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMCwgNTI0Mjg4MDAwXQogIF0KfQ==",
+            "signature": "r+Ci1HbYn4fkyFB0pxwRWx5m0Ss=",
+            "key": "AKIAJ7K34ZKXEV72GYRQ"
+          });
       return deferred.promise;
     };
 

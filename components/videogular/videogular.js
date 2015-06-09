@@ -443,7 +443,7 @@ angular.module("com.2fdevs.videogular")
 
         this.onComplete = function (event) {
             $scope.vgComplete();
-
+            console.log("COMPLETED!")
             this.setState(VG_STATES.STOP);
             this.isCompleted = true;
             $scope.$apply();

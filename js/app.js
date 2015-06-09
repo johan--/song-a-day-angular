@@ -36,12 +36,7 @@
 }).call(this);
 
 (function() {
-  if (GLOBALS.WEINRE_ADDRESS && (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) && !navigator.platform.match(/MacIntel/i)) {
-    window.addElement(document, "script", {
-      id: "weinre-js",
-      src: "http://" + GLOBALS.WEINRE_ADDRESS + "/target/target-script-min.js#anonymous"
-    });
-  }
+
 
 }).call(this);
 
@@ -570,6 +565,26 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
+  angular.module('songaday').filter('length', function() {
+    return function(item) {
+      return Object.keys(item || {}).length;
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('trust', function($sce) {
+    return function(url) {
+      if (url) {
+        return $sce.trustAsResourceUrl(url);
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
 
 
 }).call(this);
@@ -640,26 +655,6 @@ A simple example service that returns some data.
         }), function(error) {
           console.log(error);
         });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('length', function() {
-    return function(item) {
-      return Object.keys(item || {}).length;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('trust', function($sce) {
-    return function(url) {
-      if (url) {
-        return $sce.trustAsResourceUrl(url);
       }
     };
   });
@@ -792,12 +787,8 @@ A simple example service that returns some data.
       }
     };
     ctrl.onPlayerReady = function(API) {
+      console.log(API);
       ctrl.API = API;
-    };
-    ctrl.onCompleteVideo = function() {
-      ctrl.isCompleted = true;
-      console.log('COMPLETED');
-      ctrl.next();
     };
     ctrl.config = {
       preload: 'none',
@@ -1023,134 +1014,6 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("TransmitCtrl", function($scope, TransmitService, $state, $timeout, AccountService) {
-    $scope.awsParamsURI = TransmitService.awsParamsURI();
-    $scope.awsFolder = TransmitService.awsFolder();
-    $scope.s3Bucket = TransmitService.s3Bucket();
-    $scope.transmission = {
-      media: {}
-    };
-    TransmitService.lastTransmission(function(song) {
-      var latest_date;
-      latest_date = new Date(song.timestamp);
-      if ((new Date()).getDay() === latest_date.getDay()) {
-        $scope.song = song;
-        return $scope.transmitted = true;
-      }
-    });
-    $scope.$on('s3upload:success', function(e) {
-      $scope.ready = true;
-      $timeout((function() {
-        $scope.transmission.media.src = e.targetScope['filename'];
-        return $scope.transmission.media.type = e.targetScope['filetype'];
-      }), 100);
-    });
-    return $scope.transmit = function(song) {
-      return AccountService.refresh(function(myself) {
-        song = {};
-        song['info'] = $scope.transmission.info || '';
-        song['title'] = $scope.transmission.title || '~untitled';
-        song['media'] = $scope.transmission.media;
-        song['user_id'] = myself.user_id;
-        song['timestamp'] = (new Date()).toISOString();
-        song['$priority'] = -1 * Math.floor(new Date().getTime() / 1000);
-        song['artist'] = {
-          'alias': myself.alias || '',
-          'key': myself.$id,
-          'avatar': myself.avatar || ''
-        };
-        return TransmitService.transmit(song, function(new_id) {
-          $scope.latestTransmission = song;
-          $scope.transmitted = true;
-          return $scope.song = song;
-        });
-      });
-    };
-  });
-
-}).call(this);
-
-
-/*
-A simple example service that returns some data.
- */
-
-(function() {
-  angular.module("songaday").factory("TransmitService", function($rootScope, $firebaseObject, $firebaseArray, FBURL, S3Uploader, ngS3Config, SongService, AccountService) {
-    var ref;
-    ref = new Firebase(FBURL + 'songs').limit(4);
-    return {
-      cloudFrontURI: function() {
-        return 'http://d1hmps6uc7xmb3.cloudfront.net/';
-      },
-      awsParamsURI: function() {
-        return '/config/aws.json';
-      },
-      awsFolder: function() {
-        return 'songs/';
-      },
-      s3Bucket: function() {
-        return 'songadays';
-      },
-      transmit: function(song, callback) {
-        var songs;
-        songs = SongService.some();
-        songs.$loaded(function() {
-          return AccountService.refresh(function(me) {
-            return songs.$add(song).then(function(new_ref) {
-              var new_id;
-              new_id = new_ref.key();
-              if (typeof me.songs === 'undefined') {
-                me.songs = {};
-              }
-              me.songs[new_id] = true;
-              me.last_transmission = new_id;
-              me.$save();
-              return callback(new_id);
-            });
-          });
-        });
-      },
-      lastTransmission: function(callback) {
-        return AccountService.refresh(function(myself) {
-          var last_transmission;
-          ref = new Firebase(FBURL + '/songs/' + myself.last_transmission);
-          last_transmission = $firebaseObject(ref);
-          return last_transmission.$loaded(function(err) {
-            if (callback) {
-              return callback(last_transmission);
-            }
-          });
-        });
-      },
-      uploadBlob: function(blob, callback) {
-        var cloudFront, s3Uri;
-        cloudFront = this.cloudFrontURI();
-        s3Uri = 'https://' + this.s3Bucket() + '.s3.amazonaws.com/';
-        return S3Uploader.getUploadOptions(this.awsParamsURI()).then(function(s3Options) {
-          var key, opts;
-          key = s3Options.folder + (new Date()).getTime() + '-' + S3Uploader.randomString(16) + ".mp3";
-          opts = angular.extend({
-            submitOnChange: true,
-            getOptionsUri: '/getS3Options',
-            getManualOptions: null,
-            acl: 'private',
-            uploadingKey: 'uploading',
-            folder: 'songs/',
-            enableValidation: true,
-            targetFilename: null
-          }, opts);
-          return S3Uploader.upload($rootScope, s3Uri, key, opts.acl, blob.type, s3Options.key, s3Options.policy, s3Options.signature, blob).then(function(obj) {
-            callback(cloudFront + key);
-          });
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
 
 
 }).call(this);
@@ -1185,6 +1048,8 @@ A simple example service that returns some data.
     var __log, audio_context, captureError, captureSuccess, export_wav, fetchFile, rec_ctrl, recorder, startUserMedia;
     rec_ctrl = this;
     audio_context = {};
+    $scope.transmission = {};
+    $rootScope.file_type = "audio/mp3";
     try {
       $rootScope.stop();
     } catch (_error) {}
@@ -1192,27 +1057,28 @@ A simple example service that returns some data.
     $rootScope.recording = false;
     $rootScope.recording_file_uri = false;
     TransmitService.lastTransmission(function(song) {
-      var latest_date;
-      $scope.song = song;
+      var latest_date, today;
       latest_date = new Date(song.timestamp);
-      if ((new Date()).getDay() === latest_date.getDay()) {
+      today = new Date();
+      if (today.getDay() === latest_date.getDay()) {
+        $scope.song = song;
         return $scope.transmitted = true;
       }
     });
     $scope.transmit = function() {
-      __log('uploading mp3');
+      __log('Uploading Compressed Audio');
       return AccountService.refresh(function(myself) {
-        return TransmitService.uploadBlob($rootScope.mp3Blob, function(file_uri) {
-          var song;
-          __log('mp3 uploaded');
+        return TransmitService.uploadBlob($rootScope.file_blob, function(file_uri) {
+          var file_type, song;
+          __log('Audio uploaded');
           song = {};
-          console.log(file_uri);
+          file_type = $rootScope.file_type;
           song['media'] = {
             'src': file_uri,
-            type: 'audio/mp3'
+            type: file_type
           };
-          song['info'] = $scope.transmission.info || '';
-          song['title'] = $scope.transmission.title || '~untitled';
+          song['info'] = $scope.transmission.info || '~';
+          song['title'] = $scope.transmission.title || 'untitled';
           song['user_id'] = myself.user_id;
           song['timestamp'] = (new Date()).toISOString();
           song['$priority'] = -1 * Math.floor(new Date().getTime() / 1000);
@@ -1223,9 +1089,12 @@ A simple example service that returns some data.
           };
           return TransmitService.transmit(song, function(new_id) {
             myself.songs[new_id] = true;
+            myself.last_transmission = new_id;
             myself.$save();
             __log('complete');
-            return $state.go('app.songs');
+            $scope.latestTransmission = song;
+            $scope.transmitted = true;
+            return $scope.song = song;
           });
         });
       });
@@ -1235,11 +1104,11 @@ A simple example service that returns some data.
         return;
       }
       __log('encoded.');
-      $rootScope.mp3Blob = new Blob([new Uint8Array(e.data.buf)], {
+      $rootScope.file_blob = new Blob([new Uint8Array(e.data.buf)], {
         type: 'audio/mp3'
       });
       $scope.readyToTransmit = true;
-      $rootScope.mp3Blob.name = $scope.title + '.mp3';
+      $rootScope.file_blob.name = $scope.title + '.mp3';
       return $scope.$apply();
     };
     fetchFile = function(fs) {
@@ -1250,9 +1119,16 @@ A simple example service that returns some data.
       $window.file = mediaFiles[0];
       file_protocol = "file://";
       return $window.resolveLocalFileSystemURI(file_protocol + file.fullPath, function(obj) {
-        window.file_obj = obj;
-        RecordService.__log(obj);
-        return $scope.file = obj;
+        var file_URI;
+        $rootScope["native"] = true;
+        file_URI = obj.nativeURL;
+        return obj.file(function(file_obj) {
+          $rootScope.wav_file_uri = file_URI;
+          $rootScope.file_blob = file_obj;
+          $rootScope.file_type = "audio/m4a";
+          $rootScope.readyToTransmit = true;
+          return $scope.$apply();
+        });
       });
     };
     captureError = function(error) {
@@ -1569,7 +1445,12 @@ A simple example service that returns some data.
         this.more();
         return songs;
       },
-      more: function() {
+      more: function(cb) {
+        songs.$loaded(function() {
+          if (cb) {
+            return cb();
+          }
+        });
         return scroll.next(limit);
       },
       comment: function(song, comment) {
@@ -1600,6 +1481,139 @@ A simple example service that returns some data.
           playlist.push(this.get(songId));
         }
         return playlist;
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").controller("TransmitCtrl", function($scope, TransmitService, $state, $timeout, AccountService) {
+    $scope.awsParamsURI = TransmitService.awsParamsURI();
+    $scope.awsFolder = TransmitService.awsFolder();
+    $scope.s3Bucket = TransmitService.s3Bucket();
+    $scope.transmission = {
+      media: {}
+    };
+    TransmitService.lastTransmission(function(song) {
+      var latest_date, today;
+      latest_date = new Date(song.timestamp);
+      today = new Date();
+      if (today.getDay() === latest_date.getDay()) {
+        $scope.song = song;
+        return $scope.transmitted = true;
+      }
+    });
+    $scope.$on('s3upload:success', function(e) {
+      $scope.ready = true;
+      $timeout((function() {
+        $scope.transmission.media.src = e.targetScope['filename'];
+        return $scope.transmission.media.type = e.targetScope['filetype'];
+      }), 100);
+    });
+    return $scope.transmit = function(song) {
+      return AccountService.refresh(function(myself) {
+        song = {};
+        song['info'] = $scope.transmission.info || '';
+        song['title'] = $scope.transmission.title || '~untitled';
+        song['media'] = $scope.transmission.media;
+        song['user_id'] = myself.user_id;
+        song['timestamp'] = (new Date()).toISOString();
+        song['$priority'] = -1 * Math.floor(new Date().getTime() / 1000);
+        song['artist'] = {
+          'alias': myself.alias || '',
+          'key': myself.$id,
+          'avatar': myself.avatar || ''
+        };
+        console.log(song);
+        return TransmitService.transmit(song, function(new_id) {
+          $scope.latestTransmission = song;
+          $scope.transmitted = true;
+          return $scope.song = song;
+        });
+      });
+    };
+  });
+
+}).call(this);
+
+
+/*
+A simple example service that returns some data.
+ */
+
+(function() {
+  angular.module("songaday").factory("TransmitService", function($rootScope, $firebaseObject, $firebaseArray, FBURL, S3Uploader, ngS3Config, SongService, AccountService) {
+    var ref;
+    ref = new Firebase(FBURL + 'songs').limit(4);
+    return {
+      cloudFrontURI: function() {
+        return 'http://d1hmps6uc7xmb3.cloudfront.net/';
+      },
+      awsParamsURI: function() {
+        return '/config/aws.json';
+      },
+      awsFolder: function() {
+        return 'songs/';
+      },
+      s3Bucket: function() {
+        return 'songadays';
+      },
+      transmit: function(song, callback) {
+        var songs;
+        songs = SongService.some();
+        songs.$loaded(function() {
+          return AccountService.refresh(function(me) {
+            return songs.$add(song).then(function(new_ref) {
+              var new_id;
+              new_id = new_ref.key();
+              if (typeof me.songs === 'undefined') {
+                me.songs = {};
+              }
+              me.songs[new_id] = true;
+              me.last_transmission = new_id;
+              me.$save();
+              return callback(new_id);
+            });
+          });
+        });
+      },
+      lastTransmission: function(callback) {
+        return AccountService.refresh(function(myself) {
+          var last_transmission;
+          ref = new Firebase(FBURL + '/songs/' + myself.last_transmission);
+          last_transmission = $firebaseObject(ref);
+          return last_transmission.$loaded(function(err) {
+            if (callback) {
+              return callback(last_transmission);
+            }
+          });
+        });
+      },
+      uploadBlob: function(blob, callback) {
+        var awsParams, cloudFront, key, opts, s3Options, s3Uri;
+        cloudFront = this.cloudFrontURI();
+        s3Uri = 'https://' + this.s3Bucket() + '.s3.amazonaws.com/';
+        awsParams = this.awsParamsURI();
+        s3Options = {
+          'policy': 'ewogICJleHBpcmF0aW9uIjogIjIwMjAtMDEtMDFUMDA6MDA6MDBaIiwKICAiY29uZGl0aW9ucyI6IFsKICAgIHsiYnVja2V0IjogInNvbmdhZGF5cyJ9LAogICAgWyJzdGFydHMtd2l0aCIsICIka2V5IiwgIiJdLAogICAgeyJhY2wiOiAicHJpdmF0ZSJ9LAogICAgWyJzdGFydHMtd2l0aCIsICIkQ29udGVudC1UeXBlIiwgIiJdLAogICAgWyJzdGFydHMtd2l0aCIsICIkZmlsZW5hbWUiLCAiIl0sCiAgICBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMCwgNTI0Mjg4MDAwXQogIF0KfQ==',
+          'signature': 'r+Ci1HbYn4fkyFB0pxwRWx5m0Ss=',
+          'key': 'AKIAJ7K34ZKXEV72GYRQ'
+        };
+        key = s3Options.folder + (new Date()).getTime() + '-' + S3Uploader.randomString(16) + ".mp3";
+        opts = angular.extend({
+          submitOnChange: true,
+          getOptionsUri: awsParams,
+          getManualOptions: null,
+          acl: 'private',
+          uploadingKey: 'uploading',
+          folder: 'songs/',
+          enableValidation: true,
+          targetFilename: null
+        }, opts);
+        return S3Uploader.upload($rootScope, s3Uri, key, opts.acl, blob.type, s3Options.key, s3Options.policy, s3Options.signature, blob).then(function(obj) {
+          callback(cloudFront + key);
+        });
       }
     };
   });
