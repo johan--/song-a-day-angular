@@ -6,6 +6,15 @@ loader {
   margin: auto;
   font-size: 80px; }
 
+.song_info {
+  cursor: alias; }
+
+.song_info .title {
+  font-family: fantasy; }
+
+.avatar:hover {
+  border: 1px dotted transparent; }
+
 .artist {
   display: inline-block; }
 
@@ -25,6 +34,12 @@ loader {
 
 .float-right {
   float: right; }
+
+.ion-play:hover {
+  color: #519f6b !important; }
+
+.ion-plus:hover {
+  color: #26a3e4 !important; }
 
 .avatar {
   border-radius: 100%;

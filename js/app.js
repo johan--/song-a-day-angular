@@ -81,15 +81,15 @@
     if (GLOBALS.ENV !== "test") {
       $log.debug("Ionic app \"" + GLOBALS.ANGULAR_APP_NAME + "\" has just started (app.run)!");
     }
+    $timeout(function() {
+      var ref;
+      return (ref = navigator.splashscreen) != null ? ref.hide() : void 0;
+    });
     Auth.$onAuth(function(user) {
       return $rootScope.loggedIn = !!user;
     });
-    AccountService.refresh(function(myself) {
+    return AccountService.refresh(function(myself) {
       return $rootScope.myself = myself;
-    });
-    return $timeout(function() {
-      var ref;
-      return (ref = navigator.splashscreen) != null ? ref.hide() : void 0;
     });
   });
 
@@ -775,10 +775,18 @@ A simple example service that returns some data.
       ctrl.API.stop();
       return ctrl.playlist = [];
     };
+    $rootScope.enQueue = function(song) {
+      if (_(ctrl.playlist).includes(song)) {
+        return;
+      }
+      ctrl.playlist.push(song);
+      if (ctrl.playlist.length === 1) {
+        return ctrl.setNowPlaying(0);
+      }
+    };
     $rootScope.queue = function(song) {
       if (_(ctrl.playlist).includes(song)) {
         ctrl.setNowPlaying(_.indexOf(ctrl.playlist, song));
-        console.log('now');
         return;
       }
       ctrl.playlist.push(song);
@@ -1050,6 +1058,7 @@ A simple example service that returns some data.
     audio_context = {};
     $scope.transmission = {};
     $rootScope.file_type = "audio/mp3";
+    $scope.transmitting = false;
     try {
       $rootScope.stop();
     } catch (_error) {}
@@ -1094,7 +1103,8 @@ A simple example service that returns some data.
             __log('complete');
             $scope.latestTransmission = song;
             $scope.transmitted = true;
-            return $scope.song = song;
+            $scope.song = song;
+            return $scope.transmitting = false;
           });
         });
       });
@@ -1416,12 +1426,21 @@ A simple example service that returns some data.
     $scope.songs.$loaded(function() {
       return $scope.loading = false;
     });
-    return $scope.loadMore = function() {
-      console.log('loading more');
+    $scope.loadMore = function() {
       $scope.loading = true;
       return SongService.more(function() {
         return $scope.loading = false;
       });
+    };
+    return $scope.playAll = function() {
+      var i, len, ref, results, song;
+      ref = $scope.songs;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        song = ref[i];
+        results.push($scope.enQueue(song));
+      }
+      return results;
     };
   });
 
@@ -1446,12 +1465,10 @@ A simple example service that returns some data.
         return songs;
       },
       more: function(cb) {
-        songs.$loaded(function() {
-          if (cb) {
-            return cb();
-          }
-        });
-        return scroll.next(limit);
+        scroll.next(limit);
+        if (cb) {
+          return cb();
+        }
       },
       comment: function(song, comment) {
         var comments, commentsRef, notices, noticesRef, notification;

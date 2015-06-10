@@ -443,7 +443,7 @@ angular.module("com.2fdevs.videogular")
 
         this.onComplete = function (event) {
             $scope.vgComplete();
-            console.log("COMPLETED!")
+            console.log($scope)
             this.setState(VG_STATES.STOP);
             this.isCompleted = true;
             $scope.$apply();
@@ -453,18 +453,18 @@ angular.module("com.2fdevs.videogular")
             $scope.vgError({$event: event});
         };
 
-        this.addListeners = function () {
-            this.mediaElement[0].addEventListener("canplay", this.onCanPlay.bind(this), false);
-            this.mediaElement[0].addEventListener("loadedmetadata", this.onLoadMetaData.bind(this), false);
-            this.mediaElement[0].addEventListener("waiting", this.onStartBuffering.bind(this), false);
-            this.mediaElement[0].addEventListener("ended", this.onComplete.bind(this), false);
-            this.mediaElement[0].addEventListener("playing", this.onStartPlaying.bind(this), false);
-            this.mediaElement[0].addEventListener("play", this.onPlay.bind(this), false);
-            this.mediaElement[0].addEventListener("pause", this.onPause.bind(this), false);
-            this.mediaElement[0].addEventListener("volumechange", this.onVolumeChange.bind(this), false);
-            this.mediaElement[0].addEventListener("playbackchange", this.onPlaybackChange.bind(this), false);
-            this.mediaElement[0].addEventListener("timeupdate", this.onUpdateTime.bind(this), false);
-            this.mediaElement[0].addEventListener("error", this.onVideoError.bind(this), false);
+        this.addListeners = function (element) {
+            element.addEventListener("canplay", this.onCanPlay.bind(this), false);
+            element.addEventListener("loadedmetadata", this.onLoadMetaData.bind(this), false);
+            element.addEventListener("waiting", this.onStartBuffering.bind(this), false);
+            element.addEventListener("ended", this.onComplete.bind(this), false);
+            element.addEventListener("playing", this.onStartPlaying.bind(this), false);
+            element.addEventListener("play", this.onPlay.bind(this), false);
+            element.addEventListener("pause", this.onPause.bind(this), false);
+            element.addEventListener("volumechange", this.onVolumeChange.bind(this), false);
+            element.addEventListener("playbackchange", this.onPlaybackChange.bind(this), false);
+            element.addEventListener("timeupdate", this.onUpdateTime.bind(this), false);
+            element.addEventListener("error", this.onVideoError.bind(this), false);
         };
 
         this.init = function () {
@@ -664,8 +664,8 @@ angular.module("com.2fdevs.videogular")
                 API.mediaElement = API.audioElement
                 API.sources = scope.vgSrc;
 
-                API.addListeners();
-                API.onVideoReady();
+                API.addListeners(API.audioElement[0]);
+                API.onVideoReady(API.videoElement[0]);
 
                 scope.$watch("vgSrc", scope.onChangeSource);
 

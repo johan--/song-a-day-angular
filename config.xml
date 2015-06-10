@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.paulwand.songaday.development" 
+<widget id="paulwand.SongADay" 
         version="1.0.0" 
         android-versionCode="100" 
         ios-bundleVersion="1.0.0" 
