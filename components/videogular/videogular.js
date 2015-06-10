@@ -665,6 +665,7 @@ angular.module("com.2fdevs.videogular")
                 API.sources = scope.vgSrc;
 
                 API.addListeners(API.audioElement[0]);
+                API.addListeners(API.videoElement[0]);
                 API.onVideoReady(API.videoElement[0]);
 
                 scope.$watch("vgSrc", scope.onChangeSource);

@@ -84,14 +84,20 @@ loader {
   background-color: black; }
 
 .cinema video {
-  pointer-events: none;
-  opacity: 50%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  height: 100%; }
+  pointer-events: none; }
+
+.close {
+  cursor: pointer; }
+
+.close:hover {
+  color: red; }
+
+.song_title {
+  font-family: fantasy; }
+
+.alias:hover {
+  color: #26a3e4 !important;
+  cursor: pointer; }
 
 .comments {
   float: left; }
