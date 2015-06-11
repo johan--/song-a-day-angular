@@ -670,6 +670,10 @@ A simple example service that returns some data.
     ctrl.currentSong = 0;
     ctrl.currentMediaType = "audio";
     ctrl.playlist = [];
+    ctrl.playlistMode = false;
+    ctrl.toggleAside = function() {
+      return ctrl.playlistMode = true;
+    };
     $timeout((function() {
       return ionic.trigger('resize');
     }), 100);
@@ -758,6 +762,9 @@ A simple example service that returns some data.
       return ctrl.setNowPlaying(ctrl.currentSong);
     };
     $rootScope.play = function(song) {
+      if (ctrl.playlist.indexOf(song) === ctrl.currentSong) {
+        return;
+      }
       if (!_(ctrl.playlist).includes(song)) {
         ctrl.playlist.push(song);
         return ctrl.setNowPlaying(_.indexOf(ctrl.playlist, song));
@@ -807,9 +814,26 @@ A simple example service that returns some data.
         }
       ]
     };
+    ctrl.remove = function(index) {
+      if (ctrl.currentSong === index) {
+        ctrl.next();
+      }
+      ctrl.playlist.splice(index, 1);
+      return $scope.$apply();
+    };
+    ctrl.moveSong = function(song, fromIndex, toIndex) {
+      if (ctrl.currentSong === fromIndex) {
+        ctrl.currentSong = toIndex;
+      }
+      console.log(fromIndex, toIndex, ctrl.playlist);
+      ctrl.playlist.splice(fromIndex, 1);
+      $scope.$apply();
+      ctrl.playlist.splice(toIndex, 0, song);
+      $scope.$apply();
+      console.log(ctrl.playlist);
+    };
     ctrl.setNowPlaying = function(index) {
       var m;
-      console.log(ctrl.API);
       ctrl.API.stop();
       ctrl.currentSong = index;
       m = ctrl.playlist[index].media;

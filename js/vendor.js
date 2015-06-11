@@ -70114,7 +70114,12 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
    * Toggle the left menu to open 100%
    */
   self.toggleLeft = function(shouldOpen) {
-    if (isAsideExposed || !self.left.isEnabled) return;
+    if (!self.left.isEnabled) return;
+    if (isAsideExposed){
+      self.exposeAside(false)
+    }else{
+      self.exposeAside(true)
+    }
     var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
       shouldOpen = openAmount <= 0;
@@ -70125,6 +70130,9 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
     } else {
       self.openPercentage(100);
     }
+
+    self.content.element.children[1].focus()
+    console.log(self.content)
   };
 
   /**
@@ -73419,7 +73427,7 @@ IonicModule
  * <ion-radio ng-model="choice" ng-value="'B'">Choose B</ion-radio>
  * <ion-radio ng-model="choice" ng-value="'C'">Choose C</ion-radio>
  * ```
- * 
+ *
  * @param {string=} name The name of the radio input.
  * @param {expression=} value The value of the radio input.
  * @param {boolean=} disabled The state of the radio input.
@@ -74852,6 +74860,7 @@ IonicModule
 });
 
 })();
+
 /*
 CryptoJS v3.1.2
 code.google.com/p/crypto-js
