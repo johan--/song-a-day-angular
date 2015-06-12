@@ -120,8 +120,8 @@ loader {
 .song_title:hover {
   color: #519f6b !important; }
 
-.song_avatar {
-  padding: 4px; }
+.avatar {
+  padding-left: 4px; }
 
 .song_title:hover:after {
   content: "\f215" !important;
