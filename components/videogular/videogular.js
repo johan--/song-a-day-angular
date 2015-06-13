@@ -7,7 +7,7 @@
 angular.module("com.2fdevs.videogular", ["ngSanitize"])
     .run(
     ["$templateCache", function ($templateCache) {
-        $templateCache.put("vg-templates/vg-media", "<audio></audio><video></video>");
+        $templateCache.put("vg-templates/vg-media", "<audio></audio><video controls ></video>");
 
         // Support for browsers that doesn't have .bind()
         if (!Function.prototype.bind) {

@@ -38763,7 +38763,7 @@ if( typeof window !== 'undefined' ) {
 angular.module("com.2fdevs.videogular", ["ngSanitize"])
     .run(
     ["$templateCache", function ($templateCache) {
-        $templateCache.put("vg-templates/vg-media", "<audio></audio><video></video>");
+        $templateCache.put("vg-templates/vg-media", "<audio></audio><video controls></video>");
 
         // Support for browsers that doesn't have .bind()
         if (!Function.prototype.bind) {
@@ -52607,24 +52607,22 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
     "<div class=\"upload-wrap\">\n" +
     "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
     "  <a ng-href=\"{{ filename  }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > Stored file </a>\n" +
-    "  <div class=\"progress progress-striped\" ng-class=\"{active: uploading}\" ng-show=\"attempt\" style=\"margin-top: 10px\">\n" +
-    "    <div class=\"bar\" style=\"width: {{ progress }}%;\" ng-class=\"barClass()\"></div>\n" +
-    "    </div>\n" +
-    "  <input type=\"file\" style=\"display: none\"/>\n" +
+    "    <progress max=\"100\" value=\"{{progress}}\"ng-class=\"{active: uploading}\" >\n" +
+    "    </progress>\n" +
+    "  <input type=\"file\" accept='image/*' style=\"display: none\"/>\n" +
     "</div>"
   );
 
 
   $templateCache.put('theme/audio.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
-    "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > Stored file </a>\n" +
+    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose song file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
+    "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" >  transmission </a>\n" +
     "  <div class=\"progress\">\n" +
-    "    <div class=\"progress-bar progress-bar-striped\" ng-class=\"{active: uploading}\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: {{ progress }}%; margin-top: 10px\" ng-class=\"barClass()\">\n" +
-    "      <span class=\"sr-only\">{{progress}}% Complete</span>\n" +
-    "    </div>\n" +
+    "    <progress max=\"100\" value=\"{{progress}}\"ng-class=\"{active: uploading}\" >\n" +
+    "    </progress>\n" +
     "  </div>\n" +
-    "  <input type=\"file\" style=\"display: none\"/>\n" +
+    "  <input type=\"file\" accept='audio/*,video/*' style=\"display: none\"/>\n" +
     "</div>"
   );
 
