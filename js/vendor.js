@@ -70065,7 +70065,8 @@ IonicModule
   '$ionicPlatform',
   '$ionicBody',
   '$ionicHistory',
-function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $ionicHistory) {
+  '$window',
+function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $ionicHistory,$window) {
   var self = this;
   var rightShowing, leftShowing, isDragging;
   var startX, lastX, offsetX, isAsideExposed;
@@ -70113,10 +70114,13 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
    */
   self.toggleLeft = function(shouldOpen) {
     if (!self.left.isEnabled) return;
-    if (isAsideExposed){
-      self.exposeAside(false)
-    }else{
-      self.exposeAside(true)
+    var mq = '(min-width:768px)'
+    if ($window.matchMedia(mq).matches){
+      if (isAsideExposed){
+        self.exposeAside(false)
+      }else{
+        self.exposeAside(true)
+      }
     }
     var openAmount = self.getOpenAmount();
     if (arguments.length === 0) {
@@ -70130,7 +70134,6 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
     }
 
     self.content.element.children[1].focus()
-    console.log(self.content)
   };
 
   /**
@@ -70214,7 +70217,10 @@ function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform, $ionicBody, $io
 
     // add the CSS class "menu-open" if the percentage does not
     // equal 0, otherwise remove the class from the body element
-    $ionicBody.enableClass((percentage !== 0), 'menu-open');
+    var mq = '(min-width:768px)'
+    if (!$window.matchMedia(mq).matches){
+      $ionicBody.enableClass((percentage !== 0), 'menu-open');
+    }
   };
 
   /**

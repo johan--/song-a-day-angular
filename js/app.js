@@ -716,17 +716,17 @@ A simple example service that returns some data.
       });
     };
     $rootScope.showNotification = function(notice) {
+      var songID;
+      songID = notice.link.toString().replace('song/', "");
       $state.go('app.song-detail', {
-        songId: notice.link
+        songId: songID
       });
       return $rootScope.notifications.$remove(notice);
     };
     $rootScope.login = function() {
-      console.log('login');
       return AccountService.login();
     };
     $rootScope.logout = function() {
-      console.log('login');
       return AccountService.logout();
     };
     $rootScope.showArtist = function(artist) {
@@ -857,6 +857,7 @@ A simple example service that returns some data.
       var m;
       ctrl.API.stop();
       ctrl.currentSong = index;
+      ctrl.nowPlaying = ctrl.playlist[index];
       m = ctrl.playlist[index].media;
       ctrl.config.sources = [
         {
@@ -1537,10 +1538,11 @@ A simple example service that returns some data.
         return $firebaseObject(ref);
       },
       getList: function(songList, cb) {
-        var playlist, songId;
+        var playlist, song, songId;
         playlist = [];
         for (songId in songList) {
-          playlist.push(this.get(songId));
+          song = this.get(songId);
+          playlist.push(song);
         }
         return playlist;
       }

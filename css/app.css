@@ -63,9 +63,10 @@ loader {
   cursor: pointer; }
 
 .avatar:hover {
-  width: 200px;
-  height: 200px;
-  border: 1px dotted transparent; }
+  /*  width:200px;
+  height:200px;
+  border:1px dotted transparent;
+*/ }
 
 .comment {
   display: block; }
@@ -98,8 +99,9 @@ loader {
   cursor: pointer; }
 
 .song-header:hover {
-  background-color: #519f6b !important;
-  background-opacity: .2; }
+  /*
+  background-color:#519f6b!important;
+  background-opacity: .2;*/ }
 
 .comment .text:before {
   content: ":"; }
@@ -123,7 +125,8 @@ video::-webkit-media-controls-fullscreen-button {
   cursor: pointer; }
 
 .close:hover {
-  color: red; }
+  /*
+  color:red;*/ }
 
 .enqueue {
   position: absolute;
@@ -142,10 +145,7 @@ video::-webkit-media-controls-fullscreen-button {
   cursor: pointer;
   color: gray;
   line-height: 50px;
-  font-size: 27px !important; }
-
-.song_title:hover {
-  color: #519f6b !important; }
+  font-size: 17px !important; }
 
 .song_heading {
   color: gray;
@@ -154,10 +154,6 @@ video::-webkit-media-controls-fullscreen-button {
 .card {
   border-radius: 5px;
   border-color: #d9edf7; }
-
-.alias:hover {
-  color: #26a3e4 !important;
-  cursor: pointer; }
 
 .comments {
   float: left; }
@@ -181,6 +177,12 @@ video::-webkit-media-controls-fullscreen-button {
 
 .always {
   display: inline !important; }
+
+.playlist-item {
+  cursor: pointer; }
+
+.active, .playing {
+  background-color: #D6EBE0 !important; }
 
 .transmit {
   animation: myfirst 5s;
