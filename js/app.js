@@ -385,6 +385,39 @@
 
 }).call(this);
 
+(function() {
+  angular.module('songaday').filter('length', function() {
+    return function(item) {
+      return Object.keys(item || {}).length;
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('trust', function($sce) {
+    return function(url) {
+      if (url) {
+        return $sce.trustAsResourceUrl(url);
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  Array.prototype.last = function(n) {
+    n = typeof n !== 'undefined' ? n : 1;
+    return this[this.length - n];
+  };
+
+}).call(this);
+
+(function() {
+
+
+}).call(this);
+
 
 /*
 A simple example service that returns some data.
@@ -565,39 +598,6 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module('songaday').filter('length', function() {
-    return function(item) {
-      return Object.keys(item || {}).length;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('trust', function($sce) {
-    return function(url) {
-      if (url) {
-        return $sce.trustAsResourceUrl(url);
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  Array.prototype.last = function(n) {
-    n = typeof n !== 'undefined' ? n : 1;
-    return this[this.length - n];
-  };
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
-(function() {
   angular.module("songaday").controller("AccountCtrl", function($scope, $stateParams, AccountService, SongService, TransmitService) {
     console.log('ACCOUNT');
     $scope.awsParamsURI = TransmitService.awsParamsURI();
@@ -698,6 +698,12 @@ A simple example service that returns some data.
     $timeout((function() {
       return ionic.trigger('resize');
     }), 100);
+    $rootScope.songIsPlaying = function(song) {
+      var isPlaying;
+      isPlaying = ctrl.nowPlaying.$id === song.$id && ctrl.API.currentState === "play";
+      console.log(isPlaying, song, ctrl.API.currentState, ctrl.nowPlaying);
+      return isPlaying;
+    };
     $rootScope.comment = function(song, comment_text) {
       return AccountService.refresh(function(myself) {
         var comment;
@@ -1538,13 +1544,15 @@ A simple example service that returns some data.
         return $firebaseObject(ref);
       },
       getList: function(songList, cb) {
-        var playlist, song, songId;
+        var playlist, results, song, songId;
         playlist = [];
+        results = [];
         for (songId in songList) {
           song = this.get(songId);
           playlist.push(song);
+          results.push(playlist);
         }
-        return playlist;
+        return results;
       }
     };
   });
