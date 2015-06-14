@@ -77,6 +77,11 @@ loader {
 .alias {
   font-weight: bold; }
 
+.comment_alias {
+  font-weight: bold;
+  color: darkblue;
+  cursor: pointer; }
+
 .artist_statement {
   -webkit-text-fill-color: white;
   /* Will override color (regardless of order) */
@@ -149,6 +154,18 @@ video::-webkit-media-controls-fullscreen-button {
   text-overflow: initial !important;
   white-space: pre-line !important;
   padding-top: 10px; }
+
+.item-delete.active {
+  background-color: transparent !important; }
+
+.comment_input {
+  background-color: transparent; }
+
+.comment-box {
+  background-color: whiteSmoke; }
+
+.item-right-edit.item-reorder {
+  background-color: transparent !important; }
 
 .song_heading {
   color: gray;
