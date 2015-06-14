@@ -287,137 +287,6 @@
 
 }).call(this);
 
-(function() {
-  angular.module('songaday').directive('comments', function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        tElem.append('<div another-directive></div>');
-        return function(scope, iElem, iAttrs) {
-          iElem.append('<div another-directive></div>');
-        };
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('enterSubmit', function() {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        elem.bind('keyup', function(event) {
-          var code;
-          code = event.keyCode || event.which;
-          if (code === 13) {
-            if (!event.shiftKey) {
-              event.preventDefault();
-              scope.$apply(attrs.enterSubmit);
-            }
-          }
-        });
-        if (ionic.Platform.isIOS()) {
-          elem.bind('blur', function(event) {
-            scope.$apply(attrs.enterSubmit);
-          });
-        }
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('errSrc', function() {
-    return {
-      link: function(scope, element, attrs) {
-        element.bind('error', function() {
-          if (attrs.src !== attrs.errSrc) {
-            attrs.$set('src', attrs.errSrc);
-          }
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('loader', function() {
-    return {
-      template: '{{loading?"☕":""}}'
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('showWhen', function($window) {
-    return {
-      restrict: 'A',
-      link: function($scope, $element, $attr) {
-        var checkExpose, debouncedCheck, onResize;
-        debouncedCheck = ionic.debounce((function() {
-          $scope.$apply(function() {
-            checkExpose();
-          });
-        }), 300, false);
-        checkExpose = function() {
-          var mq;
-          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
-          if ($window.matchMedia(mq).matches) {
-            $element.removeClass('ng-hide');
-          } else {
-            $element.addClass('ng-hide');
-          }
-        };
-        onResize = function() {
-          debouncedCheck();
-        };
-        checkExpose();
-        ionic.on('resize', onResize, $window);
-        $scope.$on('$destroy', function() {
-          ionic.off('resize', onResize, $window);
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('length', function() {
-    return function(item) {
-      return Object.keys(item || {}).length;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('trust', function($sce) {
-    return function(url) {
-      if (url) {
-        return $sce.trustAsResourceUrl(url);
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  Array.prototype.last = function(n) {
-    n = typeof n !== 'undefined' ? n : 1;
-    return this[this.length - n];
-  };
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
 
 /*
 A simple example service that returns some data.
@@ -598,6 +467,137 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
+  angular.module('songaday').directive('comments', function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        tElem.append('<div another-directive></div>');
+        return function(scope, iElem, iAttrs) {
+          iElem.append('<div another-directive></div>');
+        };
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('enterSubmit', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elem, attrs) {
+        elem.bind('keyup', function(event) {
+          var code;
+          code = event.keyCode || event.which;
+          if (code === 13) {
+            if (!event.shiftKey) {
+              event.preventDefault();
+              scope.$apply(attrs.enterSubmit);
+            }
+          }
+        });
+        if (ionic.Platform.isIOS()) {
+          elem.bind('blur', function(event) {
+            scope.$apply(attrs.enterSubmit);
+          });
+        }
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('errSrc', function() {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if (attrs.src !== attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('loader', function() {
+    return {
+      template: '{{loading?"☕":""}}'
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('showWhen', function($window) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        var checkExpose, debouncedCheck, onResize;
+        debouncedCheck = ionic.debounce((function() {
+          $scope.$apply(function() {
+            checkExpose();
+          });
+        }), 300, false);
+        checkExpose = function() {
+          var mq;
+          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
+          if ($window.matchMedia(mq).matches) {
+            $element.removeClass('ng-hide');
+          } else {
+            $element.addClass('ng-hide');
+          }
+        };
+        onResize = function() {
+          debouncedCheck();
+        };
+        checkExpose();
+        ionic.on('resize', onResize, $window);
+        $scope.$on('$destroy', function() {
+          ionic.off('resize', onResize, $window);
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  Array.prototype.last = function(n) {
+    n = typeof n !== 'undefined' ? n : 1;
+    return this[this.length - n];
+  };
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('length', function() {
+    return function(item) {
+      return Object.keys(item || {}).length;
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('trust', function($sce) {
+    return function(url) {
+      if (url) {
+        return $sce.trustAsResourceUrl(url);
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+
+
+}).call(this);
+
+(function() {
   angular.module("songaday").controller("AccountCtrl", function($scope, $stateParams, AccountService, SongService, TransmitService) {
     console.log('ACCOUNT');
     $scope.awsParamsURI = TransmitService.awsParamsURI();
@@ -758,21 +758,8 @@ A simple example service that returns some data.
     };
     $scope.showNowPlaying = function() {
       return $state.go('app.song-detail', {
-        songId: ctrl.nowPlaying().$id
+        songId: ctrl.nowPlaying.$id
       });
-    };
-    ctrl.nowPlaying = function() {
-      if (ctrl.currentSong < ctrl.playlist.length) {
-        return ctrl.playlist[ctrl.currentSong];
-      } else {
-        return {
-          artist: {
-            "alias": "",
-            "avatar": ""
-          },
-          $id: ""
-        };
-      }
     };
     ctrl.next = function() {
       ctrl.currentSong++;
@@ -1544,15 +1531,13 @@ A simple example service that returns some data.
         return $firebaseObject(ref);
       },
       getList: function(songList, cb) {
-        var playlist, results, song, songId;
+        var playlist, song, songId;
         playlist = [];
-        results = [];
         for (songId in songList) {
           song = this.get(songId);
           playlist.push(song);
-          results.push(playlist);
         }
-        return results;
+        return playlist;
       }
     };
   });
