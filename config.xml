@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="paulwand.SongADay" 
-        version="1.0.0" 
-        android-versionCode="100" 
-        ios-bundleVersion="1.0.0" 
-        xmlns="http://www.w3.org/ns/widgets" 
+<widget id="paulwand.SongADay"
+        version="3.3.6"
+        android-versionCode="336"
+        ios-bundleVersion="3.3.6"
+        xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
 
     <name>SongADay</name>
     <description>
       A sample ionic-cordova application.
     </description>
-    <author email="jacek@jtom.me" href="http://jtom.me/">
-      Jacek Tomaszewski
-    </author>
+    <author email="hello@paulwand.com" href="http://jtom.me/">
+  Paul Wand
+        </author>
 
     <!-- This page will be shown at the beginning when the app is launched. -->
     <content src="index.html" />

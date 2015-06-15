@@ -703,14 +703,12 @@ A simple example service that returns some data.
     }), 100);
     $rootScope.songIsPlaying = function(song) {
       var isPlaying;
-      isPlaying = ctrl.nowPlaying.$id === song.$id && ctrl.API.currentState === "play";
-      console.log(isPlaying, song, ctrl.API.currentState, ctrl.nowPlaying);
+      isPlaying = ctrl.nowPlaying.$id === song.$id;
       return isPlaying;
     };
     $rootScope.comment = function(song, comment_text) {
       return AccountService.refresh(function(myself) {
         var comment;
-        console.log(myself);
         comment = {
           comment: comment_text,
           author: {
@@ -719,7 +717,6 @@ A simple example service that returns some data.
             key: myself.$id
           }
         };
-        console.log(comment);
         SongService.comment(song, comment);
         return comment_text = "";
       });
