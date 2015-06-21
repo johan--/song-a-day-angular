@@ -256,347 +256,6 @@
 
 }).call(this);
 
-
-/**
- * Wraps ng-cloak so that, instead of simply waiting for Angular to compile, it waits until
- * Auth resolves with the remote Firebase services.
-#
- * <code>
- *    <div ng-cloak>Authentication has resolved.</div>
- * </code>
- */
-
-(function() {
-  angular.module('songaday').config([
-    '$provide', function($provide) {
-      $provide.decorator('ngCloakDirective', [
-        '$delegate', 'Auth', function($delegate, Auth) {
-          var _compile, directive;
-          directive = $delegate[0];
-          _compile = directive.compile;
-          directive.compile = function(element, attr) {
-            Auth.$waitForAuth().then(function() {
-              _compile.call(directive, element, attr);
-            });
-          };
-          return $delegate;
-        }
-      ]);
-    }
-  ]);
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('comments', function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        tElem.append('<div another-directive></div>');
-        return function(scope, iElem, iAttrs) {
-          iElem.append('<div another-directive></div>');
-        };
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('enterSubmit', function() {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        elem.bind('keyup', function(event) {
-          var code;
-          code = event.keyCode || event.which;
-          if (code === 13) {
-            if (!event.shiftKey) {
-              event.preventDefault();
-              scope.$apply(attrs.enterSubmit);
-            }
-          }
-        });
-        if (ionic.Platform.isIOS()) {
-          elem.bind('blur', function(event) {
-            scope.$apply(attrs.enterSubmit);
-          });
-        }
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('errSrc', function() {
-    return {
-      link: function(scope, element, attrs) {
-        element.bind('error', function() {
-          if (attrs.src !== attrs.errSrc) {
-            attrs.$set('src', attrs.errSrc);
-          }
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('loader', function() {
-    return {
-      template: '{{loading?"☕":""}}'
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('showWhen', function($window) {
-    return {
-      restrict: 'A',
-      link: function($scope, $element, $attr) {
-        var checkExpose, debouncedCheck, onResize;
-        debouncedCheck = ionic.debounce((function() {
-          $scope.$apply(function() {
-            checkExpose();
-          });
-        }), 300, false);
-        checkExpose = function() {
-          var mq;
-          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
-          if ($window.matchMedia(mq).matches) {
-            $element.removeClass('ng-hide');
-          } else {
-            $element.addClass('ng-hide');
-          }
-        };
-        onResize = function() {
-          debouncedCheck();
-        };
-        checkExpose();
-        ionic.on('resize', onResize, $window);
-        $scope.$on('$destroy', function() {
-          ionic.off('resize', onResize, $window);
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-
-/*
-A simple example service that returns some data.
- */
-
-(function() {
-  angular.module("songaday").factory("Auth", function($firebaseAuth, FBURL) {
-    return $firebaseAuth(new Firebase(FBURL));
-  });
-
-}).call(this);
-
-(function() {
-  angular.module("songaday").factory('FormFactory', function($q) {
-
-    /*
-    Basic form class that you can extend in your actual forms.
-    
-    Object attributes:
-    - loading[Boolean] - is the request waiting for response?
-    - message[String] - after response, success message
-    - errors[String[]] - after response, error messages
-    
-    Options:
-      - submitPromise[function] (REQUIRED) - creates a form request promise
-      - onSuccess[function] - will be called on succeded promise
-      - onFailure[function] - will be called on failed promise
-     */
-    var FormFactory;
-    return FormFactory = (function() {
-      function FormFactory(options) {
-        this.options = options != null ? options : {};
-        this.loading = false;
-      }
-
-      FormFactory.prototype.submit = function() {
-        if (!this.loading) {
-          return this._handleRequestPromise(this._createSubmitPromise());
-        }
-      };
-
-      FormFactory.prototype._onSuccess = function(response) {
-        this.message = response.message || response.success;
-        return response;
-      };
-
-      FormFactory.prototype._onFailure = function(response) {
-        var ref, ref1, ref2, ref3, ref4;
-        this.errors = ((ref = response.data) != null ? (ref1 = ref.data) != null ? ref1.errors : void 0 : void 0) || ((ref2 = response.data) != null ? ref2.errors : void 0) || [((ref3 = response.data) != null ? ref3.error : void 0) || response.error || ((ref4 = response.data) != null ? ref4.message : void 0) || response.message || "Something has failed. Try again."];
-        return $q.reject(response);
-      };
-
-      FormFactory.prototype._createSubmitPromise = function() {
-        return this.options.submitPromise();
-      };
-
-      FormFactory.prototype._handleRequestPromise = function($promise, onSuccess, onFailure) {
-        this.$promise = $promise;
-        this.loading = true;
-        this.submitted = false;
-        this.message = null;
-        this.errors = [];
-        this.$promise.then((function(_this) {
-          return function(response) {
-            _this.errors = [];
-            _this.submitted = true;
-            return response;
-          };
-        })(this)).then(_.bind(this._onSuccess, this)).then(onSuccess || this.options.onSuccess)["catch"](_.bind(this._onFailure, this))["catch"](onFailure || this.options.onFailure)["finally"]((function(_this) {
-          return function() {
-            return _this.loading = false;
-          };
-        })(this));
-        return this.$promise;
-      };
-
-      return FormFactory;
-
-    })();
-  });
-
-}).call(this);
-
-(function() {
-  var slice = [].slice;
-
-  angular.module("songaday").factory('ObserverFactory', function($rootScope) {
-    var ObserverFactory;
-    return ObserverFactory = (function() {
-      function ObserverFactory() {}
-
-      ObserverFactory.prototype.on = function(eventName, listener) {
-        var base;
-        if (this.listeners == null) {
-          this.listeners = {};
-        }
-        if ((base = this.listeners)[eventName] == null) {
-          base[eventName] = [];
-        }
-        return this.listeners[eventName].push(listener);
-      };
-
-      ObserverFactory.prototype.once = function(eventName, listener) {
-        listener.__once__ = true;
-        return this.on(eventName, listener);
-      };
-
-      ObserverFactory.prototype.off = function(eventName, listener) {
-        var i, j, len, ref, ref1, results, v;
-        if (!((ref = this.listeners) != null ? ref[eventName] : void 0)) {
-          return;
-        }
-        if (!listener) {
-          return delete this.listeners[eventName];
-        }
-        ref1 = this.listeners[eventName];
-        results = [];
-        for (v = j = 0, len = ref1.length; j < len; v = ++j) {
-          i = ref1[v];
-          if (this.listeners[eventName] === listener) {
-            this.listeners.splice(i, 1);
-            break;
-          } else {
-            results.push(void 0);
-          }
-        }
-        return results;
-      };
-
-      ObserverFactory.prototype.fireEvent = function() {
-        var eventName, j, len, params, ref, ref1, ref2, v;
-        eventName = arguments[0], params = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-        if (!((ref = this.listeners) != null ? (ref1 = ref[eventName]) != null ? ref1.length : void 0 : void 0)) {
-          return;
-        }
-        ref2 = this.listeners[eventName];
-        for (j = 0, len = ref2.length; j < len; j++) {
-          v = ref2[j];
-          v.apply(this, params);
-          if (v.__once__) {
-            this.off(eventName, v);
-          }
-        }
-        if (!$rootScope.$$phase) {
-          return $rootScope.$apply();
-        }
-      };
-
-      return ObserverFactory;
-
-    })();
-  });
-
-}).call(this);
-
-(function() {
-  angular.module("songaday").factory('PromiseFactory', function($q) {
-    var constructor;
-    return constructor = function(value, resolve) {
-      var deferred;
-      if (resolve == null) {
-        resolve = true;
-      }
-      if ((value != null) && typeof (value != null ? value.then : void 0) === 'function') {
-        return value;
-      } else {
-        deferred = $q.defer();
-        if (resolve) {
-          deferred.resolve(value);
-        } else {
-          deferred.reject(value);
-        }
-        return deferred.promise;
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('length', function() {
-    return function(item) {
-      return Object.keys(item || {}).length;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('trust', function($sce) {
-    return function(url) {
-      if (url) {
-        return $sce.trustAsResourceUrl(url);
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  Array.prototype.last = function(n) {
-    n = typeof n !== 'undefined' ? n : 1;
-    return this[this.length - n];
-  };
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
 (function() {
   angular.module("songaday").controller("AccountCtrl", function($scope, $stateParams, AccountService, SongService, TransmitService) {
     console.log('ACCOUNT');
@@ -816,7 +475,6 @@ A simple example service that returns some data.
       }
     };
     ctrl.onPlayerReady = function(API) {
-      console.log(API);
       ctrl.API = API;
     };
     ctrl.config = {
@@ -839,12 +497,10 @@ A simple example service that returns some data.
       if (ctrl.currentSong === fromIndex) {
         ctrl.currentSong = toIndex;
       }
-      console.log(fromIndex, toIndex, ctrl.playlist);
       ctrl.playlist.splice(fromIndex, 1);
       $scope.$apply();
       ctrl.playlist.splice(toIndex, 0, song);
       $scope.$apply();
-      console.log(ctrl.playlist);
     };
     ctrl.setNowPlaying = function(index) {
       var m;
@@ -877,6 +533,10 @@ A simple example service that returns some data.
     $scope.loading = true;
     return $scope.artist.$loaded(function() {
       $scope.songs = SongService.getList($scope.artist.songs);
+      console.log($scope.songs[0]);
+      $scope.songs[0].$loaded(function() {
+        return console.log($scope.songs[0]);
+      });
       return $scope.loading = false;
     });
   });
@@ -1448,11 +1108,13 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("SongDetailCtrl", function($scope, $stateParams, SongService) {
-    $scope.loading = false;
+  angular.module("songaday").controller("SongDetailCtrl", function($scope, $stateParams, SongService, $ionicLoading) {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
     $scope.song = SongService.get($stateParams.songId);
     return $scope.song.$loaded(function() {
-      return $scope.loading = true;
+      return $ionicLoading.hide();
     });
   });
 
@@ -1530,12 +1192,15 @@ A simple example service that returns some data.
         ref = new Firebase(FBURL + '/songs/' + songId);
         return $firebaseObject(ref);
       },
-      getList: function(songList, cb) {
-        var playlist, song, songId;
+      getList: function(songList, calback) {
+        var callback, playlist, song, songId;
         playlist = [];
         for (songId in songList) {
           song = this.get(songId);
           playlist.push(song);
+          if (typeof (callback = 'function')) {
+            song.$loaded(callback);
+          }
         }
         return playlist;
       }
@@ -1674,6 +1339,386 @@ A simple example service that returns some data.
       }
     };
   });
+
+}).call(this);
+
+
+/**
+ * Wraps ng-cloak so that, instead of simply waiting for Angular to compile, it waits until
+ * Auth resolves with the remote Firebase services.
+#
+ * <code>
+ *    <div ng-cloak>Authentication has resolved.</div>
+ * </code>
+ */
+
+(function() {
+  angular.module('songaday').config([
+    '$provide', function($provide) {
+      $provide.decorator('ngCloakDirective', [
+        '$delegate', 'Auth', function($delegate, Auth) {
+          var _compile, directive;
+          directive = $delegate[0];
+          _compile = directive.compile;
+          directive.compile = function(element, attr) {
+            Auth.$waitForAuth().then(function() {
+              _compile.call(directive, element, attr);
+            });
+          };
+          return $delegate;
+        }
+      ]);
+    }
+  ]);
+
+}).call(this);
+
+
+/*
+A simple example service that returns some data.
+ */
+
+(function() {
+  angular.module("songaday").factory("VisualizerService", function($rootScope, $window) {
+    return {
+      initialize: function() {
+        var analyser, audio, audioSrc, ctx;
+        ctx = new AudioContext;
+        audio = document.getElementsByTagName('audio')[0];
+        console.log(audio);
+        audioSrc = ctx.createMediaElementSource(audio);
+        analyser = ctx.createAnalyser();
+        console.log('render the fram', audioSrc);
+        $window.renderFrame = function() {
+          var d, frequencyData, i, len;
+          requestAnimationFrame(renderFrame);
+          frequencyData = new Uint8Array(analyser.frequencyBinCount);
+          analyser.getByteFrequencyData(frequencyData);
+          for (i = 0, len = frequencyData.length; i < len; i++) {
+            d = frequencyData[i];
+            if (d !== 0) {
+              console.log(frequencyData);
+            }
+          }
+        };
+        audioSrc.connect(analyser);
+        analyser.connect(ctx.destination);
+        console.log(audioSrc);
+        console.log(analyser);
+        return $window.renderFrame();
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('comments', function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        tElem.append('<div another-directive></div>');
+        return function(scope, iElem, iAttrs) {
+          iElem.append('<div another-directive></div>');
+        };
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('enterSubmit', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elem, attrs) {
+        elem.bind('keyup', function(event) {
+          var code;
+          code = event.keyCode || event.which;
+          if (code === 13) {
+            if (!event.shiftKey) {
+              event.preventDefault();
+              scope.$apply(attrs.enterSubmit);
+            }
+          }
+        });
+        if (ionic.Platform.isIOS()) {
+          elem.bind('blur', function(event) {
+            scope.$apply(attrs.enterSubmit);
+          });
+        }
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('errSrc', function() {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if (attrs.src !== attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('loader', function() {
+    return {
+      template: '{{loading?"☕":""}}'
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('showWhen', function($window) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        var checkExpose, debouncedCheck, onResize;
+        debouncedCheck = ionic.debounce((function() {
+          $scope.$apply(function() {
+            checkExpose();
+          });
+        }), 300, false);
+        checkExpose = function() {
+          var mq;
+          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
+          if ($window.matchMedia(mq).matches) {
+            $element.removeClass('ng-hide');
+          } else {
+            $element.addClass('ng-hide');
+          }
+        };
+        onResize = function() {
+          debouncedCheck();
+        };
+        checkExpose();
+        ionic.on('resize', onResize, $window);
+        $scope.$on('$destroy', function() {
+          ionic.off('resize', onResize, $window);
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+
+/*
+A simple example service that returns some data.
+ */
+
+(function() {
+  angular.module("songaday").factory("Auth", function($firebaseAuth, FBURL) {
+    return $firebaseAuth(new Firebase(FBURL));
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").factory('FormFactory', function($q) {
+
+    /*
+    Basic form class that you can extend in your actual forms.
+    
+    Object attributes:
+    - loading[Boolean] - is the request waiting for response?
+    - message[String] - after response, success message
+    - errors[String[]] - after response, error messages
+    
+    Options:
+      - submitPromise[function] (REQUIRED) - creates a form request promise
+      - onSuccess[function] - will be called on succeded promise
+      - onFailure[function] - will be called on failed promise
+     */
+    var FormFactory;
+    return FormFactory = (function() {
+      function FormFactory(options) {
+        this.options = options != null ? options : {};
+        this.loading = false;
+      }
+
+      FormFactory.prototype.submit = function() {
+        if (!this.loading) {
+          return this._handleRequestPromise(this._createSubmitPromise());
+        }
+      };
+
+      FormFactory.prototype._onSuccess = function(response) {
+        this.message = response.message || response.success;
+        return response;
+      };
+
+      FormFactory.prototype._onFailure = function(response) {
+        var ref, ref1, ref2, ref3, ref4;
+        this.errors = ((ref = response.data) != null ? (ref1 = ref.data) != null ? ref1.errors : void 0 : void 0) || ((ref2 = response.data) != null ? ref2.errors : void 0) || [((ref3 = response.data) != null ? ref3.error : void 0) || response.error || ((ref4 = response.data) != null ? ref4.message : void 0) || response.message || "Something has failed. Try again."];
+        return $q.reject(response);
+      };
+
+      FormFactory.prototype._createSubmitPromise = function() {
+        return this.options.submitPromise();
+      };
+
+      FormFactory.prototype._handleRequestPromise = function($promise, onSuccess, onFailure) {
+        this.$promise = $promise;
+        this.loading = true;
+        this.submitted = false;
+        this.message = null;
+        this.errors = [];
+        this.$promise.then((function(_this) {
+          return function(response) {
+            _this.errors = [];
+            _this.submitted = true;
+            return response;
+          };
+        })(this)).then(_.bind(this._onSuccess, this)).then(onSuccess || this.options.onSuccess)["catch"](_.bind(this._onFailure, this))["catch"](onFailure || this.options.onFailure)["finally"]((function(_this) {
+          return function() {
+            return _this.loading = false;
+          };
+        })(this));
+        return this.$promise;
+      };
+
+      return FormFactory;
+
+    })();
+  });
+
+}).call(this);
+
+(function() {
+  var slice = [].slice;
+
+  angular.module("songaday").factory('ObserverFactory', function($rootScope) {
+    var ObserverFactory;
+    return ObserverFactory = (function() {
+      function ObserverFactory() {}
+
+      ObserverFactory.prototype.on = function(eventName, listener) {
+        var base;
+        if (this.listeners == null) {
+          this.listeners = {};
+        }
+        if ((base = this.listeners)[eventName] == null) {
+          base[eventName] = [];
+        }
+        return this.listeners[eventName].push(listener);
+      };
+
+      ObserverFactory.prototype.once = function(eventName, listener) {
+        listener.__once__ = true;
+        return this.on(eventName, listener);
+      };
+
+      ObserverFactory.prototype.off = function(eventName, listener) {
+        var i, j, len, ref, ref1, results, v;
+        if (!((ref = this.listeners) != null ? ref[eventName] : void 0)) {
+          return;
+        }
+        if (!listener) {
+          return delete this.listeners[eventName];
+        }
+        ref1 = this.listeners[eventName];
+        results = [];
+        for (v = j = 0, len = ref1.length; j < len; v = ++j) {
+          i = ref1[v];
+          if (this.listeners[eventName] === listener) {
+            this.listeners.splice(i, 1);
+            break;
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      };
+
+      ObserverFactory.prototype.fireEvent = function() {
+        var eventName, j, len, params, ref, ref1, ref2, v;
+        eventName = arguments[0], params = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+        if (!((ref = this.listeners) != null ? (ref1 = ref[eventName]) != null ? ref1.length : void 0 : void 0)) {
+          return;
+        }
+        ref2 = this.listeners[eventName];
+        for (j = 0, len = ref2.length; j < len; j++) {
+          v = ref2[j];
+          v.apply(this, params);
+          if (v.__once__) {
+            this.off(eventName, v);
+          }
+        }
+        if (!$rootScope.$$phase) {
+          return $rootScope.$apply();
+        }
+      };
+
+      return ObserverFactory;
+
+    })();
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").factory('PromiseFactory', function($q) {
+    var constructor;
+    return constructor = function(value, resolve) {
+      var deferred;
+      if (resolve == null) {
+        resolve = true;
+      }
+      if ((value != null) && typeof (value != null ? value.then : void 0) === 'function') {
+        return value;
+      } else {
+        deferred = $q.defer();
+        if (resolve) {
+          deferred.resolve(value);
+        } else {
+          deferred.reject(value);
+        }
+        return deferred.promise;
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('length', function() {
+    return function(item) {
+      return Object.keys(item || {}).length;
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('trust', function($sce) {
+    return function(url) {
+      if (url) {
+        return $sce.trustAsResourceUrl(url);
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+
+
+}).call(this);
+
+(function() {
+  Array.prototype.last = function(n) {
+    n = typeof n !== 'undefined' ? n : 1;
+    return this[this.length - n];
+  };
 
 }).call(this);
 

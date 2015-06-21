@@ -12,6 +12,11 @@ loader {
 .artist {
   display: inline-block; }
 
+.artist_index_alias {
+  padding-top: 10px;
+  font-size: 20px !important;
+  line-height: 40px !important; }
+
 .artist-info {
   position: absolute;
   border-radius: 20px;
@@ -157,6 +162,9 @@ video::-webkit-media-controls-fullscreen-button {
 
 .item-delete.active {
   background-color: transparent !important; }
+
+.item.active, .item.activated, .item-complex.active .item-content, .item-complex.activated .item-content, .item .item-content.active, .item .item-content.activated {
+  background-color: #D6EBE0 !important; }
 
 .comment_input {
   background-color: transparent; }
