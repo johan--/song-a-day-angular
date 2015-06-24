@@ -256,104 +256,6 @@
 
 }).call(this);
 
-(function() {
-  angular.module('songaday').directive('comments', function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        tElem.append('<div another-directive></div>');
-        return function(scope, iElem, iAttrs) {
-          iElem.append('<div another-directive></div>');
-        };
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('enterSubmit', function() {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        elem.bind('keyup', function(event) {
-          var code;
-          code = event.keyCode || event.which;
-          if (code === 13) {
-            if (!event.shiftKey) {
-              event.preventDefault();
-              scope.$apply(attrs.enterSubmit);
-            }
-          }
-        });
-        if (ionic.Platform.isIOS()) {
-          elem.bind('blur', function(event) {
-            scope.$apply(attrs.enterSubmit);
-          });
-        }
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('errSrc', function() {
-    return {
-      link: function(scope, element, attrs) {
-        element.bind('error', function() {
-          if (attrs.src !== attrs.errSrc) {
-            attrs.$set('src', attrs.errSrc);
-          }
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('loader', function() {
-    return {
-      template: '{{loading?"☕":""}}'
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('showWhen', function($window) {
-    return {
-      restrict: 'A',
-      link: function($scope, $element, $attr) {
-        var checkExpose, debouncedCheck, onResize;
-        debouncedCheck = ionic.debounce((function() {
-          $scope.$apply(function() {
-            checkExpose();
-          });
-        }), 300, false);
-        checkExpose = function() {
-          var mq;
-          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
-          if ($window.matchMedia(mq).matches) {
-            $element.removeClass('ng-hide');
-          } else {
-            $element.addClass('ng-hide');
-          }
-        };
-        onResize = function() {
-          debouncedCheck();
-        };
-        checkExpose();
-        ionic.on('resize', onResize, $window);
-        $scope.$on('$destroy', function() {
-          ionic.off('resize', onResize, $window);
-        });
-      }
-    };
-  });
-
-}).call(this);
-
 
 /*
 A simple example service that returns some data.
@@ -533,6 +435,124 @@ A simple example service that returns some data.
 
 }).call(this);
 
+(function() {
+  angular.module('songaday').directive('comments', function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        tElem.append('<div another-directive></div>');
+        return function(scope, iElem, iAttrs) {
+          iElem.append('<div another-directive></div>');
+        };
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('enterSubmit', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elem, attrs) {
+        elem.bind('keyup', function(event) {
+          var code;
+          code = event.keyCode || event.which;
+          if (code === 13) {
+            if (!event.shiftKey) {
+              event.preventDefault();
+              scope.$apply(attrs.enterSubmit);
+            }
+          }
+        });
+        if (ionic.Platform.isIOS()) {
+          elem.bind('blur', function(event) {
+            scope.$apply(attrs.enterSubmit);
+          });
+        }
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('errSrc', function() {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if (attrs.src !== attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('loader', function() {
+    return {
+      template: '{{loading?"☕":""}}'
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('showWhen', function($window) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        var checkExpose, debouncedCheck, onResize;
+        debouncedCheck = ionic.debounce((function() {
+          $scope.$apply(function() {
+            checkExpose();
+          });
+        }), 300, false);
+        checkExpose = function() {
+          var mq;
+          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
+          if ($window.matchMedia(mq).matches) {
+            $element.removeClass('ng-hide');
+          } else {
+            $element.addClass('ng-hide');
+          }
+        };
+        onResize = function() {
+          debouncedCheck();
+        };
+        checkExpose();
+        ionic.on('resize', onResize, $window);
+        $scope.$on('$destroy', function() {
+          ionic.off('resize', onResize, $window);
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('length', function() {
+    return function(item) {
+      return Object.keys(item || {}).length;
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').filter('trust', function($sce) {
+    return function(url) {
+      if (url) {
+        return $sce.trustAsResourceUrl(url);
+      }
+    };
+  });
+
+}).call(this);
+
 
 /**
  * Wraps ng-cloak so that, instead of simply waiting for Angular to compile, it waits until
@@ -565,31 +585,6 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module('songaday').filter('length', function() {
-    return function(item) {
-      return Object.keys(item || {}).length;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').filter('trust', function($sce) {
-    return function(url) {
-      if (url) {
-        return $sce.trustAsResourceUrl(url);
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
-(function() {
   Array.prototype.last = function(n) {
     n = typeof n !== 'undefined' ? n : 1;
     return this[this.length - n];
@@ -598,70 +593,7 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("ArtistDetailCtrl", function($scope, $stateParams, SongService, ArtistService) {
-    $scope.artist = ArtistService.get($stateParams.artistId);
-    $scope.loading = true;
-    return $scope.artist.$loaded(function() {
-      $scope.songs = SongService.getList($scope.artist.songs);
-      console.log($scope.songs[0]);
-      $scope.songs[0].$loaded(function() {
-        return console.log($scope.songs[0]);
-      });
-      return $scope.loading = false;
-    });
-  });
 
-}).call(this);
-
-(function() {
-  angular.module("songaday").controller("ArtistIndexCtrl", function($scope, $state, ArtistService) {
-    $scope.artists = ArtistService.some();
-    $scope.loading = true;
-    return $scope.artists.$loaded(function() {
-      return $scope.loading = false;
-    });
-  });
-
-}).call(this);
-
-
-/*
-A simple example service that returns some data.
- */
-
-(function() {
-  angular.module("songaday").factory("ArtistService", function($firebaseObject, $firebaseArray, FBURL) {
-    var artists, ref;
-    ref = new Firebase(FBURL + 'artists');
-    this.loading = true;
-    artists = $firebaseArray(ref);
-    return {
-      some: function() {
-        artists.$loaded(function() {
-          var artist, i, results;
-          this.loading = false;
-          results = [];
-          for (i in artists) {
-            artist = artists[i];
-            if (typeof artist.songs === 'undefined') {
-              console.log(artist);
-              results.push(artists.splice(i, 1));
-            } else {
-              results.push(void 0);
-            }
-          }
-          return results;
-        });
-        return artists;
-      },
-      get: function(artistId) {
-        var artist;
-        ref = new Firebase(FBURL + '/artists/' + artistId);
-        artist = $firebaseObject(ref);
-        return artist;
-      }
-    };
-  });
 
 }).call(this);
 
@@ -887,6 +819,7 @@ A simple example service that returns some data.
       }
     };
     ctrl.onPlayerReady = function(API) {
+      console.log(API);
       ctrl.API = API;
     };
     ctrl.config = {
@@ -934,6 +867,62 @@ A simple example service that returns some data.
           }
         }
       }), 200);
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").controller("ArtistDetailCtrl", function($scope, $stateParams, SongService, ArtistService) {
+    $scope.artist = ArtistService.get($stateParams.artistId);
+    $scope.loading = true;
+    return $scope.artist.$loaded(function() {
+      $scope.songs = SongService.getList($scope.artist.songs);
+      console.log($scope.songs[0]);
+      $scope.songs[0].$loaded(function() {
+        return console.log($scope.songs[0]);
+      });
+      return $scope.loading = false;
+    });
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").controller("ArtistIndexCtrl", function($scope, $state, ArtistService) {
+    $scope.artists = ArtistService.some();
+    $scope.loading = true;
+    return $scope.artists.$loaded(function() {
+      return $scope.loading = false;
+    });
+  });
+
+}).call(this);
+
+
+/*
+A simple example service that returns some data.
+ */
+
+(function() {
+  angular.module("songaday").factory("ArtistService", function($firebaseObject, $firebaseArray, FBURL) {
+    var artists, ref;
+    ref = new Firebase(FBURL + '/artists');
+    this.loading = true;
+    artists = $firebaseArray(ref);
+    return {
+      some: function() {
+        artists.$loaded(function() {
+          return this.loading = false;
+        });
+        return artists;
+      },
+      get: function(artistId) {
+        var artist;
+        ref = new Firebase(FBURL + '/artists/' + artistId);
+        artist = $firebaseObject(ref);
+        return artist;
+      }
     };
   });
 

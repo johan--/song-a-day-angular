@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="paulwand.SongADay"
-        version="3.3.7"
-        android-versionCode="337"
-        ios-bundleVersion="3.3.7"
+        version="3.3.8"
+        android-versionCode="338"
+        ios-bundleVersion="3.3.8"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
 
     <name>SongADay</name>
     <description>
-      A sample ionic-cordova application.
+    Song a day
     </description>
     <author email="hello@paulwand.com" href="http://jtom.me/">
   Paul Wand

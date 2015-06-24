@@ -37,6 +37,14 @@ loader {
 .artists {
   display: inline-block; }
 
+.song-position {
+  position: absolute;
+  bottom: -7px;
+  z-index: 1000;
+  width: 110%;
+  left: -5px;
+  margin: 0px !important; }
+
 .record {
   text-align: center; }
 
