@@ -7,6 +7,9 @@ loader {
   margin: auto;
   font-size: 80px; }
 
+.jumbotron {
+  padding: 20px; }
+
 .song_info .title {
   font-family: fantasy; }
 
@@ -39,10 +42,12 @@ loader {
 
 .song-position {
   position: absolute;
-  bottom: -7px;
+  bottom: 0px;
+  height: 2px;
   z-index: 1000;
-  width: 110%;
-  left: -5px;
+  overflow: hidden;
+  width: 100%;
+  left: 0px;
   margin: 0px !important; }
 
 .record {

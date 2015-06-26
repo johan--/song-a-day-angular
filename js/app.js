@@ -257,6 +257,135 @@
 }).call(this);
 
 
+/**
+ * Wraps ng-cloak so that, instead of simply waiting for Angular to compile, it waits until
+ * Auth resolves with the remote Firebase services.
+#
+ * <code>
+ *    <div ng-cloak>Authentication has resolved.</div>
+ * </code>
+ */
+
+(function() {
+  angular.module('songaday').config([
+    '$provide', function($provide) {
+      $provide.decorator('ngCloakDirective', [
+        '$delegate', 'Auth', function($delegate, Auth) {
+          var _compile, directive;
+          directive = $delegate[0];
+          _compile = directive.compile;
+          directive.compile = function(element, attr) {
+            Auth.$waitForAuth().then(function() {
+              _compile.call(directive, element, attr);
+            });
+          };
+          return $delegate;
+        }
+      ]);
+    }
+  ]);
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('comments', function() {
+    return {
+      compile: function(tElem, tAttrs) {
+        tElem.append('<div another-directive></div>');
+        return function(scope, iElem, iAttrs) {
+          iElem.append('<div another-directive></div>');
+        };
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('enterSubmit', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, elem, attrs) {
+        elem.bind('keyup', function(event) {
+          var code;
+          code = event.keyCode || event.which;
+          if (code === 13) {
+            if (!event.shiftKey) {
+              event.preventDefault();
+              scope.$apply(attrs.enterSubmit);
+            }
+          }
+        });
+        if (ionic.Platform.isIOS()) {
+          elem.bind('blur', function(event) {
+            scope.$apply(attrs.enterSubmit);
+          });
+        }
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('errSrc', function() {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if (attrs.src !== attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('loader', function() {
+    return {
+      template: '{{loading?"☕":""}}'
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('songaday').directive('showWhen', function($window) {
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+        var checkExpose, debouncedCheck, onResize;
+        debouncedCheck = ionic.debounce((function() {
+          $scope.$apply(function() {
+            checkExpose();
+          });
+        }), 300, false);
+        checkExpose = function() {
+          var mq;
+          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
+          if ($window.matchMedia(mq).matches) {
+            $element.removeClass('ng-hide');
+          } else {
+            $element.addClass('ng-hide');
+          }
+        };
+        onResize = function() {
+          debouncedCheck();
+        };
+        checkExpose();
+        ionic.on('resize', onResize, $window);
+        $scope.$on('$destroy', function() {
+          ionic.off('resize', onResize, $window);
+        });
+      }
+    };
+  });
+
+}).call(this);
+
+
 /*
 A simple example service that returns some data.
  */
@@ -436,104 +565,6 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module('songaday').directive('comments', function() {
-    return {
-      compile: function(tElem, tAttrs) {
-        tElem.append('<div another-directive></div>');
-        return function(scope, iElem, iAttrs) {
-          iElem.append('<div another-directive></div>');
-        };
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('enterSubmit', function() {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        elem.bind('keyup', function(event) {
-          var code;
-          code = event.keyCode || event.which;
-          if (code === 13) {
-            if (!event.shiftKey) {
-              event.preventDefault();
-              scope.$apply(attrs.enterSubmit);
-            }
-          }
-        });
-        if (ionic.Platform.isIOS()) {
-          elem.bind('blur', function(event) {
-            scope.$apply(attrs.enterSubmit);
-          });
-        }
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('errSrc', function() {
-    return {
-      link: function(scope, element, attrs) {
-        element.bind('error', function() {
-          if (attrs.src !== attrs.errSrc) {
-            attrs.$set('src', attrs.errSrc);
-          }
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('loader', function() {
-    return {
-      template: '{{loading?"☕":""}}'
-    };
-  });
-
-}).call(this);
-
-(function() {
-  angular.module('songaday').directive('showWhen', function($window) {
-    return {
-      restrict: 'A',
-      link: function($scope, $element, $attr) {
-        var checkExpose, debouncedCheck, onResize;
-        debouncedCheck = ionic.debounce((function() {
-          $scope.$apply(function() {
-            checkExpose();
-          });
-        }), 300, false);
-        checkExpose = function() {
-          var mq;
-          mq = $attr.showWhen === 'large' ? '(min-width:768px)' : '(max-width:768px)';
-          if ($window.matchMedia(mq).matches) {
-            $element.removeClass('ng-hide');
-          } else {
-            $element.addClass('ng-hide');
-          }
-        };
-        onResize = function() {
-          debouncedCheck();
-        };
-        checkExpose();
-        ionic.on('resize', onResize, $window);
-        $scope.$on('$destroy', function() {
-          ionic.off('resize', onResize, $window);
-        });
-      }
-    };
-  });
-
-}).call(this);
-
-(function() {
   angular.module('songaday').filter('length', function() {
     return function(item) {
       return Object.keys(item || {}).length;
@@ -550,37 +581,6 @@ A simple example service that returns some data.
       }
     };
   });
-
-}).call(this);
-
-
-/**
- * Wraps ng-cloak so that, instead of simply waiting for Angular to compile, it waits until
- * Auth resolves with the remote Firebase services.
-#
- * <code>
- *    <div ng-cloak>Authentication has resolved.</div>
- * </code>
- */
-
-(function() {
-  angular.module('songaday').config([
-    '$provide', function($provide) {
-      $provide.decorator('ngCloakDirective', [
-        '$delegate', 'Auth', function($delegate, Auth) {
-          var _compile, directive;
-          directive = $delegate[0];
-          _compile = directive.compile;
-          directive.compile = function(element, attr) {
-            Auth.$waitForAuth().then(function() {
-              _compile.call(directive, element, attr);
-            });
-          };
-          return $delegate;
-        }
-      ]);
-    }
-  ]);
 
 }).call(this);
 
@@ -907,7 +907,7 @@ A simple example service that returns some data.
 (function() {
   angular.module("songaday").factory("ArtistService", function($firebaseObject, $firebaseArray, FBURL) {
     var artists, ref;
-    ref = new Firebase(FBURL + '/artists');
+    ref = new Firebase(FBURL + '/artists').orderByPriority();
     this.loading = true;
     artists = $firebaseArray(ref);
     return {
@@ -1538,9 +1538,11 @@ A simple example service that returns some data.
         return $firebaseObject(ref);
       },
       getList: function(songList, calback) {
-        var callback, playlist, song, songId;
+        var callback, i, len, playlist, song, songId, songsInOrder;
         playlist = [];
-        for (songId in songList) {
+        songsInOrder = Object.keys(songList).reverse();
+        for (i = 0, len = songsInOrder.length; i < len; i++) {
+          songId = songsInOrder[i];
           song = this.get(songId);
           playlist.push(song);
           if (typeof (callback = 'function')) {
