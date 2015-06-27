@@ -661,6 +661,17 @@ A simple example service that returns some data.
       mySelf: function() {
         return me;
       },
+      remove_song: function(song, cb) {
+        var last_song_ref, last_song_uri, song_ref, song_uri;
+        song_uri = FBURL + '/artists/' + me.$id + '/songs/' + song.$id;
+        last_song_uri = FBURL + '/artists/' + me.$id + '/last_transmission/';
+        song_ref = new Firebase(song_uri);
+        last_song_ref = new Firebase(last_song_uri);
+        song_ref.remove();
+        last_song_ref.remove();
+        song.$remove();
+        return cb();
+      },
       logout: function() {
         return Auth.$unauth();
       },
@@ -1095,8 +1106,8 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("RecordCtrl", function($rootScope, $scope, $state, $window, AccountService, $stateParams, TransmitService, RecordService, MultiTrackService) {
-    var __log, audio_context, captureError, captureSuccess, export_wav, fetchFile, rec_ctrl, recorder, startUserMedia;
+  angular.module("songaday").controller("RecordCtrl", function($rootScope, $scope, $state, SongService, $window, AccountService, $stateParams, TransmitService, RecordService, MultiTrackService) {
+    var __log, audio_context, captureError, captureSuccess, export_wav, fetchFile, rec_ctrl, recorder, reset, startUserMedia;
     rec_ctrl = this;
     audio_context = {};
     $scope.transmission = {};
@@ -1110,6 +1121,7 @@ A simple example service that returns some data.
     $rootScope.recording_file_uri = false;
     TransmitService.lastTransmission(function(song) {
       var latest_date, today;
+      console.log(song, 'ssss');
       latest_date = new Date(song.timestamp);
       today = new Date();
       if (today.getDay() === latest_date.getDay()) {
@@ -1140,13 +1152,17 @@ A simple example service that returns some data.
             'avatar': myself.avatar || ''
           };
           return TransmitService.transmit(song, function(new_id) {
+            var sng;
             myself.songs[new_id] = true;
             myself.last_transmission = new_id;
             myself.$save();
             __log('complete');
+            sng = SongService.get(new_id);
+            sng.$loaded(function() {
+              return $scope.song = sng;
+            });
             $scope.latestTransmission = song;
             $scope.transmitted = true;
-            $scope.song = song;
             return $scope.transmitting = false;
           });
         });
@@ -1163,6 +1179,20 @@ A simple example service that returns some data.
       $scope.readyToTransmit = true;
       $rootScope.file_blob.name = $scope.title + '.mp3';
       return $scope.$apply();
+    };
+    reset = function() {
+      $scope.transmitted = false;
+      $scope.readyToTransmit = false;
+      $scope.song = false;
+      return $rootScope.file_blob = null;
+    };
+    $scope.revoke = function() {
+      console.log($scope.song);
+      if ($scope.song) {
+        return AccountService.remove_song($scope.song, function() {
+          return reset();
+        });
+      }
     };
     fetchFile = function(fs) {
       return console.log(fs);
@@ -1557,26 +1587,26 @@ A simple example service that returns some data.
 
 (function() {
   angular.module("songaday").controller("TransmitCtrl", function($scope, SongService, TransmitService, $state, $timeout, AccountService) {
+    var reset;
     $scope.awsParamsURI = TransmitService.awsParamsURI();
     $scope.awsFolder = TransmitService.awsFolder();
     $scope.s3Bucket = TransmitService.s3Bucket();
     $scope.transmission = {
       media: {}
     };
-    $scope.ready = false;
+    reset = function() {
+      $scope.transmitted = false;
+      $scope.ready = false;
+      return $scope.song = false;
+    };
     $scope.revoke = function() {
-      console.log($scope.song);
       if ($scope.song) {
-        return AccountService.refresh(function(myself) {
-          delete myself.songs[$scope.song.$id];
-          myself.$save();
-          $scope.song.$remove();
-          $scope.transmitted = false;
-          $scope.ready = false;
-          return $scope.song = false;
+        return AccountService.remove_song($scope.song, function() {
+          return reset();
         });
       }
     };
+    reset();
     TransmitService.lastTransmission(function(song) {
       var latest_date, today;
       latest_date = new Date(song.timestamp);
@@ -1659,7 +1689,7 @@ A simple example service that returns some data.
               me.songs[new_id] = true;
               me.last_transmission = new_id;
               me.$save();
-              return callback(new_id, new_ref);
+              return callback(new_id);
             });
           });
         });
