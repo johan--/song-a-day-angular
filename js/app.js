@@ -819,7 +819,6 @@ A simple example service that returns some data.
       }
     };
     ctrl.onPlayerReady = function(API) {
-      console.log(API);
       ctrl.API = API;
     };
     ctrl.config = {
@@ -1557,12 +1556,26 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("TransmitCtrl", function($scope, TransmitService, $state, $timeout, AccountService) {
+  angular.module("songaday").controller("TransmitCtrl", function($scope, SongService, TransmitService, $state, $timeout, AccountService) {
     $scope.awsParamsURI = TransmitService.awsParamsURI();
     $scope.awsFolder = TransmitService.awsFolder();
     $scope.s3Bucket = TransmitService.s3Bucket();
     $scope.transmission = {
       media: {}
+    };
+    $scope.ready = false;
+    $scope.revoke = function() {
+      console.log($scope.song);
+      if ($scope.song) {
+        return AccountService.refresh(function(myself) {
+          delete myself.songs[$scope.song.$id];
+          myself.$save();
+          $scope.song.$remove();
+          $scope.transmitted = false;
+          $scope.ready = false;
+          return $scope.song = false;
+        });
+      }
     };
     TransmitService.lastTransmission(function(song) {
       var latest_date, today;
@@ -1581,6 +1594,7 @@ A simple example service that returns some data.
       }), 100);
     });
     return $scope.transmit = function(song) {
+      $scope.transmitting = true;
       return AccountService.refresh(function(myself) {
         song = {};
         song['info'] = $scope.transmission.info || '';
@@ -1588,7 +1602,7 @@ A simple example service that returns some data.
         song['media'] = $scope.transmission.media;
         song['user_id'] = myself.user_id;
         song['timestamp'] = (new Date()).toISOString();
-        song['$priority'] = -1 * Math.floor(new Date().getTime() / 1000);
+        song['$priority'] = -1 * Date.parse(song.timestamp);
         song['artist'] = {
           'alias': myself.alias || '',
           'key': myself.$id,
@@ -1596,9 +1610,12 @@ A simple example service that returns some data.
         };
         console.log(song);
         return TransmitService.transmit(song, function(new_id) {
-          $scope.latestTransmission = song;
+          var sng;
           $scope.transmitted = true;
-          return $scope.song = song;
+          sng = SongService.get(new_id);
+          return sng.$loaded(function() {
+            return $scope.song = sng;
+          });
         });
       });
     };
@@ -1642,7 +1659,7 @@ A simple example service that returns some data.
               me.songs[new_id] = true;
               me.last_transmission = new_id;
               me.$save();
-              return callback(new_id);
+              return callback(new_id, new_ref);
             });
           });
         });

@@ -52545,6 +52545,7 @@ angular.module('ngS3upload.directives', []).
                 }
 
                 var s3Uri = 'https://' + bucket + '.s3.amazonaws.com/';
+                var cdnUri = 'http://media.songadays.com/';
                 var key = opts.targetFilename ? scope.$eval(opts.targetFilename) : opts.folder + (new Date()).getTime() + '-' + S3Uploader.randomString(16) + "." + ext;
                 S3Uploader.upload(scope,
                     s3Uri,
@@ -52556,7 +52557,7 @@ angular.module('ngS3upload.directives', []).
                     s3Options.signature,
                     selectedFile
                   ).then(function () {
-                    ngModel.$setViewValue(s3Uri + key);
+                    ngModel.$setViewValue(cdnUri + key);
                     scope.filename = ngModel.$viewValue;
                     scope.filetype = selectedFile.type
                     if (opts.enableValidation) {
@@ -52605,9 +52606,9 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('theme/image.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
+    "  <button class=\"button button-light\" type=\"button\"><span ng-if=\"!filename\">Choose file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
     "  <a ng-href=\"{{ filename  }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" > Stored file </a>\n" +
-    "    <progress max=\"100\" value=\"{{progress}}\"ng-class=\"{active: uploading}\" >\n" +
+    "    <progress max=\"100\" value=\"{{progress}}\" >\n" +
     "    </progress>\n" +
     "  <input type=\"file\" accept='image/*' style=\"display: none\"/>\n" +
     "</div>"
@@ -52616,13 +52617,11 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('theme/audio.html',
     "<div class=\"upload-wrap\">\n" +
-    "  <button class=\"btn btn-primary\" type=\"button\"><span ng-if=\"!filename\">Choose song file</span><span ng-if=\"filename\">Replace file</span></button>\n" +
-    "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" >  transmission </a>\n" +
-    "  <div class=\"progress\">\n" +
-    "    <progress max=\"100\" value=\"{{progress}}\"ng-class=\"{active: uploading}\" >\n" +
+    "  <button class=\"button button-light\" type=\"button\"><span ng-if=\"!filename\">Choose song file</span><span ng-if=\"filename\">Swap song file</span></button>\n" +
+    "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" >  Media Saved </a>\n" +
+    "    <progress max=\"100\" value=\"{{progress}}\">\n" +
     "    </progress>\n" +
-    "  </div>\n" +
-    "  <input type=\"file\" accept='audio/*,video/*' style=\"display: none\"/>\n" +
+    "  <input type=\"file\" accept='audio/mp3,audio/m4a,video/m4a' style=\"display: none\"/>\n" +
     "</div>"
   );
 
