@@ -694,7 +694,34 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("AppCtrl", function($sce, SongService, AccountService, $state, $rootScope, $scope, $ionicSideMenuDelegate, $stateParams, $timeout) {
+
+
+}).call(this);
+
+
+/*
+A simple example service that returns some data.
+ */
+
+(function() {
+  angular.module("songaday").factory("AudioContextService", function($window) {
+    var context, nodes;
+    nodes = {};
+    context = new ($window.AudioContext || $window.webkitAudioContext)();
+    return {
+      getContext: function() {
+        return context;
+      },
+      getAudioContext: function() {
+        return context;
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module("songaday").controller("AppCtrl", function($sce, SongService, AccountService, $state, $rootScope, $scope, $ionicSideMenuDelegate, $stateParams, $timeout, AudioVisualizerService, $window) {
     var ctrl;
     ctrl = this;
     ctrl.state = null;
@@ -1106,7 +1133,7 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module("songaday").controller("RecordCtrl", function($rootScope, $scope, $state, SongService, $window, AccountService, $stateParams, TransmitService, RecordService, MultiTrackService) {
+  angular.module("songaday").controller("RecordCtrl", function($rootScope, $scope, $state, SongService, $window, AccountService, $stateParams, TransmitService, AudioContextService, RecordService, MultiTrackService, AudioVisualizerService) {
     var __log, audio_context, captureError, captureSuccess, export_wav, fetchFile, rec_ctrl, recorder, reset, startUserMedia;
     rec_ctrl = this;
     audio_context = {};
@@ -1145,7 +1172,7 @@ A simple example service that returns some data.
           song['title'] = $scope.transmission.title || 'untitled';
           song['user_id'] = myself.user_id;
           song['timestamp'] = (new Date()).toISOString();
-          song['$priority'] = -1 * Math.floor(new Date().getTime() / 1000);
+          song['$priority'] = -1 * Date.parse(song.timestamp);
           song['artist'] = {
             'alias': myself.alias || '',
             'key': myself.$id,
@@ -1153,9 +1180,6 @@ A simple example service that returns some data.
           };
           return TransmitService.transmit(song, function(new_id) {
             var sng;
-            myself.songs[new_id] = true;
-            myself.last_transmission = new_id;
-            myself.$save();
             __log('complete');
             sng = SongService.get(new_id);
             sng.$loaded(function() {
@@ -1184,10 +1208,11 @@ A simple example service that returns some data.
       $scope.transmitted = false;
       $scope.readyToTransmit = false;
       $scope.song = false;
-      return $rootScope.file_blob = null;
+      $rootScope.file_blob = null;
+      $rootScope.wav_file_uri = null;
+      return __log('reset');
     };
     $scope.revoke = function() {
-      console.log($scope.song);
       if ($scope.song) {
         return AccountService.remove_song($scope.song, function() {
           return reset();
@@ -1228,10 +1253,9 @@ A simple example service that returns some data.
     };
     $scope.tryHTML5Recording = function() {
       __log('init html5 recording');
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
       window.URL = window.URL || window.webkitURL;
-      audio_context = new AudioContext;
+      audio_context = AudioContextService.getContext();
       __log('Audio context...');
       __log(navigator.getUserMedia ? 'ready.' : ':( sad browser!');
       return navigator.getUserMedia({
@@ -1274,12 +1298,14 @@ A simple example service that returns some data.
       });
     };
     $scope.startRecording = function(button) {
+      AudioVisualizerService.initialize();
       recorder && recorder.record();
       $rootScope.recording = true;
       __log('Recording...');
       $scope.readyToTransmit = false;
     };
     $scope.stopRecording = function(button) {
+      AudioVisualizerService.$destroy();
       $rootScope.recording = false;
       recorder && recorder.stop();
       __log('Stopped recording.');
@@ -1296,7 +1322,7 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
-  angular.module('songaday').factory('RecordService', function($rootScope, $window, $http) {
+  angular.module('songaday').factory('RecordService', function($rootScope, $window, AudioContextService, $http) {
     var WORKER_PATH, encoderWorker;
     WORKER_PATH = 'js/recorderWorker.js';
     encoderWorker = new Worker('js/mp3Worker.js');
@@ -1473,8 +1499,10 @@ A simple example service that returns some data.
           fileReader.readAsArrayBuffer(blob);
           currCallback(blob);
         };
-        source.connect(this.node);
-        return this.node.connect(this.context.destination);
+        source.connect($window.analyser);
+        $window.analyser.connect(this.node);
+        this.node.connect(this.context.destination);
+        return $window.analyser.fftSize = 2048;
       }
     };
   });
@@ -1742,43 +1770,75 @@ A simple example service that returns some data.
  */
 
 (function() {
-  angular.module("songaday").factory("VisualizerService", function($rootScope, $window) {
+  angular.module("songaday").factory("AudioVisualizerService", function($window, AudioContextService) {
+    var analyser, context;
+    context = AudioContextService.getContext();
+    analyser = context.createAnalyser();
+    $window.analyser = analyser;
     return {
+      getAnalyser: function() {
+        return analyser;
+      },
+      $destroy: function() {
+        var HEIGHT, WIDTH, canvas, canvasCtx;
+        canvas = document.getElementById('visualizer');
+        WIDTH = canvas.clientWidth;
+        HEIGHT = canvas.clientHeight;
+        canvasCtx = canvas.getContext('2d');
+        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+        return window.cancelAnimationFrame($window.drawVisual);
+      },
       initialize: function() {
-        var analyser, audio, audioSrc, ctx;
-        ctx = new AudioContext;
-        audio = document.getElementsByTagName('audio')[0];
-        console.log(audio);
-        audioSrc = ctx.createMediaElementSource(audio);
-        analyser = ctx.createAnalyser();
-        console.log('render the fram', audioSrc);
-        $window.renderFrame = function() {
-          var d, frequencyData, i, len;
-          requestAnimationFrame(renderFrame);
-          frequencyData = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(frequencyData);
-          for (i = 0, len = frequencyData.length; i < len; i++) {
-            d = frequencyData[i];
-            if (d !== 0) {
-              console.log(frequencyData);
+        var HEIGHT, WIDTH, canvas, canvasCtx;
+        canvas = document.getElementById('visualizer');
+        WIDTH = canvas.clientWidth;
+        HEIGHT = canvas.clientHeight;
+        canvasCtx = canvas.getContext('2d');
+        $window.drawVisualizer = function() {
+          var bufferLength, i, sliceWidth, timeBuffer, v, x, y;
+          $window.drawVisual = requestAnimationFrame(window.drawVisualizer);
+          bufferLength = $window.analyser.frequencyBinCount;
+          timeBuffer = new Uint8Array(bufferLength);
+          $window.analyser.getByteTimeDomainData(timeBuffer);
+          canvasCtx.fillStyle = 'rgba(200, 200, 200,0)';
+          canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+          canvasCtx.lineWidth = 1;
+          canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+          canvasCtx.beginPath();
+          sliceWidth = WIDTH * 1.0 / bufferLength;
+          x = 0;
+          i = 0;
+          while (i < bufferLength) {
+            v = timeBuffer[i] / 128.0;
+            y = v * HEIGHT / 2;
+            if (i === 0) {
+              canvasCtx.moveTo(x, y);
+            } else {
+              canvasCtx.lineTo(x, y);
             }
+            x += sliceWidth;
+            i++;
           }
+          canvasCtx.lineTo(canvas.width, canvas.height / 2);
+          canvasCtx.stroke();
         };
-        audioSrc.connect(analyser);
-        analyser.connect(ctx.destination);
-        console.log(audioSrc);
-        console.log(analyser);
-        return $window.renderFrame();
+        return $window.drawVisualizer();
       }
     };
   });
+
+  window.requestAnimFrame = (function() {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
+  })();
 
 }).call(this);
 
 (function() {
   angular.module("songaday").config(function($stateProvider, $urlRouterProvider) {
     $stateProvider.state("app", {
-      url: "/app",
+      url: "",
       abstract: true,
       templateUrl: "templates/menu.html"
     }).state("app.songs", {
@@ -1876,7 +1936,7 @@ A simple example service that returns some data.
         }
       }
     });
-    return $urlRouterProvider.otherwise("/app/songs");
+    return $urlRouterProvider.otherwise("/songs");
   });
 
 }).call(this);

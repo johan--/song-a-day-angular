@@ -52621,7 +52621,7 @@ angular.module('ngS3upload').run(['$templateCache', function($templateCache) {
     "  <a ng-href=\"{{ filename }}\" target=\"_blank\" class=\"\" ng-if=\"filename\" >  Media Saved </a>\n" +
     "    <progress max=\"100\" value=\"{{progress}}\">\n" +
     "    </progress>\n" +
-    "  <input type=\"file\" accept='audio/mp3,audio/m4a,video/m4a' style=\"display: none\"/>\n" +
+    "  <input type=\"file\" accept='audio/mp3,audio/m4a,video/mp4,video/x-m4v,video/*' style=\"display: none\"/>\n" +
     "</div>"
   );
 
