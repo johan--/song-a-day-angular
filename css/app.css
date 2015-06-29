@@ -19,12 +19,15 @@ loader {
 .hide {
   opacity: 0; }
 
-.record {
-  padding-top: 20%; }
+audio {
+  background-color: #95B9C7;
+  padding-bottom: 100px;
+  margin: 40px;
+  border-radius: 10px 10px 100px 100px; }
 
 #visualizer {
-  top: 100px;
-  width: 400px;
+  bottom: 100px;
+  width: 1000px;
   height: 200px;
   margin-left: auto;
   margin-right: auto;
@@ -66,14 +69,43 @@ loader {
   display: inline-block; }
 
 .song-position {
+  color: blue;
+  background-color: white;
   position: absolute;
   bottom: 0px;
-  height: 2px;
   z-index: 1000;
   overflow: hidden;
   width: 100%;
   left: 0px;
+  height: 4px;
   margin: 0px !important; }
+
+/* Background Colors  */
+progress, progress[role][aria-valuenow] {
+  /* Polyfill */
+  background: #F0F0F0 !important;
+  /* !important is needed by the polyfill */ }
+
+/* Chrome */
+progress::-webkit-progress-bar {
+  background: #F0F0F0; }
+
+/* Foreground Colors   */
+/* IE10 */
+progress {
+  color: #80CC99; }
+
+/* Firefox */
+progress::-moz-progress-bar {
+  background: #80CC99; }
+
+/* Chrome */
+progress::-webkit-progress-value {
+  background: #80CC99; }
+
+/* Polyfill */
+progress[aria-valuenow]:before {
+  background: #80CC99; }
 
 .record {
   text-align: center; }

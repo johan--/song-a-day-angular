@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, width=device-width, minimal-ui">
-    <title>Song a Day ☕</title>
+    <title>Song A Day</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="white-translucent">
-    <link href="css/app.css?v=1435499661725" rel="stylesheet">
+    <link href="css/app.css?v=1435510846274" rel="stylesheet">
     <meta property="og:title" content="Song a Day">
     <meta property="og:type" content="website">
     <meta property="og:image" content="http://songadays.com/img/song-a-day.png">
@@ -14,19 +14,19 @@
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="apple-touch-icon" href="img/favicon.png">
     <script>
-      GLOBALS = {"ANGULAR_APP_NAME":"songaday","BUNDLE_NAME":"SongADay","BUNDLE_VERSION":"3.3.9","CODE_VERSION":"d521431088e6d86baf06099a378eea5b00e05099","DEPLOY_TIME":1435499661725,"ENV":"development","ROLLBAR_SOURCEMAPS_URL_PREFIX":"https://songadays.com","WEINRE_ADDRESS":"192.168.1.14:31173"};
+      GLOBALS = {"ANGULAR_APP_NAME":"songaday","BUNDLE_NAME":"SongADay","BUNDLE_VERSION":"3.4.0","CODE_VERSION":"d521431088e6d86baf06099a378eea5b00e05099","DEPLOY_TIME":1435510846274,"ENV":"development","ROLLBAR_SOURCEMAPS_URL_PREFIX":"https://songadays.com","WEINRE_ADDRESS":"192.168.1.14:31173"};
       
     </script>
-    <script src="js/vendor.js?v=1435499661725"></script>
-    <script src="js/app_templates.js?v=1435499661725"></script>
-    <script src="js/app.js?v=1435499661725"></script>
+    <script src="js/vendor.js?v=1435510846274"></script>
+    <script src="js/app_templates.js?v=1435510846274"></script>
+    <script src="js/app.js?v=1435510846274"></script>
     <script id="cordova-js" src="cordova.js"></script>
   </head>
   <body ng-controller="AppCtrl as ctrl" ng-cloak>
     <videogular vg-player-ready="ctrl.onPlayerReady($API)" vg-complete="ctrl.next()" class="cinema">
       <vg-media vg-use-native-controls="true" vg-src="ctrl.config.sources" vg-type="video" vg-auto-play="true">             </vg-media>
       <progress max="{{ctrl.API.totalTime}}" value="{{ctrl.API.currentTime}}" class="song-position"></progress>
-      <canvas id="visualizer" width="400" height="200"></canvas>
+      <canvas id="visualizer" width="1000" height="200"></canvas>
     </videogular>
     <ion-nav-view></ion-nav-view>
     <ion-footer-bar align-title="center">

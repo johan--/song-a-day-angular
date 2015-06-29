@@ -565,6 +565,14 @@ A simple example service that returns some data.
 }).call(this);
 
 (function() {
+  Array.prototype.last = function(n) {
+    n = typeof n !== 'undefined' ? n : 1;
+    return this[this.length - n];
+  };
+
+}).call(this);
+
+(function() {
   angular.module('songaday').filter('length', function() {
     return function(item) {
       return Object.keys(item || {}).length;
@@ -581,14 +589,6 @@ A simple example service that returns some data.
       }
     };
   });
-
-}).call(this);
-
-(function() {
-  Array.prototype.last = function(n) {
-    n = typeof n !== 'undefined' ? n : 1;
-    return this[this.length - n];
-  };
 
 }).call(this);
 
@@ -1139,6 +1139,7 @@ A simple example service that returns some data.
     audio_context = {};
     $scope.transmission = {};
     $rootScope.file_type = "audio/mp3";
+    $rootScope.file_ext = "mp3";
     $scope.transmitting = false;
     try {
       $rootScope.stop();
@@ -1159,7 +1160,7 @@ A simple example service that returns some data.
     $scope.transmit = function() {
       __log('Uploading Compressed Audio');
       return AccountService.refresh(function(myself) {
-        return TransmitService.uploadBlob($rootScope.file_blob, function(file_uri) {
+        return TransmitService.uploadBlob($rootScope.file_blob, $rootScope.file_ext, function(file_uri) {
           var file_type, song;
           __log('Audio uploaded');
           song = {};
@@ -1210,7 +1211,10 @@ A simple example service that returns some data.
       $scope.song = false;
       $rootScope.file_blob = null;
       $rootScope.wav_file_uri = null;
-      return __log('reset');
+      __log('reset');
+      if (!_(ionic.Platform.platforms).contains('browser')) {
+        return $scope.startNativeRecording();
+      }
     };
     $scope.revoke = function() {
       if ($scope.song) {
@@ -1230,9 +1234,12 @@ A simple example service that returns some data.
         var file_URI;
         $rootScope["native"] = true;
         file_URI = obj.nativeURL;
+        console.log(obj, 'file object');
         return obj.file(function(file_obj) {
+          console.log(obj, 'file');
           $rootScope.wav_file_uri = file_URI;
           $rootScope.file_blob = file_obj;
+          console.log(file_obj);
           $rootScope.file_type = "audio/m4a";
           $rootScope.readyToTransmit = true;
           return $scope.$apply();
@@ -1315,7 +1322,10 @@ A simple example service that returns some data.
     if (_(ionic.Platform.platforms).contains('browser')) {
       return $scope.tryHTML5Recording();
     } else {
-      return $scope.startNativeRecording();
+      $scope.startNativeRecording();
+      $rootScope.file_blob = void 0;
+      $rootScope.wav_file_uri = void 0;
+      return $rootScope.file_ext = "m4a";
     }
   });
 
@@ -1692,7 +1702,7 @@ A simple example service that returns some data.
     ref = new Firebase(FBURL + 'songs').limit(4);
     return {
       cloudFrontURI: function() {
-        return 'http://d1hmps6uc7xmb3.cloudfront.net/';
+        return 'http://media.songadays.com/';
       },
       awsParamsURI: function() {
         return '/config/aws.json';
@@ -1734,7 +1744,7 @@ A simple example service that returns some data.
           });
         });
       },
-      uploadBlob: function(blob, callback) {
+      uploadBlob: function(blob, file_ext, callback) {
         var awsParams, cloudFront, key, opts, s3Options, s3Uri;
         cloudFront = this.cloudFrontURI();
         s3Uri = 'https://' + this.s3Bucket() + '.s3.amazonaws.com/';
@@ -1744,7 +1754,7 @@ A simple example service that returns some data.
           'signature': 'r+Ci1HbYn4fkyFB0pxwRWx5m0Ss=',
           'key': 'AKIAJ7K34ZKXEV72GYRQ'
         };
-        key = s3Options.folder + (new Date()).getTime() + '-' + S3Uploader.randomString(16) + ".mp3";
+        key = s3Options.folder + (new Date()).getTime() + '-' + S3Uploader.randomString(16) + '.' + file_ext;
         opts = angular.extend({
           submitOnChange: true,
           getOptionsUri: awsParams,
