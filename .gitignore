@@ -17,6 +17,8 @@ local.properties
 .settings/
 .loadpath
 
+app/bower_components/
+
 # External tool builders
 .externalToolBuilders/
 
